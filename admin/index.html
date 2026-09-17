@@ -79,23 +79,23 @@
         <div class="kpi-grid">
           <div class="kpi-card green">
             <div class="kpi-title">提携・契約企業店舗数</div>
-            <div class="kpi-value" id="kpi-company-count">5 社</div>
-            <div class="kpi-meta"><span class="badge-up">↑ 稼働率 100%</span> <span id="kpi-company-sub">全6件</span></div>
+            <div class="kpi-value" id="kpi-company-count">0 社</div>
+            <div class="kpi-meta"><span id="kpi-company-sub">全提携申請 0 件</span></div>
           </div>
           <div class="kpi-card gold">
             <div class="kpi-title">設置パネル総数</div>
-            <div class="kpi-value" id="kpi-panel-count">5 台</div>
-            <div class="kpi-meta" id="kpi-panel-sub">那須町・那須塩原市・大田原市</div>
+            <div class="kpi-value" id="kpi-panel-count">0 台</div>
+            <div class="kpi-meta" id="kpi-panel-sub">稼働中パネル 0 台</div>
           </div>
           <div class="kpi-card">
             <div class="kpi-title">累計受注売上高</div>
-            <div class="kpi-value" id="kpi-total-revenue">¥1,157,000</div>
-            <div class="kpi-meta" id="kpi-monthly-mrr">月額サブスク: ¥22,000/月</div>
+            <div class="kpi-value" id="kpi-total-revenue">¥0</div>
+            <div class="kpi-meta" id="kpi-monthly-mrr">月額サブスク収益: ¥0/月</div>
           </div>
           <div class="kpi-card purple">
             <div class="kpi-title">サブスク年間継続率</div>
-            <div class="kpi-value" id="kpi-renewal-rate">100%</div>
-            <div class="kpi-meta" id="kpi-renewal-sub">中途解約 0件</div>
+            <div class="kpi-value" id="kpi-renewal-rate">0%</div>
+            <div class="kpi-meta" id="kpi-renewal-sub">提携企業数 0 件</div>
           </div>
         </div>
 
@@ -105,19 +105,8 @@
             <div class="card-panel-title">📊 2026年度 月別売上推移（初期導入費 + 月額PR配信）</div>
             <span style="font-size: 12px; color: var(--admin-text-muted);">単位: 千円（棒グラフにホバーで金額表示）</span>
           </div>
-          <div class="chart-container">
-            <div class="chart-col"><div class="chart-bar" style="height: 15%;" data-tooltip="1月: ¥50,000"></div><span class="chart-label">1月</span></div>
-            <div class="chart-col"><div class="chart-bar" style="height: 20%;" data-tooltip="2月: ¥80,000"></div><span class="chart-label">2月</span></div>
-            <div class="chart-col"><div class="chart-bar" style="height: 35%;" data-tooltip="3月: ¥140,000"></div><span class="chart-label">3月</span></div>
-            <div class="chart-col"><div class="chart-bar" style="height: 80%;" data-tooltip="4月: ¥370,000"></div><span class="chart-label">4月</span></div>
-            <div class="chart-col"><div class="chart-bar" style="height: 60%;" data-tooltip="5月: ¥260,000"></div><span class="chart-label">5月</span></div>
-            <div class="chart-col"><div class="chart-bar" style="height: 55%;" data-tooltip="6月: ¥210,000"></div><span class="chart-label">6月</span></div>
-            <div class="chart-col"><div class="chart-bar" style="height: 45%;" data-tooltip="7月: ¥170,000"></div><span class="chart-label">7月</span></div>
-            <div class="chart-col"><div class="chart-bar" style="height: 50%;" data-tooltip="8月: ¥190,000"></div><span class="chart-label">8月</span></div>
-            <div class="chart-col"><div class="chart-bar" style="height: 75%;" data-tooltip="9月: ¥290,000"></div><span class="chart-label">9月</span></div>
-            <div class="chart-col"><div class="chart-bar" style="height: 65%;" data-tooltip="10月(見込): ¥240,000"></div><span class="chart-label">10月</span></div>
-            <div class="chart-col"><div class="chart-bar" style="height: 70%;" data-tooltip="11月(見込): ¥270,000"></div><span class="chart-label">11月</span></div>
-            <div class="chart-col"><div class="chart-bar" style="height: 90%;" data-tooltip="12月(見込): ¥350,000"></div><span class="chart-label">12月</span></div>
+          <div class="chart-container" id="sales-chart-container">
+            <!-- Rendered dynamically by JS -->
           </div>
         </div>
 
@@ -141,7 +130,7 @@
                 </tr>
               </thead>
               <tbody id="table-dashboard-companies">
-                <!-- Rendered dynamically -->
+                <!-- Rendered dynamically by JS -->
               </tbody>
             </table>
           </div>

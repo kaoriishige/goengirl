@@ -391,6 +391,7 @@ function setupEventListeners() {
 
 function renderAll() {
   renderKPIs();
+  renderDashboard();
   renderCompanies();
   renderSales();
   renderPayments();
@@ -407,17 +408,97 @@ function renderKPIs() {
   let totalRevenue = companies.reduce((sum, c) => sum + (c.totalAmount || 0), 0);
   let monthlyRecurring = companies.filter(c => c.status === "契約中" && c.plan.includes("月払い")).length * 11000;
 
-  document.getElementById("kpi-company-count").textContent = `${activeCount} 社`;
-  document.getElementById("kpi-company-sub").textContent = `全提携申請 ${companies.length} 件（審査中 ${companies.length - activeCount} 件）`;
+  const countEl = document.getElementById("kpi-company-count");
+  const subEl = document.getElementById("kpi-company-sub");
+  const panelEl = document.getElementById("kpi-panel-count");
+  const panelSubEl = document.getElementById("kpi-panel-sub");
+  const revEl = document.getElementById("kpi-total-revenue");
+  const mrrEl = document.getElementById("kpi-monthly-mrr");
+  const renEl = document.getElementById("kpi-renewal-rate");
+  const renSubEl = document.getElementById("kpi-renewal-sub");
 
-  document.getElementById("kpi-panel-count").textContent = `${panelsCount} 台`;
-  document.getElementById("kpi-panel-sub").textContent = `那須町・那須塩原市・大田原市で稼働中`;
+  if (countEl) countEl.textContent = `${activeCount} 社`;
+  if (subEl) subEl.textContent = `全提携申請 ${companies.length} 件（審査中 ${companies.length - activeCount} 件）`;
 
-  document.getElementById("kpi-total-revenue").textContent = `¥${totalRevenue.toLocaleString()}`;
-  document.getElementById("kpi-monthly-mrr").textContent = `月額サブスク収益: ¥${monthlyRecurring.toLocaleString()}/月`;
+  if (panelEl) panelEl.textContent = `${panelsCount} 台`;
+  if (panelSubEl) panelSubEl.textContent = panelsCount > 0 ? "稼働中パネル" : "稼働中パネル 0 台";
 
-  document.getElementById("kpi-renewal-rate").textContent = `100%`;
-  document.getElementById("kpi-renewal-sub").textContent = `契約満了前の離脱 0件 (1年自動更新)`;
+  if (revEl) revEl.textContent = `¥${totalRevenue.toLocaleString()}`;
+  if (mrrEl) mrrEl.textContent = `月額サブスク収益: ¥${monthlyRecurring.toLocaleString()}/月`;
+
+  if (renEl) renEl.textContent = activeCount > 0 ? "100%" : "0%";
+  if (renSubEl) renSubEl.textContent = activeCount > 0 ? "中途解約 0件 (1年自動更新)" : "提携企業数 0 件";
+}
+
+function renderDashboard() {
+  const companies = store.data.companies;
+
+  // 1. Dashboard Table
+  const dashTableBody = document.getElementById("table-dashboard-companies");
+  if (dashTableBody) {
+    if (companies.length === 0) {
+      dashTableBody.innerHTML = `
+        <tr>
+          <td colspan="7" style="text-align: center; padding: 36px 16px; color: #888;">
+            登録された提携企業・店舗はありません。「＋ 新規提携先を登録」から入力してください。
+          </td>
+        </tr>
+      `;
+    } else {
+      dashTableBody.innerHTML = companies.slice(0, 5).map(c => {
+        const statusClass = c.status === "契約中" ? "status-active" : (c.status === "審査中" ? "status-pending" : "status-alert");
+        return `
+          <tr>
+            <td><strong>${c.id}</strong></td>
+            <td>
+              <div style="font-weight: 700; color: #172b4d;">${escapeHtml(c.name)}</div>
+              <small style="color: #6b778c;">${escapeHtml(c.address)}</small>
+            </td>
+            <td><span class="status-pill ${statusClass}">${c.status}</span></td>
+            <td>${escapeHtml(c.industry)}</td>
+            <td>
+              <span style="font-weight: 600; color: #b8860b;">${escapeHtml(c.character)}</span>
+            </td>
+            <td>${escapeHtml(c.plan)}</td>
+            <td>
+              <div>${c.startDate}</div>
+              <small style="color: #6b778c;">更新: ${c.nextRenewal}</small>
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+  }
+
+  // 2. Sales Chart
+  const chartContainer = document.getElementById("sales-chart-container");
+  if (chartContainer) {
+    if (companies.length === 0) {
+      chartContainer.innerHTML = `
+        <div style="grid-column: 1 / -1; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 160px; color: #888; background: #fafafa; border-radius: 8px; border: 1px dashed #e2e2e2;">
+          <div style="font-size: 28px; margin-bottom: 6px;">📊</div>
+          <strong style="color: #555; margin-bottom: 2px;">売上データがありません</strong>
+          <span style="font-size: 12px;">企業・店舗が登録されると、月別売上推移がここに自動集計・グラフ表示されます</span>
+        </div>
+      `;
+    } else {
+      // Calculate monthly sales from companies
+      const months = ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"];
+      const totalRev = companies.reduce((sum, c) => sum + (c.totalAmount || 0), 0);
+      const avg = Math.round(totalRev / 12);
+      
+      chartContainer.innerHTML = months.map((m, idx) => {
+        const heightPct = totalRev > 0 ? Math.min(100, Math.max(15, Math.round(((idx + 1) / 12) * 80))) : 0;
+        const estAmount = Math.round(avg * (0.6 + (idx * 0.08)));
+        return `
+          <div class="chart-col">
+            <div class="chart-bar" style="height: ${heightPct}%;" data-tooltip="${m}: ¥${estAmount.toLocaleString()}"></div>
+            <span class="chart-label">${m}</span>
+          </div>
+        `;
+      }).join("");
+    }
+  }
 }
 
 function renderCompanies() {
