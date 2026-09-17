@@ -1,0 +1,309 @@
+:root {
+  --join-pink: #e9588d;
+  --join-pink-dark: #c8386f;
+  --join-pink-soft: #fff4f8;
+  --join-navy: #173c61;
+  --join-blue: #1199c4;
+  --join-line: #06c755; /* LINE Green */
+  --join-line-hover: #05b04b;
+  --font-serif: 'Noto Serif JP', 'Yu Mincho', serif;
+  --font-sans: 'M PLUS Rounded 1c', 'BIZ UDPGothic', sans-serif;
+  --radius-md: 14px;
+  --radius-lg: 24px;
+  --radius-pill: 9999px;
+  --shadow-lg: 0 12px 36px rgba(233, 88, 141, 0.18);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--font-sans);
+  background: linear-gradient(135deg, #fff7fa 0%, #f0f8fc 100%);
+  color: var(--join-navy);
+  line-height: 1.8;
+  overflow-x: hidden;
+}
+
+.join-header {
+  height: 70px;
+  padding: 0 24px;
+  max-width: 1080px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.join-logo {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--join-navy);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.join-logo span { color: var(--join-pink); }
+
+.join-header-link {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--join-navy);
+  text-decoration: none;
+}
+
+/* Hero */
+.join-hero {
+  max-width: 960px;
+  margin: 20px auto 50px;
+  padding: 40px 24px;
+  text-align: center;
+}
+
+.join-eyebrow {
+  display: inline-block;
+  background: #ffe3ee;
+  color: var(--join-pink-dark);
+  font-size: 13px;
+  font-weight: 800;
+  padding: 6px 18px;
+  border-radius: var(--radius-pill);
+  margin-bottom: 20px;
+  letter-spacing: 0.05em;
+}
+
+.join-hero-title {
+  font-family: var(--font-serif);
+  font-size: clamp(32px, 5.5vw, 56px);
+  line-height: 1.35;
+  margin-bottom: 20px;
+  color: var(--join-navy);
+}
+.join-hero-title mark {
+  background: linear-gradient(transparent 60%, #ffd0e3 60%);
+  color: inherit;
+}
+
+.join-hero-lead {
+  font-size: clamp(15px, 2vw, 18px);
+  color: #4a637d;
+  max-width: 640px;
+  margin: 0 auto 36px;
+}
+
+/* Hero Visual Banner */
+.join-characters-banner {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 16px;
+  margin-bottom: 40px;
+}
+.banner-char {
+  max-height: 260px;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 16px rgba(23, 60, 97, 0.15));
+  transition: transform 0.3s;
+}
+.banner-char:hover {
+  transform: translateY(-8px) scale(1.03);
+}
+
+/* CTA Box */
+.join-cta-box {
+  background: #fff;
+  border: 2px solid #ffd0e3;
+  border-radius: var(--radius-lg);
+  padding: 36px 28px;
+  max-width: 580px;
+  margin: 0 auto;
+  box-shadow: var(--shadow-lg);
+}
+
+.join-cta-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--join-navy);
+  margin-bottom: 8px;
+}
+.join-cta-desc {
+  font-size: 13px;
+  color: #6d849e;
+  margin-bottom: 24px;
+}
+
+.btn-line-register {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: var(--join-line);
+  color: #fff;
+  text-decoration: none;
+  font-size: 17px;
+  font-weight: 800;
+  padding: 16px 28px;
+  border-radius: var(--radius-pill);
+  box-shadow: 0 6px 20px rgba(6, 199, 85, 0.35);
+  transition: all 0.2s;
+  cursor: pointer;
+  border: none;
+  width: 100%;
+}
+.btn-line-register:hover {
+  background: var(--join-line-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(6, 199, 85, 0.45);
+}
+
+.line-icon-badge {
+  width: 28px;
+  height: 28px;
+  background: #fff;
+  color: var(--join-line);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-weight: 900;
+  font-size: 15px;
+}
+
+.join-sub-link {
+  display: block;
+  margin-top: 14px;
+  font-size: 12px;
+  color: #7b94ad;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* 3 Benefits */
+.join-benefits {
+  max-width: 960px;
+  margin: 60px auto;
+  padding: 0 24px;
+}
+.benefits-title {
+  text-align: center;
+  font-family: var(--font-serif);
+  font-size: 28px;
+  margin-bottom: 36px;
+}
+
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+}
+
+.benefit-card {
+  background: #fff;
+  border-radius: var(--radius-md);
+  padding: 30px 24px;
+  box-shadow: 0 4px 16px rgba(23, 60, 97, 0.06);
+  border: 1px solid #e2edf2;
+  text-align: center;
+}
+.benefit-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #fff0f6;
+  color: var(--join-pink);
+  font-size: 26px;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 16px;
+}
+.benefit-card h3 {
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+.benefit-card p {
+  font-size: 14px;
+  color: #5d758f;
+  line-height: 1.7;
+}
+
+/* Membership Plans */
+.join-plans {
+  max-width: 860px;
+  margin: 60px auto;
+  padding: 0 24px;
+}
+.plans-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+.plan-item {
+  background: #fff;
+  border: 1px solid #dbe6ec;
+  border-radius: var(--radius-md);
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+}
+.plan-item.highlight {
+  border: 2px solid var(--join-pink);
+  background: #fffdfd;
+  position: relative;
+}
+.plan-badge {
+  position: absolute;
+  top: -12px;
+  right: 20px;
+  background: var(--join-pink);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 12px;
+  border-radius: var(--radius-pill);
+}
+
+.plan-item h4 {
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+.plan-price {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--join-navy);
+  margin-bottom: 16px;
+}
+.plan-price small {
+  font-size: 12px;
+  font-weight: normal;
+  color: #7289a0;
+}
+.plan-features {
+  list-style: none;
+  font-size: 13px;
+  color: #556f8a;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: auto;
+}
+.plan-features li::before {
+  content: "✔ ";
+  color: var(--join-pink);
+  font-weight: 800;
+}
+
+/* Footer */
+.join-footer {
+  text-align: center;
+  padding: 40px 24px;
+  border-top: 1px solid #e1e9ee;
+  margin-top: 60px;
+  font-size: 13px;
+  color: #7990a6;
+}
+.join-footer a {
+  color: var(--join-navy);
+  margin: 0 10px;
+  text-decoration: none;
+}
+.join-footer a:hover {
+  text-decoration: underline;
+}

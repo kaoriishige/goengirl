@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ご縁ガール 運営管理コンソール</title>
+  <link rel="stylesheet" href="admin.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext y='.9em' font-size='54'%3E%E6%A1%9C%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo-mark">✿</div>
+      <div>
+        <div class="sidebar-title">ご縁ガール 運営</div>
+        <div class="sidebar-subtitle">Admin Management Console</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-title">MAIN</div>
+      <button class="nav-item active" data-tab="dashboard">
+        <span class="nav-icon">📊</span> ダッシュボード
+      </button>
+
+      <div class="nav-section-title">MANAGEMENT</div>
+      <button class="nav-item" data-tab="companies">
+        <span class="nav-icon">🏢</span> 登録企業・店舗管理
+      </button>
+      <button class="nav-item" data-tab="sales">
+        <span class="nav-icon">📈</span> 売上・サブスクデータ
+      </button>
+      <button class="nav-item" data-tab="payments">
+        <span class="nav-icon">💳</span> 決済・請求ステータス
+      </button>
+      <button class="nav-item" data-tab="panels">
+        <span class="nav-icon">🪧</span> パネル設置情報
+      </button>
+      <button class="nav-item" data-tab="goods">
+        <span class="nav-icon">🛍️</span> グッズ情報・在庫
+      </button>
+
+      <div class="nav-section-title">PUBLIC SITES</div>
+      <a class="nav-item" href="../" target="_blank">
+        <span class="nav-icon">🌐</span> 企業・店舗向けLP ↗
+      </a>
+      <a class="nav-item" href="../portal/" target="_blank">
+        <span class="nav-icon">🌸</span> 情報ポータル (ぽかログ風) ↗
+      </a>
+      <a class="nav-item" href="../member/" target="_blank">
+        <span class="nav-icon">📱</span> 会員ダッシュボード ↗
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div>ご縁ガール運営事務局</div>
+      <a href="javascript:void(0)" id="btn-reset-data">🔄 サンプルデータを初期化</a>
+      <small>© 2026 TS DELY &amp; GOEN GIRL</small>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="main-wrapper">
+    <header class="topbar">
+      <div class="topbar-left">
+        <h1 class="page-title" id="page-title">ダッシュボード（概要・KPI）</h1>
+      </div>
+      <div class="topbar-right">
+        <span style="font-size: 13px; color: var(--admin-text-muted);">管理者: <strong>菊地 孝史 (TS DELY)</strong></span>
+        <button class="btn btn-secondary btn-sm" onclick="location.reload()">最新情報に更新</button>
+      </div>
+    </header>
+
+    <main class="content">
+      <!-- 1. DASHBOARD TAB -->
+      <section class="tab-pane active" id="tab-dashboard">
+        <!-- KPI Cards -->
+        <div class="kpi-grid">
+          <div class="kpi-card green">
+            <div class="kpi-title">提携・契約企業店舗数</div>
+            <div class="kpi-value" id="kpi-company-count">5 社</div>
+            <div class="kpi-meta"><span class="badge-up">↑ 稼働率 100%</span> <span id="kpi-company-sub">全6件</span></div>
+          </div>
+          <div class="kpi-card gold">
+            <div class="kpi-title">設置パネル総数</div>
+            <div class="kpi-value" id="kpi-panel-count">5 台</div>
+            <div class="kpi-meta" id="kpi-panel-sub">那須町・那須塩原市・大田原市</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-title">累計受注売上高</div>
+            <div class="kpi-value" id="kpi-total-revenue">¥1,157,000</div>
+            <div class="kpi-meta" id="kpi-monthly-mrr">月額サブスク: ¥22,000/月</div>
+          </div>
+          <div class="kpi-card purple">
+            <div class="kpi-title">サブスク年間継続率</div>
+            <div class="kpi-value" id="kpi-renewal-rate">100%</div>
+            <div class="kpi-meta" id="kpi-renewal-sub">中途解約 0件</div>
+          </div>
+        </div>
+
+        <!-- Monthly Sales Trend Chart (CSS Grid Visual) -->
+        <div class="card-panel">
+          <div class="card-panel-header">
+            <div class="card-panel-title">📊 2026年度 月別売上推移（初期導入費 + 月額PR配信）</div>
+            <span style="font-size: 12px; color: var(--admin-text-muted);">単位: 千円（棒グラフにホバーで金額表示）</span>
+          </div>
+          <div class="chart-container">
+            <div class="chart-col"><div class="chart-bar" style="height: 15%;" data-tooltip="1月: ¥50,000"></div><span class="chart-label">1月</span></div>
+            <div class="chart-col"><div class="chart-bar" style="height: 20%;" data-tooltip="2月: ¥80,000"></div><span class="chart-label">2月</span></div>
+            <div class="chart-col"><div class="chart-bar" style="height: 35%;" data-tooltip="3月: ¥140,000"></div><span class="chart-label">3月</span></div>
+            <div class="chart-col"><div class="chart-bar" style="height: 80%;" data-tooltip="4月: ¥370,000"></div><span class="chart-label">4月</span></div>
+            <div class="chart-col"><div class="chart-bar" style="height: 60%;" data-tooltip="5月: ¥260,000"></div><span class="chart-label">5月</span></div>
+            <div class="chart-col"><div class="chart-bar" style="height: 55%;" data-tooltip="6月: ¥210,000"></div><span class="chart-label">6月</span></div>
+            <div class="chart-col"><div class="chart-bar" style="height: 45%;" data-tooltip="7月: ¥170,000"></div><span class="chart-label">7月</span></div>
+            <div class="chart-col"><div class="chart-bar" style="height: 50%;" data-tooltip="8月: ¥190,000"></div><span class="chart-label">8月</span></div>
+            <div class="chart-col"><div class="chart-bar" style="height: 75%;" data-tooltip="9月: ¥290,000"></div><span class="chart-label">9月</span></div>
+            <div class="chart-col"><div class="chart-bar" style="height: 65%;" data-tooltip="10月(見込): ¥240,000"></div><span class="chart-label">10月</span></div>
+            <div class="chart-col"><div class="chart-bar" style="height: 70%;" data-tooltip="11月(見込): ¥270,000"></div><span class="chart-label">11月</span></div>
+            <div class="chart-col"><div class="chart-bar" style="height: 90%;" data-tooltip="12月(見込): ¥350,000"></div><span class="chart-label">12月</span></div>
+          </div>
+        </div>
+
+        <!-- Quick Summary Table -->
+        <div class="card-panel">
+          <div class="card-panel-header">
+            <div class="card-panel-title">直近の提携企業・店舗一覧</div>
+            <button class="btn btn-primary btn-sm" onclick="document.querySelector('.nav-item[data-tab=companies]').click()">全件を見る →</button>
+          </div>
+          <div class="data-table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>企業・店舗名 / 所在地</th>
+                  <th>ステータス</th>
+                  <th>業種</th>
+                  <th>導入ガール</th>
+                  <th>プラン種別</th>
+                  <th>契約日 / 更新日</th>
+                </tr>
+              </thead>
+              <tbody id="table-dashboard-companies">
+                <!-- Rendered dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. COMPANIES TAB -->
+      <section class="tab-pane" id="tab-companies">
+        <div class="card-panel">
+          <div class="card-panel-header">
+            <div class="card-panel-title">提携企業・店舗一覧（全登録データ）</div>
+            <div class="filter-bar">
+              <input type="text" id="company-search" class="search-input" placeholder="店舗名・住所・キャラで検索...">
+              <select id="company-status-filter" class="select-input">
+                <option value="ALL">すべてのステータス</option>
+                <option value="契約中">契約中</option>
+                <option value="審査中">審査中</option>
+                <option value="解約">解約</option>
+              </select>
+              <button id="btn-new-company" class="btn btn-primary">＋ 新規提携先を登録</button>
+            </div>
+          </div>
+          <div class="data-table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>企業・店舗名 / 住所</th>
+                  <th>ステータス</th>
+                  <th>業種</th>
+                  <th>導入ガール / パネル</th>
+                  <th>契約形態</th>
+                  <th>契約期間・更新日</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody id="table-companies-body">
+                <!-- Rendered by admin.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. SALES & SUBSCRIPTION TAB -->
+      <section class="tab-pane" id="tab-sales">
+        <div class="card-panel">
+          <div class="card-panel-header">
+            <div class="card-panel-title">企業別 サブスクリプション &amp; 売上台帳</div>
+            <span style="font-size: 13px; color: var(--admin-text-muted);">1年契約（自動更新 / 30日前予告）</span>
+          </div>
+          <div class="data-table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>企業・店舗名</th>
+                  <th>契約種別</th>
+                  <th>初期パネル導入費</th>
+                  <th>月額PR動画配信料</th>
+                  <th>累計売上高</th>
+                  <th>次回契約更新予定日</th>
+                  <th>更新ステータス</th>
+                </tr>
+              </thead>
+              <tbody id="table-sales-body">
+                <!-- Rendered by admin.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. PAYMENTS TAB -->
+      <section class="tab-pane" id="tab-payments">
+        <div class="card-panel">
+          <div class="card-panel-header">
+            <div class="card-panel-title">請求・決済ステータス管理</div>
+            <span style="font-size: 13px; color: var(--admin-text-muted);">月払いは毎月末締め・翌月末払い / 年払いは初回一括</span>
+          </div>
+          <div class="data-table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>請求番号</th>
+                  <th>請求先店舗</th>
+                  <th>請求項目</th>
+                  <th>金額 (税込)</th>
+                  <th>決済方法</th>
+                  <th>支払期日</th>
+                  <th>入金日</th>
+                  <th>入金状態</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody id="table-payments-body">
+                <!-- Rendered by admin.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. PANELS TAB -->
+      <section class="tab-pane" id="tab-panels">
+        <div class="card-panel">
+          <div class="card-panel-header">
+            <div class="card-panel-title">等身大・SDパネル 設置スポット管理</div>
+            <span style="font-size: 13px; color: var(--admin-text-muted);">現地チェックインGPS座標・シリアル番号</span>
+          </div>
+          <div class="data-table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>パネルID</th>
+                  <th>シリアル番号</th>
+                  <th>キャラクター</th>
+                  <th>衣装バージョン</th>
+                  <th>設置店舗・施設</th>
+                  <th>GPS座標 (Lat, Lng)</th>
+                  <th>稼働ステータス</th>
+                  <th>状態</th>
+                </tr>
+              </thead>
+              <tbody id="table-panels-body">
+                <!-- Rendered by admin.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. GOODS TAB -->
+      <section class="tab-pane" id="tab-goods">
+        <div class="card-panel">
+          <div class="card-panel-header">
+            <div class="card-panel-title">公式キャラクターグッズ 在庫・卸売管理</div>
+            <span style="font-size: 13px; color: var(--admin-text-muted);">取扱店での販売状況・在庫数</span>
+          </div>
+          <div class="data-table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>グッズID</th>
+                  <th>商品名</th>
+                  <th>キャラクター</th>
+                  <th>カテゴリ</th>
+                  <th>卸単価 (税別)</th>
+                  <th>希望小売価格 (税込)</th>
+                  <th>本部在庫数</th>
+                  <th>累計出荷数</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody id="table-goods-body">
+                <!-- Rendered by admin.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Modal: Create / Edit Company -->
+  <div class="modal-backdrop" id="modal-company">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modal-company-title">提携企業・店舗の登録</h2>
+        <button class="modal-close" id="modal-company-close">&times;</button>
+      </div>
+      <form id="form-company">
+        <input type="hidden" id="company-edit-id">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="form-company-name">企業・店舗名 <span style="color:red;">*</span></label>
+            <input type="text" id="form-company-name" required placeholder="例: 那須温泉神社">
+          </div>
+          <div class="form-group">
+            <label for="form-company-industry">業種</label>
+            <select id="form-company-industry">
+              <option>寺社・宗教法人</option>
+              <option>ホテル・旅館</option>
+              <option>飲食店</option>
+              <option>小売・物販</option>
+              <option>観光・レジャー施設</option>
+              <option>自治体・DMO / 小売</option>
+              <option>その他</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="form-company-rep">ご担当者名 / 代表者</label>
+            <input type="text" id="form-company-rep" placeholder="例: 那須 健一">
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div class="form-group">
+              <label for="form-company-phone">電話番号</label>
+              <input type="tel" id="form-company-phone" placeholder="0287-00-0000">
+            </div>
+            <div class="form-group">
+              <label for="form-company-email">メールアドレス</label>
+              <input type="email" id="form-company-email" placeholder="info@example.com">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="form-company-address">所在地（住所）</label>
+            <input type="text" id="form-company-address" placeholder="栃木県那須郡那須町...">
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div class="form-group">
+              <label for="form-company-character">導入キャラクター</label>
+              <select id="form-company-character">
+                <option>那須乃つつじ</option>
+                <option>狩野みるく</option>
+                <option>大俵ちか</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="form-company-panel">パネル形態</label>
+              <select id="form-company-panel">
+                <option>等身大（通常Ver.）</option>
+                <option>等身大（巫女Ver.）</option>
+                <option>等身大（浴衣Ver.）</option>
+                <option>等身大（スーツVer.）</option>
+                <option>等身大（甲冑弓道Ver.）</option>
+                <option>SDパネル（ミニVer.）</option>
+              </select>
+            </div>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div class="form-group">
+              <label for="form-company-plan">契約プラン</label>
+              <select id="form-company-plan">
+                <option>年間契約（一括前払い）</option>
+                <option>年間契約（月払い）</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="form-company-status">契約ステータス</label>
+              <select id="form-company-status">
+                <option>契約中</option>
+                <option>審査中</option>
+                <option>解約</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="modal-company-cancel">キャンセル</button>
+          <button type="submit" class="btn btn-primary">保存する</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="admin.js"></script>
+</body>
+</html>

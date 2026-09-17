@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ご縁ガール情報ポータル — ご縁めぐり公式ガイド</title>
+  <meta name="description" content="ご縁ガール情報ポータルは、ファンの皆さんが現地での来訪・巡礼体験をもっと楽しめるように作られた公式情報サービスです。パネル設置スポットや限定グッズ、コラボ情報を簡単にチェックできます。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&family=Noto+Serif+JP:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="portal.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext y='.9em' font-size='54'%3E%E6%A1%9C%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="portal-header">
+    <div class="portal-top-bar">
+      <a href="./" class="portal-brand">
+        <img src="../assets/goen-girl-logo.png" alt="ご縁ガール ロゴ" class="portal-brand-logo">
+        <div>
+          <span class="portal-brand-text">ご縁ガール ポータル</span>
+          <span class="portal-brand-tagline">人とご縁で、日本を豊かに。公式巡礼ポータル</span>
+        </div>
+      </a>
+
+      <nav class="portal-nav">
+        <a href="#characters" class="portal-nav-link">キャラクター</a>
+        <a href="#panels" class="portal-nav-link">設置パネル</a>
+        <a href="#goods" class="portal-nav-link">限定グッズ</a>
+        <a href="#collabs" class="portal-nav-link">コラボ企画</a>
+        <a href="../member/" class="portal-nav-btn">会員マイページ ↗</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Wave line decoration -->
+  <div class="wave-divider"></div>
+
+  <!-- Breadcrumb -->
+  <nav class="breadcrumb-container" aria-label="パンくずリスト">
+    <a href="../">ホーム（企業・店舗向け）</a>
+    <span>&gt;</span>
+    <span>情報ポータル TOP</span>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="portal-hero">
+    <div class="hero-content">
+      <div class="hero-tag">✿ 公式ファン支援サービス</div>
+      <h1 class="hero-heading">地域をめぐって、<br><span>ご縁ガール</span>に会いに行こう。</h1>
+      <p class="hero-description">
+        栃木県の那須町・那須塩原市・大田原市をはじめ、全国の寺社や名所・老舗店舗に広がる「ご縁ガール」の世界。<br>
+        現地に設置された等身大パネル、ここでしか手に入らない限定グッズやコラボプランの最新情報をお届けします。
+      </p>
+      <div class="hero-actions">
+        <a href="#panels" class="btn-hero-primary">🪧 設置パネルを探す</a>
+        <a href="../join/" class="btn-hero-secondary">🎁 無料会員登録して特典を貰う</a>
+      </div>
+    </div>
+    <div class="hero-visual-area">
+      <div class="hero-circle-bg"></div>
+      <img src="../assets/nasuno-tsutsuji.png" alt="那須乃つつじ" class="hero-character-img">
+    </div>
+  </section>
+
+  <!-- Quick Search Section (ぽかログ風) -->
+  <section class="quick-search-section">
+    <div class="search-boxes">
+      <a href="#panels" class="search-card-btn">
+        <div class="search-card-icon">🗺️</div>
+        <div>
+          <strong class="search-card-title">設置スポットから探す</strong>
+          <span class="search-card-desc">那須町・那須塩原市・大田原市の設置店舗</span>
+        </div>
+      </a>
+      <a href="#characters" class="search-card-btn">
+        <div class="search-card-icon">🌸</div>
+        <div>
+          <strong class="search-card-title">キャラクターから探す</strong>
+          <span class="search-card-desc">つつじ・みるく・ちかのプロフィールとボイス</span>
+        </div>
+      </a>
+      <a href="#goods" class="search-card-btn">
+        <div class="search-card-icon">🛍️</div>
+        <div>
+          <strong class="search-card-title">取扱グッズから探す</strong>
+          <span class="search-card-desc">御朱印カード・アクスタ・限定アイテム</span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- 1. Characters Section -->
+  <section id="characters" class="portal-section">
+    <div class="section-header-area">
+      <h2 class="section-title">地域の守護少女たち</h2>
+      <span style="font-size: 13px; color: var(--goen-text-muted);">ボイスボタンでメッセージが再生されます</span>
+    </div>
+    <div class="char-grid" id="char-container">
+      <!-- Rendered by portal.js -->
+    </div>
+  </section>
+
+  <!-- 2. New Panels Section -->
+  <section id="panels" class="portal-section">
+    <div class="section-header-area">
+      <h2 class="section-title">新着パネル一覧</h2>
+      <span style="font-size: 13px; color: var(--goen-text-muted);">タップで設置場所とマップを確認</span>
+    </div>
+    <div class="card-grid" id="panel-container">
+      <!-- Rendered by portal.js -->
+    </div>
+  </section>
+
+  <!-- 3. New Goods Section -->
+  <section id="goods" class="portal-section">
+    <div class="section-header-area">
+      <h2 class="section-title">新着グッズ一覧</h2>
+      <span style="font-size: 13px; color: var(--goen-text-muted);">現地限定の御朱印カードやアクスタ</span>
+    </div>
+    <div class="card-grid" id="goods-container">
+      <!-- Rendered by portal.js -->
+    </div>
+  </section>
+
+  <!-- 4. New Collabs Section -->
+  <section id="collabs" class="portal-section">
+    <div class="section-header-area">
+      <h2 class="section-title">新着コラボ・宿泊プラン一覧</h2>
+      <span style="font-size: 13px; color: var(--goen-text-muted);">地域店舗との特別タイアップ</span>
+    </div>
+    <div class="card-grid" id="collab-container">
+      <!-- Rendered by portal.js -->
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="portal-footer">
+    <div class="portal-footer-inner">
+      <img src="../assets/goen-girl-logo.png" alt="ご縁ガール ロゴ" style="height: 44px; background: #fff; padding: 4px 12px; border-radius: 6px;">
+      <nav class="footer-links">
+        <a href="../">企業・店舗向けトップページ</a>
+        <a href="../join/">ファン会員登録</a>
+        <a href="../member/">会員ダッシュボード</a>
+        <a href="../privacy.html">プライバシーポリシー</a>
+        <a href="../tokusho.html">特定商取引法に基づく表記</a>
+        <a href="../admin/">運営管理コンソール</a>
+      </nav>
+      <p class="footer-copy">© 2026 GOEN GIRL PROJECT / TS DELY. All Rights Reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Detail Modal -->
+  <div class="detail-modal" id="detail-modal">
+    <div class="detail-modal-card">
+      <button class="detail-modal-close" id="detail-modal-close">&times;</button>
+      <div id="detail-modal-content"></div>
+    </div>
+  </div>
+
+  <script src="portal.js"></script>
+</body>
+</html>

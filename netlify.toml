@@ -1,0 +1,46 @@
+[build]
+  publish = "."
+
+[[redirects]]
+  from = "/thanks"
+  to = "/thanks.html"
+  status = 200
+
+[[redirects]]
+  from = "/member"
+  to = "/member/"
+  status = 301
+
+[[redirects]]
+  from = "/portal"
+  to = "/portal/"
+  status = 301
+
+[[redirects]]
+  from = "/join"
+  to = "/join/"
+  status = 301
+
+[[redirects]]
+  from = "/admin"
+  to = "/admin/"
+  status = 301
+
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[headers]]
+  for = "/assets/*.mp4"
+  [headers.values]
+    Content-Disposition = "inline"
+    X-Content-Type-Options = "nosniff"
+
+[[forms]]
+  [forms.features]
+    honeypot = true
+    notifications = true

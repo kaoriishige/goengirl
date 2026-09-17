@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ご縁ガール 会員ダッシュボード — マイページ</title>
+  <meta name="description" content="ご縁ガール公式ファン会員マイページ。等身大パネルチェックイン、ご縁ポイント確認、限定ボイス再生、スタンプ帳など、ファンが遊べるダッシュボードです。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&family=Noto+Serif+JP:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="member.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext y='.9em' font-size='54'%3E%E6%A1%9C%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+  <main class="wrap">
+    <!-- Header -->
+    <header>
+      <a href="../portal/" class="brand">ご縁<span>✿</span>ガール</a>
+      <nav class="header-nav">
+        <a class="header-link" href="../portal/">情報ポータル ↗</a>
+        <a class="header-link" href="../">企業・店舗様はこちら</a>
+        <button class="btn-header-action" id="btn-toggle-login">ログアウト</button>
+      </nav>
+    </header>
+
+    <!-- Digital Member Card (デジタル会員証) -->
+    <section class="member-pass theme-tsutsuji" id="member-pass-card">
+      <div class="pass-top-row">
+        <div class="pass-badge">
+          <span>✿</span> <span id="pass-title-badge">那須の旅人</span>
+        </div>
+        <div class="pass-id" id="pass-id">GG-FAN-884920</div>
+      </div>
+
+      <div class="pass-middle-row">
+        <div class="pass-user-info">
+          <h2 id="pass-nickname">ご縁巡礼者 様</h2>
+          <div class="pass-user-oshi" id="pass-oshi-name">推し: 那須乃つつじ</div>
+        </div>
+        <img src="../assets/nasuno-tsutsuji.png" alt="推しガール" class="pass-character-thumb" id="pass-avatar">
+      </div>
+
+      <div class="pass-bottom-row">
+        <div class="pass-points">
+          <span style="font-size: 11px; opacity: 0.85; display: block;">保有ご縁ポイント</span>
+          <b id="pass-points">150</b> GOEN PT
+        </div>
+        <button class="pass-change-oshi-btn" id="btn-change-oshi">
+          推しガールを変更 🔄
+        </button>
+      </div>
+    </section>
+
+    <!-- Navigation Tabs -->
+    <nav class="tabs">
+      <button class="tab-btn active" data-tab="checkin">📍 現地チェックイン</button>
+      <button class="tab-btn" data-tab="stamps">🎴 ご縁スタンプ帳</button>
+      <button class="tab-btn" data-tab="media">🎙️ 限定ボイス・壁紙</button>
+      <button class="tab-btn" data-tab="shop">🎁 ポイント交換所</button>
+    </nav>
+
+    <!-- 1. Checkin Panel -->
+    <section id="panel-checkin" class="panel">
+      <h2 class="panel-header-title">📍 等身大パネルを読み取る</h2>
+      <p class="panel-desc">提携店舗や寺社のパネル付近で現在地を確認し、カメラで読み取ると50ポイントを獲得できます。</p>
+
+      <div class="checkin-action-card">
+        <button id="btn-start-checkin" class="btn-primary">
+          <span>📷</span> 現在地を確認してパネルを読み取る
+        </button>
+
+        <div class="checkin-demo-selector">
+          <label for="demo-spot-select"><strong>【巡礼シミュレーション（テスト用）】</strong></label><br>
+          <select id="demo-spot-select" style="margin-top: 6px; padding: 6px 12px; border-radius: 6px; border: 1px solid var(--line); font-size: 13px;">
+            <!-- Populated by JS -->
+          </select>
+        </div>
+
+        <div id="checkin-status" class="notice">
+          現在地GPSとカメラ画像認識により、加盟店舗・寺社での巡礼を判定します。
+        </div>
+
+        <div id="camera-box" class="camera-box">
+          <video id="video-preview" autoplay muted playsinline></video>
+          <div class="camera-overlay-target"></div>
+          <div class="camera-controls">
+            <button id="btn-recognize" class="btn-primary" style="padding: 10px 20px; font-size: 14px;">
+              パネルを認識・ポイント獲得！
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Flow explanation -->
+      <h3 style="font-size: 16px; margin: 24px 0 12px;">チェックインの流れ</h3>
+      <div style="font-size: 13px; color: var(--text-muted); display: grid; gap: 8px;">
+        <div>1. <strong>現地GPS確認:</strong> パネル設置地点から半径50m以内かを判定します。</div>
+        <div>2. <strong>カメラでパネル認識:</strong> 衣装・髪型・シルエットをAI照合します。</div>
+        <div>3. <strong>ご縁ポイント付与:</strong> ポイントと限定デジタルスタンプを獲得！</div>
+      </div>
+    </section>
+
+    <!-- 2. Stamps Panel (スタンプ帳) -->
+    <section id="panel-stamps" class="panel" hidden>
+      <h2 class="panel-header-title">🎴 ご縁スタンプ帳（巡礼図鑑）</h2>
+      <p class="panel-desc">チェックインした店舗・寺社の朱印スタンプが記録されます。全スポット巡礼を目指そう！</p>
+      
+      <div class="stamps-grid" id="stamps-container">
+        <!-- Rendered by JS -->
+      </div>
+    </section>
+
+    <!-- 3. Media Panel (限定ボイス・壁紙) -->
+    <section id="panel-media" class="panel" hidden>
+      <h2 class="panel-header-title">🎙️ 会員限定コンテンツ</h2>
+      <p class="panel-desc">推しガールの日替わりあいさつボイスや、獲得した特製壁紙をいつでも楽しめます。</p>
+
+      <div class="media-grid" id="media-container">
+        <!-- Rendered by JS -->
+      </div>
+    </section>
+
+    <!-- 4. Shop Panel (ポイント交換所) -->
+    <section id="panel-shop" class="panel" hidden>
+      <h2 class="panel-header-title">🎁 ご縁ポイント交換所</h2>
+      <p class="panel-desc">巡礼やチェックインで貯まったポイントを使って、ここでしか手に入らない限定特典をアンロックできます。</p>
+
+      <div class="shop-grid" id="shop-container">
+        <!-- Rendered by JS -->
+      </div>
+    </section>
+
+    <!-- Points History -->
+    <section class="panel" style="margin-top: 24px;">
+      <h2 class="panel-header-title" style="font-size: 18px;">📜 ポイント獲得・利用履歴</h2>
+      <ul class="history-list" id="history-container">
+        <!-- Rendered by JS -->
+      </ul>
+    </section>
+
+    <div style="text-align: center; margin-top: 32px; font-size: 13px;">
+      <a href="../portal/" style="color: var(--navy); text-decoration: underline; margin-right: 16px;">← 公式情報ポータルへ戻る</a>
+      <a href="../" style="color: var(--navy); text-decoration: underline;">企業・店舗向けご案内（トップ）</a>
+    </div>
+  </main>
+
+  <script src="member.js"></script>
+</body>
+</html>
