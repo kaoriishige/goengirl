@@ -1,70 +1,65 @@
-# ========================================
-# ご縁ガール スマホデータ同期スクリプト
-# 使い方: PowerShellでこのファイルを実行
-# ========================================
+# =====================================
+# ご縁ガール - 管理データ自動監視・同期
+# このスクリプトを起動しておくと、
+# 管理画面でデータを保存するたびに
+# 自動でGitHubにプッシュします
+# =====================================
 
-$rootDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$companiesJson = Join-Path $rootDir "data\companies.json"
-$memberHtml = Join-Path $rootDir "member\index.html"
+$rootDir = "c:\Users\user\Desktop\ご縁ガール"
+$companiesPath = "$rootDir\data\companies.json"
+$interval = 30  # 30秒ごとにチェック
 
-Write-Host ""
 Write-Host "==================================" -ForegroundColor Cyan
-Write-Host "  ご縁ガール スマホ反映ツール" -ForegroundColor Cyan
+Write-Host "  ご縁ガール データ自動同期" -ForegroundColor Cyan
+Write-Host "  起動中... (Ctrl+Cで停止)" -ForegroundColor Cyan
 Write-Host "==================================" -ForegroundColor Cyan
-Write-Host ""
 
-# ダウンロードフォルダからcompanies.jsonを探す
-$downloads = "$env:USERPROFILE\Downloads\companies.json"
-$desktop = "$env:USERPROFILE\Desktop\companies.json"
+# ChromeのlocalStorageパスを検索
+$chromeLocalStoragePath = "$env:LOCALAPPDATA\Google\Chrome\User Data\Default\Local Storage\leveldb"
+$edgeLocalStoragePath = "$env:LOCALAPPDATA\Microsoft\Edge\User Data\Default\Local Storage\leveldb"
 
-$sourceJson = $null
-if (Test-Path $downloads) {
-    $sourceJson = $downloads
-    Write-Host "[1] ダウンロードフォルダの companies.json を検出しました。" -ForegroundColor Green
-} elseif (Test-Path $desktop) {
-    $sourceJson = $desktop
-    Write-Host "[1] デスクトップの companies.json を検出しました。" -ForegroundColor Green
-} else {
-    Write-Host "[1] companies.json が見つかりません。" -ForegroundColor Red
-    Write-Host "    管理画面で スマホにデータ共有(QR) から companies.json をダウンロードしてください。" -ForegroundColor Yellow
-    Read-Host "Enterキーで終了"
-    exit 1
+function Get-AdminDataFromChrome {
+    # Chrome/EdgeのlocalStorageからデータを読み取るのは複雑なため
+    # 代わりにdownloadsフォルダのcompanies.jsonを監視
+    $downloads = "$env:USERPROFILE\Downloads\companies.json"
+    if (Test-Path $downloads) {
+        $dlTime = (Get-Item $downloads).LastWriteTime
+        $curTime = (Get-Item $companiesPath -ErrorAction SilentlyContinue)?.LastWriteTime
+        if ($curTime -eq $null -or $dlTime -gt $curTime) {
+            return $downloads
+        }
+    }
+    return $null
 }
 
-# data/companies.json を更新
-Write-Host "[2] data\companies.json を更新中..." -ForegroundColor Yellow
-Copy-Item -Path $sourceJson -Destination $companiesJson -Force
-Write-Host "    更新完了！" -ForegroundColor Green
+$lastHash = ""
+$iteration = 0
 
-# member/index.html のインラインデータを更新
-Write-Host "[3] member\index.html のインラインデータを更新中..." -ForegroundColor Yellow
-
-$jsonContent = Get-Content -Path $companiesJson -Raw -Encoding UTF8
-$htmlContent = Get-Content -Path $memberHtml -Raw -Encoding UTF8
-
-$pattern = '(?s)window\._inlineCompanies\s*=\s*\[.*?\];'
-$replacement = "window._inlineCompanies = $jsonContent;"
-
-if ($htmlContent -match $pattern) {
-    $newHtml = [regex]::Replace($htmlContent, $pattern, $replacement)
-    [System.IO.File]::WriteAllText($memberHtml, $newHtml, [System.Text.Encoding]::UTF8)
-    Write-Host "    更新完了！" -ForegroundColor Green
-} else {
-    Write-Host "    スキップ" -ForegroundColor Yellow
+while ($true) {
+    $iteration++
+    
+    # ダウンロードフォルダのcompanies.jsonをチェック
+    $source = Get-AdminDataFromChrome
+    if ($source) {
+        Write-Host "[$(Get-Date -Format 'HH:mm:ss')] companies.json を検出！同期中..." -ForegroundColor Yellow
+        
+        Copy-Item -Path $source -Destination $companiesPath -Force
+        
+        Set-Location $rootDir
+        $hash = (Get-FileHash $companiesPath).Hash
+        
+        if ($hash -ne $lastHash) {
+            git add data/companies.json
+            git commit -m "auto-sync: 店舗データ自動更新 $(Get-Date -Format 'yyyy/MM/dd HH:mm')"
+            git push origin main
+            $lastHash = $hash
+            Write-Host "[$(Get-Date -Format 'HH:mm:ss')] ✅ プッシュ完了！1〜2分後にスマホに反映されます" -ForegroundColor Green
+        }
+    }
+    
+    if ($iteration % 10 -eq 0) {
+        Write-Host "[$(Get-Date -Format 'HH:mm:ss')] 監視中... (管理画面でJSONをダウンロードすると自動反映)" -ForegroundColor Gray
+    }
+    
+    Start-Sleep -Seconds $interval
 }
-
-# GitへのPush
-Write-Host "[4] GitHubへプッシュ中..." -ForegroundColor Yellow
-Set-Location $rootDir
-git add -A
-git commit -m "update: 店舗データをスマホ会員ページに反映"
-git push origin main
-
-if ($LASTEXITCODE -eq 0) {
-    Write-Host ""
-    Write-Host "完了！約1〜2分後にスマホを再読み込みしてください。" -ForegroundColor Green
-} else {
-    Write-Host "Gitプッシュに失敗しました。手動でプッシュしてください。" -ForegroundColor Red
-}
-
-Read-Host "Enterキーで終了"

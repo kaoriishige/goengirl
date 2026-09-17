@@ -89,6 +89,8 @@ class AdminStore {
   constructor() {
     this.storageKey = "goen_girl_admin_db_permanent";
     this.data = this.load();
+    // localStorage が空の場合、data/companies.json から自動読み込み
+    this._initFromServer();
   }
 
   load() {
@@ -131,6 +133,41 @@ class AdminStore {
 
     this.save(DEFAULT_DATA);
     return JSON.parse(JSON.stringify(DEFAULT_DATA));
+  }
+
+  // localStorage が空の場合、data/companies.json を自動フェッチ
+  async _initFromServer() {
+    if (this.data.companies.length > 0) return; // すでにデータあり
+    try {
+      const res = await fetch("../data/companies.json?v=" + Date.now());
+      if (res.ok) {
+        const companies = await res.json();
+        if (Array.isArray(companies) && companies.length > 0) {
+          this.data.companies = companies;
+          // パネル・請求データも補完
+          if (!this.data.panels || this.data.panels.length === 0) {
+            this.data.panels = companies.map((c, i) => ({
+              id: `PN-${String(i+1).padStart(3,"0")}`,
+              serial: `GG-${c.id}`,
+              character: c.character || "那須乃つつじ",
+              costume: c.panelType || "等身大",
+              companyId: c.id,
+              companyName: c.name,
+              location: c.panelLocation || "店頭特設",
+              lat: c.lat || 0,
+              lng: c.lng || 0,
+              status: "稼働中",
+              condition: "良好",
+              image: c.characterImg || ""
+            }));
+          }
+          // localStorageには書かない（読み取り専用として利用）
+          renderAll(); // UIを再描画
+        }
+      }
+    } catch (e) {
+      console.warn("サーバーからデータ読み込み失敗:", e);
+    }
   }
 
   save(data) {
