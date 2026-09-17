@@ -188,7 +188,16 @@ function setupTabs() {
 
       t.classList.add("active");
       const targetPanel = document.getElementById(`panel-${t.dataset.tab}`);
-      if (targetPanel) targetPanel.hidden = false;
+      if (targetPanel) {
+        targetPanel.hidden = false;
+        // Auto scroll to target content on mobile so user does not need to scroll down manually
+        setTimeout(() => {
+          const navTabs = document.querySelector(".tabs");
+          const rect = (navTabs || targetPanel).getBoundingClientRect();
+          const targetY = window.pageYOffset + rect.top - 10;
+          window.scrollTo({ top: targetY, behavior: "smooth" });
+        }, 50);
+      }
     });
   });
 }

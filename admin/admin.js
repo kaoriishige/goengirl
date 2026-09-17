@@ -109,6 +109,16 @@ function setupNavigation() {
         goods: "グッズ情報・在庫管理"
       };
       document.getElementById("page-title").textContent = titleMap[tabId] || "管理コンソール";
+
+      // Auto scroll to content on mobile so user does not need to scroll down manually
+      if (window.innerWidth <= 900) {
+        const contentEl = document.querySelector(".content") || document.getElementById(`tab-${tabId}`);
+        if (contentEl) {
+          setTimeout(() => {
+            contentEl.scrollIntoView({ behavior: "smooth", block: "start" });
+          }, 60);
+        }
+      }
     });
   });
 }

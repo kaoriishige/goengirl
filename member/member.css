@@ -565,9 +565,34 @@ header {
   font-weight: 700;
 }
 
-/* Responsive */
+/* Responsive & Sticky Tabs for Smooth Mobile UX */
 @media (max-width: 600px) {
-  .tabs { grid-template-columns: repeat(2, 1fr); }
-  .member-pass { padding: 20px; }
-  .pass-points b { font-size: 32px; }
+  .tabs { 
+    grid-template-columns: repeat(2, 1fr); 
+    position: sticky;
+    top: 8px;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    padding: 6px;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    margin-bottom: 12px;
+  }
+  .tab-btn {
+    padding: 9px 4px;
+    font-size: 12px;
+  }
+  .member-pass { 
+    padding: 16px; 
+    margin-bottom: 14px;
+  }
+  .pass-character-thumb {
+    width: 52px;
+    height: 52px;
+  }
+  .pass-points b { font-size: 26px; }
+  .panel {
+    scroll-margin-top: 110px;
+  }
 }
