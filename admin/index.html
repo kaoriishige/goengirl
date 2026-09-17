@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ご縁ガール 運営管理コンソール</title>
-  <link rel="stylesheet" href="admin.css?v=3">
+  <link rel="stylesheet" href="admin.css?v=4">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext y='.9em' font-size='54'%3E%E6%A1%9C%3C/text%3E%3C/svg%3E">
 </head>
 <body>
@@ -364,15 +364,8 @@
             
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
               <div class="form-group">
-                <label for="form-company-character">導入キャラクター <span style="color:red;">*</span></label>
-                <select id="form-company-character" required>
-                  <option value="">-- キャラクターを選択 --</option>
-                  <option value="那須乃つつじ" data-img="../assets/nasuno-tsutsuji.png">那須乃つつじ (那須町)</option>
-                  <option value="狩野みるく" data-img="../assets/karino-milk.png">狩野みるく (那須塩原市)</option>
-                  <option value="大俵ちか" data-img="../assets/otawara-chika.png">大俵ちか (大田原市)</option>
-                  <option value="__custom__">✨ 新規オリジナルキャラクター（自由入力）</option>
-                </select>
-                <input type="text" id="form-company-custom-char" placeholder="キャラクター名を入力" style="display: none; margin-top: 6px;">
+                <label for="form-company-character">導入キャラクター名 <span style="color:red;">*</span></label>
+                <input type="text" id="form-company-character" required placeholder="例: 那須乃つつじ、オリジナルキャラクター名など手入力">
               </div>
               <div class="form-group">
                 <label for="form-company-panel">パネル形態・仕様 <span style="color:red;">*</span></label>
@@ -414,7 +407,7 @@
                     <button type="button" id="btn-clear-panel-img" class="btn btn-sm" style="color: #666; background: #f0f0f0; border: none; padding: 4px 10px; font-size: 11px;">画像をクリア</button>
                   </div>
                   <div id="panel-img-filename" style="font-size: 11px; color: #666; margin-top: 6px;">
-                    キャラクターを選択すると公式画像がセットされます。PCから独自画像ファイル（PNG/JPG）を直接登録することも可能です。
+                    パソコンからパネル画像ファイル（PNG / JPG / WebP等）を選択してアップロードしてください。（必須）
                   </div>
                 </div>
               </div>
@@ -569,6 +562,6 @@
     </div>
   </div>
 
-  <script src="admin.js?v=3"></script>
+  <script src="admin.js?v=4"></script>
 </body>
 </html>

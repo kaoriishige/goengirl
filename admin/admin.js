@@ -2,27 +2,22 @@
 const DEFAULT_DATA = {
   companies: [],
   panels: [],
-  goods: [
-    { id: "GD-001", name: "那須乃つつじ アクリルスタンド（巫女Ver.）", character: "那須乃つつじ", category: "アクリル", wholesalePrice: 880, retailPrice: 1650, stock: 500, shippedTotal: 0 },
-    { id: "GD-002", name: "那須乃つつじ 開運・良縁祈願 木札絵馬", character: "那須乃つつじ", category: "伝統品・絵馬", wholesalePrice: 600, retailPrice: 1100, stock: 300, shippedTotal: 0 },
-    { id: "GD-003", name: "狩野みるく 特製ラバーストラップ（ジャージー牛乳）", character: "狩野みるく", category: "ストラップ", wholesalePrice: 500, retailPrice: 880, stock: 450, shippedTotal: 0 },
-    { id: "GD-004", name: "大俵ちか 豊作俵チャーム付きキーホルダー", character: "大俵ちか", category: "キーホルダー", wholesalePrice: 550, retailPrice: 990, stock: 400, shippedTotal: 0 },
-    { id: "GD-005", name: "ご縁ガール 栃木三姉妹 ホログラム缶バッジ 3種セット", character: "合同", category: "缶バッジ", wholesalePrice: 700, retailPrice: 1320, stock: 600, shippedTotal: 0 }
-  ],
+  goods: [],
   payments: []
 };
 
 // State Manager
 class AdminStore {
   constructor() {
-    this.storageKey = "goen_girl_admin_db_v3";
-    // Force clear old mock data from v1 & v2
-    if (!localStorage.getItem("goen_girl_cleaned_mock_v3")) {
+    this.storageKey = "goen_girl_admin_db_v4";
+    // Force clear old mock data
+    if (!localStorage.getItem("goen_girl_cleaned_mock_v4")) {
       localStorage.removeItem("goen_girl_admin_db_v1");
       localStorage.removeItem("goen_girl_admin_db_v2");
+      localStorage.removeItem("goen_girl_admin_db_v3");
       localStorage.removeItem("goen_girl_companies_shared");
       localStorage.removeItem("goen_girl_member_session");
-      localStorage.setItem("goen_girl_cleaned_mock_v3", "true");
+      localStorage.setItem("goen_girl_cleaned_mock_v4", "true");
       this.reset();
     }
     this.data = this.load();
@@ -128,8 +123,7 @@ function setupEventListeners() {
   const modalCompanyCancel = document.getElementById("modal-company-cancel");
   const formCompany = document.getElementById("form-company");
 
-  const charSelect = document.getElementById("form-company-character");
-  const customCharInput = document.getElementById("form-company-custom-char");
+  const charInput = document.getElementById("form-company-character");
   const panelImgPreview = document.getElementById("company-panel-preview");
   const panelNoImgLabel = document.getElementById("company-panel-no-img");
   const panelFileInput = document.getElementById("company-panel-file");
@@ -170,12 +164,6 @@ function setupEventListeners() {
     });
   });
 
-  const CHAR_IMAGE_MAP = {
-    "那須乃つつじ": "../assets/nasuno-tsutsuji.png",
-    "狩野みるく": "../assets/karino-milk.png",
-    "大俵ちか": "../assets/otawara-chika.png"
-  };
-
   function setPanelImage(src, filename) {
     if (src) {
       if (panelImgPreview) {
@@ -192,30 +180,8 @@ function setupEventListeners() {
       }
       if (panelNoImgLabel) panelNoImgLabel.style.display = "block";
       if (panelImgDataInput) panelImgDataInput.value = "";
-      if (panelFilenameLabel) panelFilenameLabel.textContent = "キャラクターを選択するか、パソコンからパネル画像を登録してください（必須）";
+      if (panelFilenameLabel) panelFilenameLabel.textContent = "パソコンからパネル画像ファイル（PNG / JPG / WebP等）を選択してください。（必須）";
     }
-  }
-
-  // Handle Character Dropdown Change
-  if (charSelect) {
-    charSelect.addEventListener("change", () => {
-      const val = charSelect.value;
-      if (val === "__custom__") {
-        if (customCharInput) {
-          customCharInput.style.display = "block";
-          customCharInput.required = true;
-          customCharInput.focus();
-        }
-      } else {
-        if (customCharInput) {
-          customCharInput.style.display = "none";
-          customCharInput.required = false;
-        }
-        if (val && CHAR_IMAGE_MAP[val]) {
-          setPanelImage(CHAR_IMAGE_MAP[val], `${val} 公式パネル画像`);
-        }
-      }
-    });
   }
 
   // Handle File Upload from User PC
@@ -312,12 +278,7 @@ function setupEventListeners() {
       if (latInput) latInput.value = "";
       if (lngInput) lngInput.value = "";
       if (gpsHint) gpsHint.textContent = "";
-      if (customCharInput) {
-        customCharInput.value = "";
-        customCharInput.style.display = "none";
-        customCharInput.required = false;
-      }
-      if (charSelect) charSelect.value = "";
+      if (charInput) charInput.value = "";
       setPanelImage("", "");
       if (panelFileInput) panelFileInput.value = "";
 
@@ -348,19 +309,11 @@ function setupEventListeners() {
       e.preventDefault();
       const editId = document.getElementById("company-edit-id").value;
 
-      // 1. Determine character name
-      let charName = charSelect.value;
-      if (charName === "__custom__") {
-        charName = customCharInput.value.trim();
-        if (!charName) {
-          alert("オリジナルキャラクター名を入力してください。");
-          customCharInput.focus();
-          return;
-        }
-      }
+      // 1. Validate Character Name (すべて手入力)
+      const charName = charInput.value.trim();
       if (!charName) {
-        alert("導入キャラクターを選択してください。");
-        charSelect.focus();
+        alert("導入キャラクター名を手入力してください。");
+        charInput.focus();
         return;
       }
 
@@ -389,10 +342,7 @@ function setupEventListeners() {
       // 3. Validate Panel Image (必須)
       let charImg = panelImgDataInput.value;
       if (!charImg) {
-        charImg = CHAR_IMAGE_MAP[charName] || "";
-      }
-      if (!charImg) {
-        alert("⚠️ 設置パネルの画像が登録されていません。\n店頭でファンがスキャン認識するためにパネル画像は必須です。\n「📁 パソコンからパネル画像を選択」から画像ファイルを登録してください。");
+        alert("⚠️ 設置パネルの画像が登録されていません。\n店頭でファンがスキャン照合するためにパネル画像は必須です。\n「📁 パソコンからパネル画像を選択」から画像ファイルを登録してください。");
         return;
       }
 
@@ -527,13 +477,6 @@ function setupEventListeners() {
             paidDate: "-",
             status: "請求中"
           });
-          // Update goods shipped totals
-          if (store.data.goods && store.data.goods.length > 0) {
-            store.data.goods.forEach(g => {
-              g.shippedTotal += 20;
-              g.stock = Math.max(0, g.stock - 20);
-            });
-          }
         }
 
         // Payment C: SNS Video PR Service (一括請求書 または 毎月クレカ/口座振替)
@@ -571,7 +514,7 @@ function setupEventListeners() {
       closeModal();
       renderAll();
 
-      alert(`✅「${formData.name}」の新規契約・提携登録が完了しました！\n\n・パネル設置: ${formData.character} (${formData.panelType}) / 請求書一括清算\n・グッズ発注: ${goodsEnabled ? `あり (¥${goodsAmount.toLocaleString()}) / 請求書一括清算` : 'なし'}\n・SNS動画PR: ${snsEnabled ? `${snsBillingType} (${snsPaymentMethod})` : 'なし'}\n\n「請求・決済管理」および「売上台帳」に即座に反映されました。`);
+      alert(`✅「${formData.name}」の新規契約・提携登録が完了しました！\n\n・導入キャラクター: ${formData.character}\n・パネル仕様: ${formData.panelType}\n・設置場所: ${formData.panelLocation}\n・清算: パネル導入(請求書一括)${goodsEnabled ? ' + グッズ(請求書一括)' : ''}${snsEnabled ? ` + SNS PR(${snsBillingType})` : ''}\n\n「請求・決済管理」および「売上台帳」に即座に反映されました。`);
     });
   }
 }
@@ -753,7 +696,7 @@ function renderCompanies() {
           <div style="display: flex; align-items: center; gap: 8px;">
             ${c.characterImg ? `<img src="${c.characterImg}" style="width: 28px; height: 36px; object-fit: contain; border-radius: 4px; background: #fff; border: 1px solid #ddd;">` : ''}
             <div>
-              <span style="font-weight: 600; color: #b8860b;">${escapeHtml(c.character)}</span>
+              <strong style="color: #b8860b;">${escapeHtml(c.character)}</strong>
               <br><small style="color: #6b778c;">${escapeHtml(c.panelType || "等身大")}</small>
             </div>
           </div>
@@ -795,35 +738,19 @@ function editCompany(id) {
     gpsHint.textContent = `📍 登録済みGPS: (緯度: ${Number(c.lat).toFixed(4)}, 経度: ${Number(c.lng).toFixed(4)})`;
   }
 
-  // Panel Fields
-  const charSelect = document.getElementById("form-company-character");
-  const customCharInput = document.getElementById("form-company-custom-char");
-  const CHAR_IMAGE_MAP = {
-    "那須乃つつじ": "../assets/nasuno-tsutsuji.png",
-    "狩野みるく": "../assets/karino-milk.png",
-    "大俵ちか": "../assets/otawara-chika.png"
-  };
+  // Panel Fields (すべて手入力)
+  const charInput = document.getElementById("form-company-character");
+  if (charInput) charInput.value = c.character || "";
 
-  if (CHAR_IMAGE_MAP[c.character]) {
-    charSelect.value = c.character;
-    if (customCharInput) customCharInput.style.display = "none";
-  } else {
-    charSelect.value = "__custom__";
-    if (customCharInput) {
-      customCharInput.value = c.character || "";
-      customCharInput.style.display = "block";
-    }
-  }
-
-  const previewSrc = c.characterImg || CHAR_IMAGE_MAP[c.character] || "";
+  const previewSrc = c.characterImg || "";
   const panelImgPreview = document.getElementById("company-panel-preview");
   const panelNoImgLabel = document.getElementById("company-panel-no-img");
   const panelImgDataInput = document.getElementById("form-company-char-img-data");
   if (panelImgPreview) {
     panelImgPreview.src = previewSrc;
-    panelImgPreview.style.display = "block";
+    panelImgPreview.style.display = previewSrc ? "block" : "none";
   }
-  if (panelNoImgLabel) panelNoImgLabel.style.display = "none";
+  if (panelNoImgLabel) panelNoImgLabel.style.display = previewSrc ? "none" : "block";
   if (panelImgDataInput) panelImgDataInput.value = previewSrc;
 
   document.getElementById("form-company-panel").value = c.panelType || "";
@@ -988,6 +915,11 @@ function renderPanels() {
 function renderGoods() {
   const goodsTableBody = document.getElementById("table-goods-body");
   if (!goodsTableBody) return;
+
+  if (store.data.goods.length === 0) {
+    goodsTableBody.innerHTML = `<tr><td colspan="9" style="text-align: center; padding: 40px; color: #888;">公式グッズ登録データはありません。</td></tr>`;
+    return;
+  }
 
   goodsTableBody.innerHTML = store.data.goods.map(g => {
     return `
