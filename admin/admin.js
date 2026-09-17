@@ -1,171 +1,9 @@
-// Initial Mock Data
+// Clean Data Template (Empty for production / testing)
 const DEFAULT_DATA = {
-  companies: [
-    {
-      id: "C001",
-      name: "那須温泉神社",
-      industry: "寺社・宗教法人",
-      representative: "宮司 那須 健一",
-      phone: "0287-76-2301",
-      email: "info@nasu-shrine.jp",
-      address: "栃木県那須郡那須町湯本182",
-      lat: 37.1002,
-      lng: 139.9678,
-      status: "契約中",
-      plan: "年間契約（一括前払い）",
-      startDate: "2026-04-01",
-      nextRenewal: "2027-03-31",
-      character: "那須乃つつじ",
-      characterImg: "../assets/nasuno-tsutsuji.png",
-      panelType: "等身大（巫女Ver.）",
-      monthlyFee: 0,
-      initialPaid: 150000,
-      annualPaid: 110000,
-      totalAmount: 260000,
-      paymentStatus: "入金済"
-    },
-    {
-      id: "C002",
-      name: "那須高原 森のカフェ ベルツ",
-      industry: "飲食店",
-      representative: "高橋 陽子",
-      phone: "0287-78-1122",
-      email: "cafe@belz-nasu.com",
-      address: "栃木県那須郡那須町高久乙1200",
-      lat: 37.0655,
-      lng: 139.9921,
-      status: "契約中",
-      plan: "年間契約（月払い）",
-      startDate: "2026-05-15",
-      nextRenewal: "2027-05-14",
-      character: "那須乃つつじ",
-      characterImg: "../assets/nasuno-tsutsuji.png",
-      panelType: "SDパネル（エプロンVer.）",
-      monthlyFee: 11000,
-      initialPaid: 150000,
-      annualPaid: 0,
-      totalAmount: 194000,
-      paymentStatus: "正常入金"
-    },
-    {
-      id: "C003",
-      name: "千本松牧場 レストラン",
-      industry: "観光・レジャー施設",
-      representative: "斉藤 達也",
-      phone: "0287-36-1025",
-      email: "senbonmatsu@farm.co.jp",
-      address: "栃木県那須塩原市千本松799",
-      lat: 36.9123,
-      lng: 139.9542,
-      status: "契約中",
-      plan: "年間契約（一括前払い）",
-      startDate: "2026-04-10",
-      nextRenewal: "2027-04-09",
-      character: "狩野みるく",
-      characterImg: "../assets/karino-milk.png",
-      panelType: "等身大（スーツVer.）",
-      monthlyFee: 0,
-      initialPaid: 150000,
-      annualPaid: 110000,
-      totalAmount: 260000,
-      paymentStatus: "入金済"
-    },
-    {
-      id: "C004",
-      name: "塩原温泉 湯守田中屋",
-      industry: "ホテル・旅館",
-      representative: "田中 健太郎",
-      phone: "0287-32-3232",
-      email: "tanakaya@shiobara-onsen.jp",
-      address: "栃木県那須塩原市塩原328",
-      lat: 36.9688,
-      lng: 139.8155,
-      status: "契約中",
-      plan: "年間契約（月払い）",
-      startDate: "2026-06-01",
-      nextRenewal: "2027-05-31",
-      character: "狩野みるく",
-      characterImg: "../assets/karino-milk.png",
-      panelType: "等身大（浴衣Ver.）",
-      monthlyFee: 11000,
-      initialPaid: 150000,
-      annualPaid: 0,
-      totalAmount: 183000,
-      paymentStatus: "正常入金"
-    },
-    {
-      id: "C005",
-      name: "道の駅 那須与一の郷",
-      industry: "自治体・DMO / 小売",
-      representative: "大田原 敏夫",
-      phone: "0287-54-1110",
-      email: "yoichi@michinoeki.ohtawara.jp",
-      address: "栃木県大田原市南金丸268-6",
-      lat: 36.8542,
-      lng: 140.0631,
-      status: "契約中",
-      plan: "年間契約（一括前払い）",
-      startDate: "2026-04-20",
-      nextRenewal: "2027-04-19",
-      character: "大俵ちか",
-      characterImg: "../assets/otawara-chika.png",
-      panelType: "等身大（甲冑弓道Ver.）",
-      monthlyFee: 0,
-      initialPaid: 150000,
-      annualPaid: 110000,
-      totalAmount: 260000,
-      paymentStatus: "入金済"
-    },
-    {
-      id: "C006",
-      name: "黒羽城址 前田屋",
-      industry: "飲食店 / 小売",
-      representative: "前田 忠雄",
-      phone: "0287-54-3388",
-      email: "maedaya@kurobane.com",
-      address: "栃木県大田原市前田987",
-      lat: 36.8711,
-      lng: 140.1245,
-      status: "審査中",
-      plan: "年間契約（月払い）予定",
-      startDate: "2026-10-01",
-      nextRenewal: "2027-09-30",
-      character: "大俵ちか",
-      characterImg: "../assets/otawara-chika.png",
-      panelType: "SDパネル（和装Ver.）",
-      monthlyFee: 11000,
-      initialPaid: 0,
-      annualPaid: 0,
-      totalAmount: 0,
-      paymentStatus: "請求前"
-    }
-  ],
-  panels: [
-    { id: "PN-001", companyId: "C001", companyName: "那須温泉神社", character: "那須乃つつじ", costume: "巫女装束Ver.", serial: "GG-NS-001", lat: 37.1002, lng: 139.9678, status: "稼働中", condition: "良好" },
-    { id: "PN-002", companyId: "C002", companyName: "那須高原 森のカフェ ベルツ", character: "那須乃つつじ", costume: "エプロンVer.(SD)", serial: "GG-NS-002", lat: 37.0655, lng: 139.9921, status: "稼働中", condition: "良好" },
-    { id: "PN-003", companyId: "C003", companyName: "千本松牧場 レストラン", character: "狩野みるく", costume: "フォーマルスーツVer.", serial: "GG-SB-001", lat: 36.9123, lng: 139.9542, status: "稼働中", condition: "良好" },
-    { id: "PN-004", companyId: "C004", companyName: "塩原温泉 湯守田中屋", character: "狩野みるく", costume: "温泉浴衣Ver.", serial: "GG-SB-002", lat: 36.9688, lng: 139.8155, status: "稼働中", condition: "良好" },
-    { id: "PN-005", companyId: "C005", companyName: "道の駅 那須与一の郷", character: "大俵ちか", costume: "那須与一弓道着Ver.", serial: "GG-OT-001", lat: 36.8542, lng: 140.0631, status: "稼働中", condition: "良好" },
-    { id: "PN-006", companyId: "C006", companyName: "黒羽城址 前田屋", character: "大俵ちか", costume: "黒羽茶屋和装Ver.(SD)", serial: "GG-OT-002", lat: 36.8711, lng: 140.1245, status: "準備中", condition: "未設置" }
-  ],
-  goods: [
-    { id: "GD-001", name: "ご縁結び御朱印カード (那須乃つつじ)", character: "那須乃つつじ", category: "カード", wholesalePrice: 280, retailPrice: 500, stock: 420, shippedTotal: 180 },
-    { id: "GD-002", name: "アクリルスタンド (那須乃つつじ 巫女Ver.)", character: "那須乃つつじ", category: "アクスタ", wholesalePrice: 850, retailPrice: 1500, stock: 150, shippedTotal: 90 },
-    { id: "GD-003", name: "限定木製コースター (那須乃つつじ SD)", character: "那須乃つつじ", category: "コースター", wholesalePrice: 200, retailPrice: 400, stock: 260, shippedTotal: 140 },
-    { id: "GD-004", name: "みるくアイススプーン (狩野みるく)", character: "狩野みるく", category: "食器", wholesalePrice: 320, retailPrice: 600, stock: 310, shippedTotal: 190 },
-    { id: "GD-005", name: "アクリルキーホルダー (狩野みるく スーツVer.)", character: "狩野みるく", category: "アクキー", wholesalePrice: 380, retailPrice: 700, stock: 180, shippedTotal: 120 },
-    { id: "GD-006", name: "温泉手ぬぐい (狩野みるく 浴衣Ver.)", character: "狩野みるく", category: "手ぬぐい", wholesalePrice: 450, retailPrice: 800, stock: 140, shippedTotal: 80 },
-    { id: "GD-007", name: "与一の矢 アクリルチャーム (大俵ちか)", character: "大俵ちか", category: "チャーム", wholesalePrice: 380, retailPrice: 700, stock: 210, shippedTotal: 110 },
-    { id: "GD-008", name: "ご縁缶バッジ (大俵ちか)", character: "大俵ちか", category: "缶バッジ", wholesalePrice: 150, retailPrice: 300, stock: 500, shippedTotal: 250 }
-  ],
-  payments: [
-    { id: "INV-202609-01", companyName: "那須温泉神社", billingItem: "年間利用料（一括更新前払い）", amount: 110000, dueDate: "2026-03-25", paidDate: "2026-03-22", status: "入金済", method: "銀行振込" },
-    { id: "INV-202609-02", companyName: "千本松牧場 レストラン", billingItem: "等身大パネル設置費 + 年間利用料", amount: 260000, dueDate: "2026-04-05", paidDate: "2026-04-02", status: "入金済", method: "銀行振込" },
-    { id: "INV-202609-03", companyName: "道の駅 那須与一の郷", billingItem: "等身大パネル設置費 + 年間利用料", amount: 260000, dueDate: "2026-04-15", paidDate: "2026-04-12", status: "入金済", method: "銀行振込" },
-    { id: "INV-202609-04", companyName: "森のカフェ ベルツ", billingItem: "PR動画・SNS配信 月額利用料（9月度）", amount: 11000, dueDate: "2026-09-30", paidDate: "2026-09-15", status: "入金済", method: "クレジットカード" },
-    { id: "INV-202609-05", companyName: "塩原温泉 湯守田中屋", billingItem: "PR動画・SNS配信 月額利用料（9月度）", amount: 11000, dueDate: "2026-09-30", paidDate: "-", status: "請求中", method: "クレジットカード" },
-    { id: "INV-202609-06", companyName: "黒羽城址 前田屋", billingItem: "初回パネル制作費見積", amount: 150000, dueDate: "2026-10-10", paidDate: "-", status: "審査・見積中", method: "銀行振込" }
-  ]
+  companies: [],
+  panels: [],
+  goods: [],
+  payments: []
 };
 
 // State Manager
@@ -180,17 +18,10 @@ class AdminStore {
       const stored = localStorage.getItem(this.storageKey);
       if (stored) {
         const parsed = JSON.parse(stored);
-        // Ensure companies have lat, lng, and characterImg
         if (parsed.companies) {
-          parsed.companies.forEach((c, idx) => {
-            const def = DEFAULT_DATA.companies.find(d => d.id === c.id) || DEFAULT_DATA.companies[idx % DEFAULT_DATA.companies.length];
-            if (c.lat === undefined) c.lat = def ? def.lat : 36.9500;
-            if (c.lng === undefined) c.lng = def ? def.lng : 140.0000;
-            if (!c.characterImg) c.characterImg = def ? def.characterImg : "../assets/nasuno-tsutsuji.png";
-          });
+          this.save(parsed);
+          return parsed;
         }
-        this.save(parsed);
-        return parsed;
       }
     } catch (e) {
       console.error("Failed to parse localStorage", e);
@@ -212,8 +43,14 @@ class AdminStore {
 
   reset() {
     localStorage.removeItem(this.storageKey);
+    localStorage.removeItem("goen_girl_companies_shared");
+    localStorage.removeItem("goen_girl_member_session");
     this.data = JSON.parse(JSON.stringify(DEFAULT_DATA));
-    this.save();
+    this.save(this.data);
+  }
+
+  clearAll() {
+    this.reset();
   }
 }
 
@@ -252,14 +89,14 @@ function setupNavigation() {
 }
 
 function setupEventListeners() {
-  // Reset Data Button
+  // Reset / Clear All Data Button
   const resetBtn = document.getElementById("btn-reset-data");
   if (resetBtn) {
     resetBtn.addEventListener("click", () => {
-      if (confirm("データを初期サンプル状態にリセットしますか？追加・編集した内容が初期化されます。")) {
-        store.reset();
+      if (confirm("⚠️ すべての提携店舗・パネル・売上データを完全に消去（クリア）しますか？\n\n・提携企業・店舗データ: 0件\n・パネル設置情報: 0件\n・会員巡礼スポット: 0件\nになります。新規入力テストをゼロから行えます。")) {
+        store.clearAll();
         renderAll();
-        alert("データを初期化しました。");
+        alert("すべての仮データを消去しました！\n「＋ 新規提携先を登録」から新しい店舗・住所・パネル画像を入力してテストしてください。");
       }
     });
   }
@@ -584,13 +421,26 @@ function renderCompanies() {
   const statusFilter = document.getElementById("company-status-filter")?.value || "ALL";
 
   const filtered = store.data.companies.filter(c => {
-    const matchSearch = c.name.toLowerCase().includes(searchQuery) || 
-                        c.address.toLowerCase().includes(searchQuery) ||
-                        c.representative.toLowerCase().includes(searchQuery) ||
-                        c.character.toLowerCase().includes(searchQuery);
+    const matchSearch = (c.name || "").toLowerCase().includes(searchQuery) || 
+                        (c.address || "").toLowerCase().includes(searchQuery) ||
+                        (c.representative || "").toLowerCase().includes(searchQuery) ||
+                        (c.character || "").toLowerCase().includes(searchQuery);
     const matchStatus = statusFilter === "ALL" || c.status === statusFilter;
     return matchSearch && matchStatus;
   });
+
+  if (filtered.length === 0) {
+    tableBody.innerHTML = `
+      <tr>
+        <td colspan="8" style="text-align: center; padding: 48px 20px; color: #777;">
+          <div style="font-size: 32px; margin-bottom: 8px;">🏢</div>
+          <strong style="font-size: 15px; color: #333; display: block; margin-bottom: 4px;">提携企業・店舗データがありません</strong>
+          <span>画面右上の「＋ 新規提携先を登録」から、店舗名・住所・パネル画像を登録してテストしてください。</span>
+        </td>
+      </tr>
+    `;
+    return;
+  }
 
   tableBody.innerHTML = filtered.map(c => {
     const statusClass = c.status === "契約中" ? "status-active" : (c.status === "審査中" ? "status-pending" : "status-alert");
@@ -692,6 +542,11 @@ function renderSales() {
   const salesTableBody = document.getElementById("table-sales-body");
   if (!salesTableBody) return;
 
+  if (store.data.companies.length === 0) {
+    salesTableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 40px; color: #888;">登録企業・店舗がないため、売上データはありません。</td></tr>`;
+    return;
+  }
+
   salesTableBody.innerHTML = store.data.companies.map(c => {
     return `
       <tr>
@@ -710,6 +565,11 @@ function renderSales() {
 function renderPayments() {
   const paymentTableBody = document.getElementById("table-payments-body");
   if (!paymentTableBody) return;
+
+  if (store.data.payments.length === 0) {
+    paymentTableBody.innerHTML = `<tr><td colspan="9" style="text-align: center; padding: 40px; color: #888;">決済・請求データはありません。</td></tr>`;
+    return;
+  }
 
   paymentTableBody.innerHTML = store.data.payments.map(p => {
     const statusClass = p.status === "入金済" ? "status-active" : (p.status === "請求中" ? "status-pending" : "status-alert");
@@ -751,6 +611,11 @@ function renderPanels() {
   const panelTableBody = document.getElementById("table-panels-body");
   if (!panelTableBody) return;
 
+  if (store.data.panels.length === 0) {
+    panelTableBody.innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 40px; color: #888;">設置パネルデータはありません。店舗を登録すると自動でパネルが生成されます。</td></tr>`;
+    return;
+  }
+
   panelTableBody.innerHTML = store.data.panels.map(p => {
     return `
       <tr>
@@ -759,7 +624,7 @@ function renderPanels() {
         <td><strong>${escapeHtml(p.character)}</strong></td>
         <td>${escapeHtml(p.costume)}</td>
         <td>${escapeHtml(p.companyName)}</td>
-        <td><small>${p.lat.toFixed(4)}, ${p.lng.toFixed(4)}</small></td>
+        <td><small>${(p.lat || 0).toFixed(4)}, ${(p.lng || 0).toFixed(4)}</small></td>
         <td><span class="status-pill ${p.status === '稼働中' ? 'status-active' : 'status-pending'}">${p.status}</span></td>
         <td>${p.condition}</td>
       </tr>

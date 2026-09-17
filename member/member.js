@@ -3,18 +3,15 @@ const DEFAULT_MEMBER = {
   isLoggedIn: true,
   memberId: "GG-FAN-884920",
   nickname: "ご縁巡礼者",
-  joinedDate: "2026-09-01",
-  points: 150,
+  joinedDate: new Date().toISOString().split("T")[0],
+  points: 100,
   rank: "レギュラー会員",
   title: "那須の旅人",
   favoriteGirl: "那須乃つつじ",
-  checkins: [
-    { spotId: "s1", spotName: "那須温泉神社", character: "那須乃つつじ", date: "2026-09-10" }
-  ],
-  unlockedItems: ["voice-tsutsuji-welcome", "wp-tsutsuji-spring"],
+  checkins: [],
+  unlockedItems: [],
   history: [
-    { text: "新規入会特典ポイント", pts: "+100", date: "2026-09-01" },
-    { text: "那須温泉神社 現地チェックイン", pts: "+50", date: "2026-09-10" }
+    { text: "新規入会特典ポイント", pts: "+100", date: new Date().toISOString().split("T")[0] }
   ]
 };
 
@@ -39,14 +36,7 @@ const CHARACTER_META = {
   }
 };
 
-const DEFAULT_SPOTS = [
-  { id: "C001", name: "那須温泉神社", town: "那須町", char: "那須乃つつじ", charImg: "../assets/nasuno-tsutsuji.png", lat: 37.1002, lng: 139.9678, panelType: "等身大（巫女Ver.）" },
-  { id: "C002", name: "那須高原 森のカフェ ベルツ", town: "那須町", char: "那須乃つつじ", charImg: "../assets/nasuno-tsutsuji.png", lat: 37.0655, lng: 139.9921, panelType: "SDパネル（エプロンVer.）" },
-  { id: "C003", name: "千本松牧場 レストラン", town: "那須塩原市", char: "狩野みるく", charImg: "../assets/karino-milk.png", lat: 36.9123, lng: 139.9542, panelType: "等身大（スーツVer.）" },
-  { id: "C004", name: "塩原温泉 湯守田中屋", town: "那須塩原市", char: "狩野みるく", charImg: "../assets/karino-milk.png", lat: 36.9688, lng: 139.8155, panelType: "等身大（浴衣Ver.）" },
-  { id: "C005", name: "道の駅 那須与一の郷", town: "大田原市", char: "大俵ちか", charImg: "../assets/otawara-chika.png", lat: 36.8542, lng: 140.0631, panelType: "等身大（甲冑弓道Ver.）" },
-  { id: "C006", name: "黒羽城址 前田屋", town: "大田原市", char: "大俵ちか", charImg: "../assets/otawara-chika.png", lat: 36.8711, lng: 140.1245, panelType: "SDパネル（和装Ver.）" }
-];
+const DEFAULT_SPOTS = [];
 
 // Dynamically get registered spots from Admin shared storage
 function getRegisteredSpots() {
@@ -253,9 +243,13 @@ function setupCheckin() {
   function updateSpotsList() {
     const spots = getRegisteredSpots();
     if (demoSpotSelect) {
-      demoSpotSelect.innerHTML = spots.map(s => `
-        <option value="${s.id}">${s.town} - ${s.name} (${s.char} / ${s.panelType || '等身大'})</option>
-      `).join("");
+      if (spots.length === 0) {
+        demoSpotSelect.innerHTML = `<option value="">-- まだ登録された提携店舗はありません --</option>`;
+      } else {
+        demoSpotSelect.innerHTML = spots.map(s => `
+          <option value="${s.id}">${s.town} - ${s.name} (${s.char} / ${s.panelType || '等身大'})</option>
+        `).join("");
+      }
     }
   }
   updateSpotsList();
@@ -267,6 +261,13 @@ function setupCheckin() {
       startBtn.disabled = true;
 
       const spots = getRegisteredSpots();
+      if (spots.length === 0) {
+        statusNotice.className = "notice error";
+        statusNotice.textContent = "現在、提携店舗・パネルスポットは登録されていません。管理画面（/admin/）から新規提携店舗を登録してください。";
+        startBtn.disabled = false;
+        return;
+      }
+
       const isSimulation = chkSimulate ? chkSimulate.checked : false;
 
       if (isSimulation) {
@@ -426,6 +427,17 @@ function renderStamps() {
   if (!container) return;
 
   const spots = getRegisteredSpots();
+  if (spots.length === 0) {
+    container.innerHTML = `
+      <div style="grid-column: 1 / -1; text-align: center; padding: 48px 16px; color: #777; background: #fff; border: 1px dashed var(--line); border-radius: var(--radius-md);">
+        <div style="font-size: 32px; margin-bottom: 8px;">🎴</div>
+        <strong style="font-size: 15px; color: #333; display: block; margin-bottom: 4px;">登録された提携店舗・パネルスポットはありません</strong>
+        <span>運営管理コンソール（/admin/）から新しい店舗とパネルをご登録いただくと、ここに自動反映されます。</span>
+      </div>
+    `;
+    return;
+  }
+
   container.innerHTML = spots.map(spot => {
     const checkinRecord = mgr.member.checkins.find(c => c.spotId === spot.id);
     const isStamped = !!checkinRecord;
