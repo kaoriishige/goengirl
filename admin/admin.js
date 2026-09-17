@@ -724,10 +724,27 @@ function setupEventListeners() {
       closeModal();
       renderAll();
 
-      alert(`✅「${formData.name}」の契約登録が完了しました！\n\n【初年度お支払い総額（合計）】\n・税別合計: ¥${annualTotalTaxExcluded.toLocaleString()}\n・税込合計: ¥${annualTotalTaxIncluded.toLocaleString()}\n\n【内訳】\n・パネル導入: ¥${panelFeeTax.toLocaleString()} (税込 / 請求書一括)\n${goodsEnabled ? `・グッズ発注: ¥${goodsAmountTax.toLocaleString()} (税込 / 請求書一括)\n` : ''}${snsEnabled ? `・SNS動画PR: ¥132,000 (税込 / 11,000円×12ヶ月 / ${snsBillingType})\n` : ''}\n売上台帳・請求書に1円の狂いなく反映されました。`);
+      // スマホへのデータ反映のため、JSONを自動ダウンロード
+      (function autoExportJson() {
+        try {
+          const json = JSON.stringify(store.data.companies, null, 2);
+          const blob = new Blob([json], { type: "application/json" });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "companies.json";
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        } catch(e) {}
+      })();
+
+      alert(`✅「${formData.name}」の契約登録が完了しました！\n\n【初年度お支払い総額（合計）】\n・税別合計: ¥${annualTotalTaxExcluded.toLocaleString()}\n・税込合計: ¥${annualTotalTaxIncluded.toLocaleString()}\n\n【内訳】\n・パネル導入: ¥${panelFeeTax.toLocaleString()} (税込 / 請求書一括)\n${goodsEnabled ? `・グッズ発注: ¥${goodsAmountTax.toLocaleString()} (税込 / 請求書一括)\n` : ''}${snsEnabled ? `・SNS動画PR: ¥132,000 (税込 / 11,000円×12ヶ月 / ${snsBillingType})\n` : ''}\n📱【スマホ反映手順】\nダウンロードされた companies.json を\nご縁ガールのフォルダ内 data/ に上書き保存し、\nGitHubへプッシュ（または担当者へ転送）してください。`);
     });
   }
 }
+
 
 function renderAll() {
   renderKPIs();
