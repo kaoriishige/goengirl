@@ -24,8 +24,8 @@
     "snsPaymentMethod": "クレジットカード毎月決済",
     "monthlyFee": 10000,
     "monthlyFeeTax": 11000,
-    "totalAmount": 270000,
-    "totalAmountTax": 297000,
+    "totalAmount": 320000,
+    "totalAmountTax": 352000,
     "startDate": "2026-09-01",
     "nextRenewal": "2027-09-01",
     "status": "契約中"
