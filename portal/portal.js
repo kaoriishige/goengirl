@@ -7,11 +7,11 @@ const PORTAL_DATA = {
       region: "栃木県 那須町",
       color: "#e9588d",
       image: "../assets/nasuno-tsutsuji.png",
-      lead: "九尾の狐伝説と歴史の町・那須町の守護少女。那須和牛や高原牛乳が大好物のおっとりお嬢様。",
+      lead: "九尾の狐伝説や殺生石の物語が語り継がれる歴史の町、那須町の守護少女。那須和牛や濃厚チーズが大好物のおっとりお嬢様。",
       voiceText: "ご縁に感謝いたしますわ。那須の美しい自然と名湯で、心ゆくまで癒やされていってくださいね。",
       birthday: "8月22日",
-      hobby: "歴史探訪、カフェ巡り、温泉めぐり",
-      specialty: "天気予報、乗馬、利きチーズ",
+      hobby: "歴史探訪、カフェ巡り",
+      specialty: "天気予報、乗馬",
       spotsCount: 2,
       goodsCount: 3
     },
@@ -24,8 +24,8 @@ const PORTAL_DATA = {
       lead: "生乳生産量本州一を誇る那須塩原市の守護ガール。牧場スイーツとキャンプが大好きな活発アウトドア派。",
       voiceText: "今日も元気いっぱい行こう！那須塩原の美味しいミルクと温泉で、エネルギーチャージだよっ！",
       birthday: "9月17日",
-      hobby: "イベント巡り、キャンプ、お花鑑賞",
-      specialty: "お菓子作り、地元案内、サイクリング",
+      hobby: "イベント巡り、キャンプ、お花観賞",
+      specialty: "お菓子作り、地元案内",
       spotsCount: 2,
       goodsCount: 3
     },
@@ -39,7 +39,7 @@ const PORTAL_DATA = {
       voiceText: "一矢必中！あなたとの出会いも、きっと素晴らしいご縁の矢が引き寄せたものですね！",
       birthday: "7月12日",
       hobby: "グルメ旅、コスプレ、鮎釣り",
-      specialty: "利きとうがらし、早起き、弓道",
+      specialty: "効きとうがらし、早起き",
       spotsCount: 2,
       goodsCount: 2
     }
