@@ -63,36 +63,93 @@ const DEFAULT_SPOTS = [];
 // Dynamically get registered spots from Admin shared storage
 function getRegisteredSpots() {
   try {
-    const shared = localStorage.getItem("goen_girl_companies_shared");
+    let shared = localStorage.getItem("goen_girl_companies_shared");
+    let companies = null;
     if (shared) {
-      const companies = JSON.parse(shared);
-      if (companies && companies.length > 0) {
-        return companies.map(c => {
-          let town = "栃木県";
-          if (c.address) {
-            const m = c.address.match(/(那須町|那須塩原市|大田原市|[^市]+[市区町村])/);
-            if (m) town = m[0];
-          }
-          const charName = c.character || "那須乃つつじ";
-          const defaultImg = charName === "狩野みるく" ? "../assets/karino-milk.png" : (charName === "大俵ちか" ? "../assets/otawara-chika.png" : "../assets/nasuno-tsutsuji.png");
-          return {
-            id: c.id,
-            name: c.name,
-            town: town,
-            char: charName,
-            charImg: c.characterImg || defaultImg,
-            lat: c.lat !== undefined ? Number(c.lat) : 36.9500,
-            lng: c.lng !== undefined ? Number(c.lng) : 140.0000,
-            panelType: c.panelType || "等身大"
-          };
-        });
-      }
+      companies = JSON.parse(shared);
+    }
+
+    // フォールバック①: fetchで取得したサーバーデータ
+    if ((!companies || companies.length === 0) && window._serverCompanies && window._serverCompanies.length > 0) {
+      companies = window._serverCompanies;
+    }
+
+    // フォールバック②: HTMLに直接埋め込んだインラインデータ（ローカル・オフラインでも動作）
+    if ((!companies || companies.length === 0) && window._inlineCompanies && window._inlineCompanies.length > 0) {
+      companies = window._inlineCompanies;
+    }
+
+    if (companies && companies.length > 0) {
+      return companies.map(c => {
+        let town = "栃木県";
+        if (c.address) {
+          const m = c.address.match(/(那須町|那須塩原市|大田原市|[^市]+[市区町村])/);
+          if (m) town = m[0];
+        }
+        const charName = c.character || "那須乃つつじ";
+        const defaultImg = charName === "狩野みるく" ? "../assets/karino-milk.png" : (charName === "大俵ちか" ? "../assets/otawara-chika.png" : "../assets/nasuno-tsutsuji.png");
+        return {
+          id: c.id,
+          name: c.name,
+          town: town,
+          char: charName,
+          charImg: c.characterImg || defaultImg,
+          lat: c.lat !== undefined ? Number(c.lat) : 36.9500,
+          lng: c.lng !== undefined ? Number(c.lng) : 140.0000,
+          panelType: c.panelType || "等身大"
+        };
+      });
     }
   } catch (e) {
     console.error("Failed to load shared companies", e);
   }
   return DEFAULT_SPOTS;
 }
+
+// Auto-fetch data/companies.json if mobile has empty localStorage
+
+(async function initServerCompanies() {
+  try {
+    const res = await fetch("../data/companies.json?v=" + Date.now());
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data) && data.length > 0) {
+        window._serverCompanies = data;
+        // 常に最新のサーバーデータをlocalStorageに反映（管理者がdata/companies.jsonを更新した場合も対応）
+        const stored = localStorage.getItem("goen_girl_companies_shared");
+        let shouldUpdate = true;
+        if (stored) {
+          try {
+            const localData = JSON.parse(stored);
+            // ローカルのデータがサーバーより古い（件数が少ない）場合は上書き
+            if (Array.isArray(localData) && localData.length >= data.length) {
+              shouldUpdate = false;
+            }
+          } catch(e) {}
+        }
+        if (shouldUpdate) {
+          localStorage.setItem("goen_girl_companies_shared", JSON.stringify(data));
+        }
+        // 必ずUI再描画（スポット選択肢・スタンプ帳）
+        const demoSelect = document.getElementById("demo-spot-select");
+        if (demoSelect) {
+          const spots = getRegisteredSpots();
+          if (spots.length === 0) {
+            demoSelect.innerHTML = `<option value="">-- まだ登録された提携店舗はありません --</option>`;
+          } else {
+            demoSelect.innerHTML = spots.map(s =>
+              `<option value="${s.id}">${s.town} - ${s.name} (${s.char} / ${s.panelType || '等身大'})</option>`
+            ).join("");
+          }
+        }
+        if (typeof renderStamps === "function") renderStamps();
+      }
+    }
+  } catch (err) {
+    console.warn("Could not fetch bundled companies.json", err);
+  }
+})();
+
 
 // Haversine formula to calculate distance between two GPS coordinates in meters
 function calculateDistance(lat1, lon1, lat2, lon2) {
@@ -190,13 +247,15 @@ function setupTabs() {
       const targetPanel = document.getElementById(`panel-${t.dataset.tab}`);
       if (targetPanel) {
         targetPanel.hidden = false;
-        // Auto scroll to target content on mobile so user does not need to scroll down manually
+        // スマホで文字が被らないよう、タブバーの高さを考慮してスクロール
         setTimeout(() => {
           const navTabs = document.querySelector(".tabs");
-          const rect = (navTabs || targetPanel).getBoundingClientRect();
-          const targetY = window.pageYOffset + rect.top - 10;
-          window.scrollTo({ top: targetY, behavior: "smooth" });
-        }, 50);
+          const tabsBottom = navTabs ? navTabs.getBoundingClientRect().bottom + window.pageYOffset : 80;
+          const panelTop = targetPanel.getBoundingClientRect().top + window.pageYOffset;
+          // タブの下端から20px余白を取ってスクロール
+          const scrollTarget = panelTop - (navTabs ? navTabs.offsetHeight : 80) - 20;
+          window.scrollTo({ top: Math.max(0, scrollTarget), behavior: "smooth" });
+        }, 80);
       }
     });
   });

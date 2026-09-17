@@ -218,6 +218,29 @@ function setupEventListeners() {
     });
   }
 
+  // JSONダウンロードボタン: data/companies.jsonを直接生成できる
+  const btnDownloadJson = document.getElementById("btn-download-json");
+  if (btnDownloadJson) {
+    btnDownloadJson.addEventListener("click", () => {
+      const companies = store.data.companies;
+      if (companies.length === 0) {
+        alert("登録された店舗データがありません。先に店舗を登録してください。");
+        return;
+      }
+      const json = JSON.stringify(companies, null, 2);
+      const blob = new Blob([json], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "companies.json";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      alert("⬇️ companies.json をダウンロードしました。\nダウンロードしたファイルを 「data/companies.json」 に上書きして！\nNetlifyへ再デプロイするとスマホでも常に最新データが表示されます。");
+    });
+  }
+
   // Dynamic Options (Goods & SNS) & Real-time Calculation
   const panelFeeInput = document.getElementById("form-company-panel-fee");
   const goodsCheckbox = document.getElementById("form-company-goods-enabled");

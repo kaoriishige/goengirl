@@ -326,6 +326,16 @@
           <small style="color: #888; font-size: 11px;">※LINEやメールに貼り付けてスマホで開いても同期できます。</small>
         </div>
       </div>
+        <div style="width: 100%; background: #fffbe6; border: 1px solid #ffe58f; border-radius: 8px; padding: 12px; text-align: left; margin-top: 4px;">
+          <div style="font-size: 12px; font-weight: 700; color: #7c5c00; margin-bottom: 6px;">💾 【推奨】サーバーデータを更新する方法</div>
+          <div style="font-size: 11px; color: #555; line-height: 1.6;">
+            QRコードはブラウザのlocalStorage経由の一時的な同期です。<br>
+            スマホを新しく開いたとき・再読み込みしたときも確実に反映するには、<strong>ダウンロードしたJSONファイルを <code>data/companies.json</code> に上書きして再デプロイ</strong>してください。
+          </div>
+          <button type="button" class="btn btn-secondary btn-sm" id="btn-download-json" style="margin-top: 8px; width: 100%; font-size: 12px;">
+            ⬇️ companies.json をダウンロード
+          </button>
+        </div>
       <div class="modal-footer" style="justify-content: center;">
         <button type="button" class="btn btn-primary" onclick="document.getElementById('modal-sync-phone').classList.remove('open')">閉じる</button>
       </div>
