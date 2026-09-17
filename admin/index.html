@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ご縁ガール 運営管理コンソール</title>
-  <link rel="stylesheet" href="admin.css">
+  <link rel="stylesheet" href="admin.css?v=3">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext y='.9em' font-size='54'%3E%E6%A1%9C%3C/text%3E%3C/svg%3E">
 </head>
 <body>
@@ -162,7 +162,7 @@
                   <th>ステータス</th>
                   <th>業種</th>
                   <th>導入ガール / パネル</th>
-                  <th>契約形態</th>
+                  <th>契約サービス・決済方式</th>
                   <th>契約期間・更新日</th>
                   <th>操作</th>
                 </tr>
@@ -187,12 +187,12 @@
               <thead>
                 <tr>
                   <th>企業・店舗名</th>
-                  <th>契約種別</th>
-                  <th>初期パネル導入費</th>
-                  <th>月額PR動画配信料</th>
+                  <th>契約サービス内訳</th>
+                  <th>初期清算 (パネル+グッズ)</th>
+                  <th>月額PR配信料</th>
+                  <th>決済方法</th>
                   <th>累計売上高</th>
-                  <th>次回契約更新予定日</th>
-                  <th>更新ステータス</th>
+                  <th>次回契約更新日</th>
                 </tr>
               </thead>
               <tbody id="table-sales-body">
@@ -247,8 +247,9 @@
                   <th>パネルID</th>
                   <th>シリアル番号</th>
                   <th>キャラクター</th>
-                  <th>衣装バージョン</th>
+                  <th>衣装・形態</th>
                   <th>設置店舗・施設</th>
+                  <th>店内設置場所</th>
                   <th>GPS座標 (Lat, Lng)</th>
                   <th>稼働ステータス</th>
                   <th>状態</th>
@@ -298,130 +299,276 @@
   <div class="modal-backdrop" id="modal-company">
     <div class="modal-card">
       <div class="modal-header">
-        <h2 class="modal-title" id="modal-company-title">提携企業・店舗の登録</h2>
+        <h2 class="modal-title" id="modal-company-title">新規提携企業・店舗の登録</h2>
         <button class="modal-close" id="modal-company-close">&times;</button>
       </div>
       <form id="form-company">
         <input type="hidden" id="company-edit-id">
         <div class="modal-body">
-          <div class="form-group">
-            <label for="form-company-name">企業・店舗名 <span style="color:red;">*</span></label>
-            <input type="text" id="form-company-name" required placeholder="例: 那須温泉神社">
-          </div>
-          <div class="form-group">
-            <label for="form-company-industry">業種</label>
-            <select id="form-company-industry">
-              <option>寺社・宗教法人</option>
-              <option>ホテル・旅館</option>
-              <option>飲食店</option>
-              <option>小売・物販</option>
-              <option>観光・レジャー施設</option>
-              <option>自治体・DMO / 小売</option>
-              <option>その他</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="form-company-rep">ご担当者名 / 代表者</label>
-            <input type="text" id="form-company-rep" placeholder="例: 那須 健一">
-          </div>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-            <div class="form-group">
-              <label for="form-company-phone">電話番号</label>
-              <input type="tel" id="form-company-phone" placeholder="0287-00-0000">
-            </div>
-            <div class="form-group">
-              <label for="form-company-email">メールアドレス</label>
-              <input type="email" id="form-company-email" placeholder="info@example.com">
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="form-company-address">所在地（住所） <span style="font-size: 11px; color: #b8860b; font-weight: normal;">※住所からGPS座標を自動連携します</span></label>
-            <div style="display: flex; gap: 8px;">
-              <input type="text" id="form-company-address" placeholder="例: 栃木県那須郡那須町湯本182" style="flex: 1;">
-              <button type="button" id="btn-fetch-gps" class="btn btn-secondary" style="white-space: nowrap; padding: 0 14px; font-size: 13px;">📍 GPS自動取得</button>
-            </div>
-            <div id="gps-status-hint" style="font-size: 12px; margin-top: 4px; color: #666;"></div>
-          </div>
 
-          <!-- GPS Coordinates -->
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; background: #fdfbf7; padding: 10px; border-radius: 8px; border: 1px dashed #e2d9cc; margin-bottom: 16px;">
-            <div class="form-group" style="margin-bottom: 0;">
-              <label for="form-company-lat" style="font-size: 12px;">緯度 (Latitude)</label>
-              <input type="number" step="0.000001" id="form-company-lat" placeholder="例: 37.100200">
-            </div>
-            <div class="form-group" style="margin-bottom: 0;">
-              <label for="form-company-lng" style="font-size: 12px;">経度 (Longitude)</label>
-              <input type="number" step="0.000001" id="form-company-lng" placeholder="例: 139.967800">
-            </div>
-          </div>
-
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-            <div class="form-group">
-              <label for="form-company-character">導入キャラクター</label>
-              <select id="form-company-character">
-                <option value="">-- キャラクターを選択または新規入力 --</option>
-                <option value="那須乃つつじ" data-img="../assets/nasuno-tsutsuji.png">那須乃つつじ (那須町)</option>
-                <option value="狩野みるく" data-img="../assets/karino-milk.png">狩野みるく (那須塩原市)</option>
-                <option value="大俵ちか" data-img="../assets/otawara-chika.png">大俵ちか (大田原市)</option>
-                <option value="__custom__">✨ 新規オリジナルキャラクター（自由入力）</option>
-              </select>
-              <input type="text" id="form-company-custom-char" placeholder="キャラクター名を入力" style="display: none; margin-top: 6px;">
+          <!-- Section 1: 基本情報 -->
+          <div class="form-section">
+            <div class="form-section-header">
+              <span class="form-section-title">🏢 提携企業・店舗 基本情報</span>
+              <span style="font-size: 11px; color: #e53e3e;">* は必須項目</span>
             </div>
             <div class="form-group">
-              <label for="form-company-panel">パネル形態・衣装</label>
-              <input type="text" id="form-company-panel" placeholder="例: 等身大（巫女Ver.） / SDパネル">
+              <label for="form-company-name">企業・店舗名 <span style="color:red;">*</span></label>
+              <input type="text" id="form-company-name" required placeholder="例: 那須温泉神社">
             </div>
-          </div>
-
-          <!-- Character Panel Image Upload & Preview -->
-          <div class="form-group" style="margin-bottom: 16px;">
-            <label>設置パネルの画像登録 <span style="font-size: 11px; color: #b8860b; font-weight: normal;">※店頭でファンがカメラ照合する画像</span></label>
-            <div style="background: #fff; border: 1px dashed #d1c7b7; border-radius: 8px; padding: 12px; display: flex; align-items: center; gap: 14px;">
-              <div style="width: 64px; height: 80px; background: #f5f5f5; border-radius: 6px; border: 1px solid #ddd; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
-                <img id="company-panel-preview" src="" alt="未選択" style="width: 100%; height: 100%; object-fit: contain; display: none;">
-                <span id="company-panel-no-img" style="font-size: 10px; color: #999; text-align: center; padding: 4px;">画像未登録</span>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+              <div class="form-group">
+                <label for="form-company-industry">業種 <span style="color:red;">*</span></label>
+                <select id="form-company-industry" required>
+                  <option value="">-- 業種を選択 --</option>
+                  <option>寺社・宗教法人</option>
+                  <option>ホテル・旅館</option>
+                  <option>飲食店</option>
+                  <option>小売・物販</option>
+                  <option>観光・レジャー施設</option>
+                  <option>自治体・DMO / 小売</option>
+                  <option>その他</option>
+                </select>
               </div>
-              <div style="flex: 1;">
-                <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
-                  <label for="company-panel-file" class="btn btn-secondary btn-sm" style="cursor: pointer; margin-bottom: 0;">
-                    📁 パソコンからパネル画像を選択
+              <div class="form-group">
+                <label for="form-company-rep">ご担当者名 / 代表者 <span style="color:red;">*</span></label>
+                <input type="text" id="form-company-rep" required placeholder="例: 那須 健一">
+              </div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+              <div class="form-group">
+                <label for="form-company-phone">電話番号 <span style="color:red;">*</span></label>
+                <input type="tel" id="form-company-phone" required placeholder="0287-00-0000">
+              </div>
+              <div class="form-group">
+                <label for="form-company-email">メールアドレス <span style="color:red;">*</span></label>
+                <input type="email" id="form-company-email" required placeholder="info@example.com">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="form-company-address">所在地（住所） <span style="color:red;">*</span> <span style="font-size: 11px; color: #b8860b; font-weight: normal;">※住所入力後、「GPS自動取得」をクリック</span></label>
+              <div style="display: flex; gap: 8px;">
+                <input type="text" id="form-company-address" required placeholder="例: 栃木県那須郡那須町湯本182" style="flex: 1;">
+                <button type="button" id="btn-fetch-gps" class="btn btn-secondary" style="white-space: nowrap; padding: 0 14px; font-size: 13px;">📍 GPS自動取得</button>
+              </div>
+              <div id="gps-status-hint" style="font-size: 12px; margin-top: 4px; color: #666;"></div>
+            </div>
+          </div>
+
+          <!-- Section 2: パネル登録（全項目必須） -->
+          <div class="form-section highlight">
+            <div class="form-section-header">
+              <span class="form-section-title">🪧 ① パネル導入・設置登録（全項目必須）</span>
+              <span class="billing-badge invoice">清算: 請求書で一括清算</span>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+              <div class="form-group">
+                <label for="form-company-character">導入キャラクター <span style="color:red;">*</span></label>
+                <select id="form-company-character" required>
+                  <option value="">-- キャラクターを選択 --</option>
+                  <option value="那須乃つつじ" data-img="../assets/nasuno-tsutsuji.png">那須乃つつじ (那須町)</option>
+                  <option value="狩野みるく" data-img="../assets/karino-milk.png">狩野みるく (那須塩原市)</option>
+                  <option value="大俵ちか" data-img="../assets/otawara-chika.png">大俵ちか (大田原市)</option>
+                  <option value="__custom__">✨ 新規オリジナルキャラクター（自由入力）</option>
+                </select>
+                <input type="text" id="form-company-custom-char" placeholder="キャラクター名を入力" style="display: none; margin-top: 6px;">
+              </div>
+              <div class="form-group">
+                <label for="form-company-panel">パネル形態・仕様 <span style="color:red;">*</span></label>
+                <input type="text" id="form-company-panel" required placeholder="例: 等身大パネル（巫女Ver.） / SD卓上パネル">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="form-company-panel-location">店内・敷地内の設置場所詳細 <span style="color:red;">*</span></label>
+              <input type="text" id="form-company-panel-location" required placeholder="例: 店頭エントランス正面 / レジ横特設ブース / 境内拝殿前">
+            </div>
+
+            <!-- GPS Coordinates (必須) -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; background: #fff; padding: 10px; border-radius: 6px; border: 1px dashed #ccd; margin-bottom: 8px;">
+              <div class="form-group" style="margin-bottom: 0;">
+                <label for="form-company-lat" style="font-size: 12px;">設置場所 緯度 (Latitude) <span style="color:red;">*</span></label>
+                <input type="number" step="0.000001" id="form-company-lat" required placeholder="例: 37.100200">
+              </div>
+              <div class="form-group" style="margin-bottom: 0;">
+                <label for="form-company-lng" style="font-size: 12px;">設置場所 経度 (Longitude) <span style="color:red;">*</span></label>
+                <input type="number" step="0.000001" id="form-company-lng" required placeholder="例: 139.967800">
+              </div>
+            </div>
+
+            <!-- Panel Image Upload (必須) -->
+            <div class="form-group">
+              <label>設置パネルの画像登録 <span style="color:red;">*</span> <span style="font-size: 11px; color: #b8860b; font-weight: normal;">※店頭でファンがカメラ照合する等身大パネルの写真・イラスト</span></label>
+              <div style="background: #fff; border: 1px dashed #d1c7b7; border-radius: 8px; padding: 12px; display: flex; align-items: center; gap: 14px;">
+                <div style="width: 72px; height: 90px; background: #f5f5f5; border-radius: 6px; border: 1px solid #ddd; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
+                  <img id="company-panel-preview" src="" alt="未選択" style="width: 100%; height: 100%; object-fit: contain; display: none;">
+                  <span id="company-panel-no-img" style="font-size: 10px; color: #999; text-align: center; padding: 4px;">画像未登録<br>(必須)</span>
+                </div>
+                <div style="flex: 1;">
+                  <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                    <label for="company-panel-file" class="btn btn-secondary btn-sm" style="cursor: pointer; margin-bottom: 0;">
+                      📁 パソコンからパネル画像を選択
+                    </label>
+                    <input type="file" id="company-panel-file" accept="image/*" style="display: none;">
+                    <button type="button" id="btn-clear-panel-img" class="btn btn-sm" style="color: #666; background: #f0f0f0; border: none; padding: 4px 10px; font-size: 11px;">画像をクリア</button>
+                  </div>
+                  <div id="panel-img-filename" style="font-size: 11px; color: #666; margin-top: 6px;">
+                    キャラクターを選択すると公式画像がセットされます。PCから独自画像ファイル（PNG/JPG）を直接登録することも可能です。
+                  </div>
+                </div>
+              </div>
+              <input type="hidden" id="form-company-char-img-data" required>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 6px;">
+              <div class="form-group">
+                <label>パネル清算方法</label>
+                <input type="text" value="請求書で一括清算（銀行振込）" readonly style="background: #eef2f7; color: #1a73e8; font-weight: 600;">
+              </div>
+              <div class="form-group">
+                <label for="form-company-panel-fee">初期パネル導入費 (税別) <span style="color:red;">*</span></label>
+                <input type="number" id="form-company-panel-fee" value="150000" required step="1000">
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 3: グッズ発注（請求書で一括清算） -->
+          <div class="form-section">
+            <div class="form-section-header">
+              <span class="form-section-title">🛍️ ② 公式キャラクターグッズ発注</span>
+              <span class="billing-badge invoice">清算: 請求書で一括清算</span>
+            </div>
+            <div class="checkbox-group">
+              <label class="radio-card">
+                <input type="checkbox" id="form-company-goods-enabled">
+                <div class="radio-card-content">
+                  <div class="radio-card-title">
+                    <span>店頭物販用 公式グッズ初回仕入れセットを発注する</span>
+                    <span class="billing-badge invoice">請求書一括</span>
+                  </div>
+                  <div class="radio-card-desc">アクリルスタンド、合格祈願・良縁絵馬、缶バッジ等の店頭物販用スターターキットを納品します。</div>
+                </div>
+              </label>
+            </div>
+            <div id="goods-order-details" style="display: none; margin-top: 10px; padding: 12px; background: #fff; border: 1px solid #e2e8f0; border-radius: 6px;">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div class="form-group">
+                  <label for="form-company-goods-package">発注セット種別</label>
+                  <select id="form-company-goods-package">
+                    <option value="スターターアソートセット (3種計90個)">スターターアソートセット (3種計90個)</option>
+                    <option value="大型店舗向けボリュームセット (全種計200個)">大型店舗向けボリュームセット (全種計200個)</option>
+                    <option value="カスタム発注">カスタム発注（個別指定）</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="form-company-goods-amount">グッズ仕入れ発注金額 (税別)</label>
+                  <input type="number" id="form-company-goods-amount" value="50000" step="1000">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 4: SNS動画配信サービス（一括または毎月課金：クレカ/口座振替） -->
+          <div class="form-section">
+            <div class="form-section-header">
+              <span class="form-section-title">🎬 ③ SNSショート動画配信PRサービス</span>
+            </div>
+            <div class="checkbox-group">
+              <label class="radio-card">
+                <input type="checkbox" id="form-company-sns-enabled" checked>
+                <div class="radio-card-content">
+                  <div class="radio-card-title">
+                    <span>ご縁ガール公式 SNSショート動画配信PRに加入する</span>
+                    <span style="font-size: 11px; color: #0052cc;">推奨</span>
+                  </div>
+                  <div class="radio-card-desc">TikTok / YouTube Shorts / Instagramでキャラクターが提携店舗の魅力を毎月PR配信します。</div>
+                </div>
+              </label>
+            </div>
+
+            <div id="sns-plan-details" style="margin-top: 10px; padding: 12px; background: #fff; border: 1px solid #e2e8f0; border-radius: 6px;">
+              <label style="font-size: 12px; font-weight: 700; color: #333; margin-bottom: 8px; display: block;">課金・清算方式の選択：</label>
+              <div class="radio-group" style="margin-bottom: 12px;">
+                <!-- 選択肢1: 一括清算 -->
+                <label class="radio-card">
+                  <input type="radio" name="form-company-sns-billing-type" value="一括清算" id="sns-type-annual">
+                  <div class="radio-card-content">
+                    <div class="radio-card-title">
+                      <span>年間一括清算（年払い）</span>
+                      <span class="billing-badge invoice">請求書一括清算</span>
+                    </div>
+                    <div class="radio-card-desc">年間PR配信費を一括で請求書清算（¥110,000 / 年 ※1ヶ月分割引）</div>
+                  </div>
+                </label>
+                <!-- 選択肢2: 毎月課金 -->
+                <label class="radio-card">
+                  <input type="radio" name="form-company-sns-billing-type" value="毎月課金" id="sns-type-monthly" checked>
+                  <div class="radio-card-content">
+                    <div class="radio-card-title">
+                      <span>毎月課金（月額サブスクリプション）</span>
+                      <span class="billing-badge" style="background: #e0f2fe; color: #0369a1;">¥11,000 / 月</span>
+                    </div>
+                    <div class="radio-card-desc">毎月自動決済で手軽に継続PR配信を実施</div>
+                  </div>
+                </label>
+              </div>
+
+              <!-- 毎月課金時の決済方法 -->
+              <div id="sns-monthly-payment-method" style="padding: 10px; background: #f8fafc; border-radius: 6px; border: 1px solid #e2e8f0;">
+                <label style="font-size: 12px; font-weight: 700; color: #333; margin-bottom: 6px; display: block;">毎月決済の支払方法：</label>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                  <label class="radio-card" style="margin-bottom: 0;">
+                    <input type="radio" name="form-company-sns-pay-method" value="クレジットカード毎月決済" checked>
+                    <div class="radio-card-content">
+                      <div class="radio-card-title">
+                        <span>💳 クレジットカード毎月決済</span>
+                        <span class="billing-badge credit">カード自動決済</span>
+                      </div>
+                      <div class="radio-card-desc" style="font-size: 11px;">毎月自動でカード決済</div>
+                    </div>
                   </label>
-                  <input type="file" id="company-panel-file" accept="image/*" style="display: none;">
-                  <button type="button" id="btn-clear-panel-img" class="btn btn-sm" style="color: #666; background: #f0f0f0; border: none; padding: 4px 10px; font-size: 11px;">画像をクリア</button>
-                </div>
-                <div id="panel-img-filename" style="font-size: 11px; color: #666; margin-top: 6px;">
-                  キャラクターを選択するか、お好きなパネル画像ファイル（PNG/JPG）を直接登録できます。
+                  <label class="radio-card" style="margin-bottom: 0;">
+                    <input type="radio" name="form-company-sns-pay-method" value="銀行引き落とし決済">
+                    <div class="radio-card-content">
+                      <div class="radio-card-title">
+                        <span>🏦 銀行引き落とし決済</span>
+                        <span class="billing-badge bank">口座振替</span>
+                      </div>
+                      <div class="radio-card-desc" style="font-size: 11px;">ご指定口座から毎月自動引落</div>
+                    </div>
+                  </label>
                 </div>
               </div>
             </div>
-            <input type="hidden" id="form-company-char-img-data">
           </div>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-            <div class="form-group">
-              <label for="form-company-plan">契約プラン</label>
-              <select id="form-company-plan">
-                <option>年間契約（一括前払い）</option>
-                <option>年間契約（月払い）</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="form-company-status">契約ステータス</label>
-              <select id="form-company-status">
-                <option>契約中</option>
-                <option>審査中</option>
-                <option>解約</option>
-              </select>
+
+          <!-- Section 5: ステータス -->
+          <div class="form-section">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+              <div class="form-group">
+                <label for="form-company-status">契約ステータス</label>
+                <select id="form-company-status">
+                  <option value="契約中">契約中（即時稼働）</option>
+                  <option value="審査中">審査中</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="form-company-start-date">契約開始日</label>
+                <input type="date" id="form-company-start-date">
+              </div>
             </div>
           </div>
+
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" id="modal-company-cancel">キャンセル</button>
-          <button type="submit" class="btn btn-primary">保存する</button>
+          <button type="submit" class="btn btn-primary" style="padding: 10px 24px; font-size: 14px;">提携・契約を登録する</button>
         </div>
       </form>
     </div>
   </div>
 
-  <script src="admin.js"></script>
+  <script src="admin.js?v=3"></script>
 </body>
 </html>

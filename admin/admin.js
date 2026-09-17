@@ -1,21 +1,28 @@
-// Clean Data Template (Empty for production / testing)
+// Clean Data Template (Zero State for Testing & Production)
 const DEFAULT_DATA = {
   companies: [],
   panels: [],
-  goods: [],
+  goods: [
+    { id: "GD-001", name: "那須乃つつじ アクリルスタンド（巫女Ver.）", character: "那須乃つつじ", category: "アクリル", wholesalePrice: 880, retailPrice: 1650, stock: 500, shippedTotal: 0 },
+    { id: "GD-002", name: "那須乃つつじ 開運・良縁祈願 木札絵馬", character: "那須乃つつじ", category: "伝統品・絵馬", wholesalePrice: 600, retailPrice: 1100, stock: 300, shippedTotal: 0 },
+    { id: "GD-003", name: "狩野みるく 特製ラバーストラップ（ジャージー牛乳）", character: "狩野みるく", category: "ストラップ", wholesalePrice: 500, retailPrice: 880, stock: 450, shippedTotal: 0 },
+    { id: "GD-004", name: "大俵ちか 豊作俵チャーム付きキーホルダー", character: "大俵ちか", category: "キーホルダー", wholesalePrice: 550, retailPrice: 990, stock: 400, shippedTotal: 0 },
+    { id: "GD-005", name: "ご縁ガール 栃木三姉妹 ホログラム缶バッジ 3種セット", character: "合同", category: "缶バッジ", wholesalePrice: 700, retailPrice: 1320, stock: 600, shippedTotal: 0 }
+  ],
   payments: []
 };
 
 // State Manager
 class AdminStore {
   constructor() {
-    this.storageKey = "goen_girl_admin_db_v2";
-    // Force clear old mock data from v1
-    if (!localStorage.getItem("goen_girl_cleaned_mock_v2")) {
+    this.storageKey = "goen_girl_admin_db_v3";
+    // Force clear old mock data from v1 & v2
+    if (!localStorage.getItem("goen_girl_cleaned_mock_v3")) {
       localStorage.removeItem("goen_girl_admin_db_v1");
+      localStorage.removeItem("goen_girl_admin_db_v2");
       localStorage.removeItem("goen_girl_companies_shared");
       localStorage.removeItem("goen_girl_member_session");
-      localStorage.setItem("goen_girl_cleaned_mock_v2", "true");
+      localStorage.setItem("goen_girl_cleaned_mock_v3", "true");
       this.reset();
     }
     this.data = this.load();
@@ -26,7 +33,7 @@ class AdminStore {
       const stored = localStorage.getItem(this.storageKey);
       if (stored) {
         const parsed = JSON.parse(stored);
-        if (parsed.companies) {
+        if (parsed.companies && parsed.panels && parsed.payments) {
           return parsed;
         }
       }
@@ -100,10 +107,10 @@ function setupEventListeners() {
   const resetBtn = document.getElementById("btn-reset-data");
   if (resetBtn) {
     resetBtn.addEventListener("click", () => {
-      if (confirm("⚠️ すべての提携店舗・パネル・売上データを完全に消去（クリア）しますか？\n\n・提携企業・店舗データ: 0件\n・パネル設置情報: 0件\n・会員巡礼スポット: 0件\nになります。新規入力テストをゼロから行えます。")) {
+      if (confirm("⚠️ すべての提携店舗・パネル・売上データを完全に消去（クリア）しますか？\n\n・提携企業・店舗データ: 0件\n・パネル設置情報: 0件\n・請求書・決済データ: 0件\n・会員巡礼スポット: 0件\nになります。新規入力テストをゼロから行えます。")) {
         store.clearAll();
         renderAll();
-        alert("すべての仮データを消去しました！\n「＋ 新規提携先を登録」から新しい店舗・住所・パネル画像を入力してテストしてください。");
+        alert("すべてのデータをクリアしました！\n「＋ 新規提携先を登録」からテストデータを登録してください。");
       }
     });
   }
@@ -136,6 +143,33 @@ function setupEventListeners() {
   const lngInput = document.getElementById("form-company-lng");
   const gpsHint = document.getElementById("gps-status-hint");
 
+  // Dynamic Options (Goods & SNS)
+  const goodsCheckbox = document.getElementById("form-company-goods-enabled");
+  const goodsDetails = document.getElementById("goods-order-details");
+  if (goodsCheckbox && goodsDetails) {
+    goodsCheckbox.addEventListener("change", () => {
+      goodsDetails.style.display = goodsCheckbox.checked ? "block" : "none";
+    });
+  }
+
+  const snsCheckbox = document.getElementById("form-company-sns-enabled");
+  const snsDetails = document.getElementById("sns-plan-details");
+  if (snsCheckbox && snsDetails) {
+    snsCheckbox.addEventListener("change", () => {
+      snsDetails.style.display = snsCheckbox.checked ? "block" : "none";
+    });
+  }
+
+  const snsTypeRadios = document.querySelectorAll("input[name='form-company-sns-billing-type']");
+  const snsMonthlyMethodBox = document.getElementById("sns-monthly-payment-method");
+  snsTypeRadios.forEach(r => {
+    r.addEventListener("change", () => {
+      if (snsMonthlyMethodBox) {
+        snsMonthlyMethodBox.style.display = (r.value === "毎月課金") ? "block" : "none";
+      }
+    });
+  });
+
   const CHAR_IMAGE_MAP = {
     "那須乃つつじ": "../assets/nasuno-tsutsuji.png",
     "狩野みるく": "../assets/karino-milk.png",
@@ -158,7 +192,7 @@ function setupEventListeners() {
       }
       if (panelNoImgLabel) panelNoImgLabel.style.display = "block";
       if (panelImgDataInput) panelImgDataInput.value = "";
-      if (panelFilenameLabel) panelFilenameLabel.textContent = "画像未選択（パソコンから選択するか、キャラクターを選択してください）";
+      if (panelFilenameLabel) panelFilenameLabel.textContent = "キャラクターを選択するか、パソコンからパネル画像を登録してください（必須）";
     }
   }
 
@@ -169,10 +203,14 @@ function setupEventListeners() {
       if (val === "__custom__") {
         if (customCharInput) {
           customCharInput.style.display = "block";
+          customCharInput.required = true;
           customCharInput.focus();
         }
       } else {
-        if (customCharInput) customCharInput.style.display = "none";
+        if (customCharInput) {
+          customCharInput.style.display = "none";
+          customCharInput.required = false;
+        }
         if (val && CHAR_IMAGE_MAP[val]) {
           setPanelImage(CHAR_IMAGE_MAP[val], `${val} 公式パネル画像`);
         }
@@ -277,10 +315,23 @@ function setupEventListeners() {
       if (customCharInput) {
         customCharInput.value = "";
         customCharInput.style.display = "none";
+        customCharInput.required = false;
       }
       if (charSelect) charSelect.value = "";
       setPanelImage("", "");
       if (panelFileInput) panelFileInput.value = "";
+
+      // Reset options
+      if (goodsCheckbox) goodsCheckbox.checked = false;
+      if (goodsDetails) goodsDetails.style.display = "none";
+      if (snsCheckbox) snsCheckbox.checked = true;
+      if (snsDetails) snsDetails.style.display = "block";
+      const monthlyRadio = document.getElementById("sns-type-monthly");
+      if (monthlyRadio) monthlyRadio.checked = true;
+      if (snsMonthlyMethodBox) snsMonthlyMethodBox.style.display = "block";
+
+      const startDateInput = document.getElementById("form-company-start-date");
+      if (startDateInput) startDateInput.value = new Date().toISOString().split("T")[0];
 
       document.getElementById("modal-company-title").textContent = "新規提携企業・店舗の登録";
       modalCompany.classList.add("open");
@@ -291,53 +342,121 @@ function setupEventListeners() {
   if (modalCompanyClose) modalCompanyClose.addEventListener("click", closeModal);
   if (modalCompanyCancel) modalCompanyCancel.addEventListener("click", closeModal);
 
+  // Form Submit Handler
   if (formCompany) {
     formCompany.addEventListener("submit", (e) => {
       e.preventDefault();
       const editId = document.getElementById("company-edit-id").value;
 
-      // Determine character name
+      // 1. Determine character name
       let charName = charSelect.value;
       if (charName === "__custom__") {
-        charName = customCharInput.value.trim() || "オリジナルキャラクター";
+        charName = customCharInput.value.trim();
+        if (!charName) {
+          alert("オリジナルキャラクター名を入力してください。");
+          customCharInput.focus();
+          return;
+        }
       }
       if (!charName) {
-        charName = "那須乃つつじ";
+        alert("導入キャラクターを選択してください。");
+        charSelect.focus();
+        return;
       }
 
-      // Determine panel image
-      let charImg = panelImgDataInput.value;
-      if (!charImg) {
-        charImg = CHAR_IMAGE_MAP[charName] || "../assets/nasuno-tsutsuji.png";
+      // 2. Validate Panel Requirements (すべて入力必須)
+      const panelTypeVal = document.getElementById("form-company-panel").value.trim();
+      if (!panelTypeVal) {
+        alert("パネル形態・仕様（例: 等身大パネル 巫女Ver.）を入力してください。");
+        document.getElementById("form-company-panel").focus();
+        return;
       }
-      
+
+      const panelLocationVal = document.getElementById("form-company-panel-location").value.trim();
+      if (!panelLocationVal) {
+        alert("店内・敷地内の設置場所詳細（例: レジ横特設ブース、エントランス等）を入力してください。");
+        document.getElementById("form-company-panel-location").focus();
+        return;
+      }
+
       let latVal = parseFloat(document.getElementById("form-company-lat").value);
       let lngVal = parseFloat(document.getElementById("form-company-lng").value);
       if (isNaN(latVal) || isNaN(lngVal)) {
-        latVal = 36.9500;
-        lngVal = 140.0000;
+        alert("GPS座標（緯度・経度）が未入力です。「📍 GPS自動取得」をクリックするか、数値を入力してください。");
+        return;
       }
 
-      const panelTypeVal = document.getElementById("form-company-panel").value || "等身大パネル";
+      // 3. Validate Panel Image (必須)
+      let charImg = panelImgDataInput.value;
+      if (!charImg) {
+        charImg = CHAR_IMAGE_MAP[charName] || "";
+      }
+      if (!charImg) {
+        alert("⚠️ 設置パネルの画像が登録されていません。\n店頭でファンがスキャン認識するためにパネル画像は必須です。\n「📁 パソコンからパネル画像を選択」から画像ファイルを登録してください。");
+        return;
+      }
+
+      // Billing & Services Calculation
+      const panelFee = parseInt(document.getElementById("form-company-panel-fee").value, 10) || 150000;
+      const goodsEnabled = document.getElementById("form-company-goods-enabled").checked;
+      const goodsPackage = goodsEnabled ? document.getElementById("form-company-goods-package").value : "発注なし";
+      const goodsAmount = goodsEnabled ? (parseInt(document.getElementById("form-company-goods-amount").value, 10) || 50000) : 0;
+
+      const snsEnabled = document.getElementById("form-company-sns-enabled").checked;
+      let snsBillingType = "未契約";
+      let snsPaymentMethod = "未契約";
+      let monthlyFee = 0;
+      let snsAnnualFee = 0;
+
+      if (snsEnabled) {
+        const selectedTypeRadio = document.querySelector("input[name='form-company-sns-billing-type']:checked");
+        snsBillingType = selectedTypeRadio ? selectedTypeRadio.value : "毎月課金";
+        if (snsBillingType === "一括清算") {
+          snsAnnualFee = 110000;
+          snsPaymentMethod = "請求書一括清算（年払い）";
+        } else {
+          monthlyFee = 11000;
+          const selectedPayRadio = document.querySelector("input[name='form-company-sns-pay-method']:checked");
+          snsPaymentMethod = selectedPayRadio ? selectedPayRadio.value : "クレジットカード毎月決済";
+        }
+      }
+
+      const initialTotal = panelFee + goodsAmount + snsAnnualFee;
+      const annualTotalRevenue = initialTotal + (monthlyFee * 12);
+
+      const startDateVal = document.getElementById("form-company-start-date").value || new Date().toISOString().split("T")[0];
+      const nextRenewalVal = new Date(new Date(startDateVal).getTime() + 365*24*60*60*1000).toISOString().split("T")[0];
 
       const formData = {
-        name: document.getElementById("form-company-name").value,
+        name: document.getElementById("form-company-name").value.trim(),
         industry: document.getElementById("form-company-industry").value,
-        representative: document.getElementById("form-company-rep").value,
-        phone: document.getElementById("form-company-phone").value,
-        email: document.getElementById("form-company-email").value,
-        address: document.getElementById("form-company-address").value,
+        representative: document.getElementById("form-company-rep").value.trim(),
+        phone: document.getElementById("form-company-phone").value.trim(),
+        email: document.getElementById("form-company-email").value.trim(),
+        address: document.getElementById("form-company-address").value.trim(),
         lat: latVal,
         lng: lngVal,
         character: charName,
         characterImg: charImg,
         panelType: panelTypeVal,
-        plan: document.getElementById("form-company-plan").value,
+        panelLocation: panelLocationVal,
+        panelFee: panelFee,
+        goodsEnabled: goodsEnabled,
+        goodsPackage: goodsPackage,
+        goodsAmount: goodsAmount,
+        snsEnabled: snsEnabled,
+        snsBillingType: snsBillingType,
+        snsPaymentMethod: snsPaymentMethod,
+        monthlyFee: monthlyFee,
+        initialPaid: initialTotal,
+        totalAmount: annualTotalRevenue,
+        startDate: startDateVal,
+        nextRenewal: nextRenewalVal,
         status: document.getElementById("form-company-status").value
       };
 
       if (editId) {
-        // Update existing
+        // Update existing company
         const index = store.data.companies.findIndex(c => c.id === editId);
         if (index !== -1) {
           store.data.companies[index] = { ...store.data.companies[index], ...formData };
@@ -349,42 +468,110 @@ function setupEventListeners() {
           store.data.panels[pIndex].lng = lngVal;
           store.data.panels[pIndex].character = charName;
           store.data.panels[pIndex].costume = panelTypeVal;
+          store.data.panels[pIndex].location = panelLocationVal;
+          store.data.panels[pIndex].image = charImg;
         }
       } else {
-        // Create new
+        // Create new company
         const newId = "C" + String(store.data.companies.length + 1).padStart(3, "0");
         const newCompany = {
           id: newId,
-          ...formData,
-          startDate: new Date().toISOString().split("T")[0],
-          nextRenewal: new Date(Date.now() + 365*24*60*60*1000).toISOString().split("T")[0],
-          monthlyFee: formData.plan.includes("月払い") ? 11000 : 0,
-          initialPaid: 150000,
-          annualPaid: formData.plan.includes("一括") ? 110000 : 0,
-          totalAmount: formData.plan.includes("一括") ? 260000 : 150000,
-          paymentStatus: "正常入金"
+          ...formData
         };
         store.data.companies.unshift(newCompany);
 
-        // Add panel with accurate GPS
+        // 1. Add Panel
+        const panelId = "PN-" + String(store.data.panels.length + 1).padStart(3, "0");
         store.data.panels.push({
-          id: "PN-" + String(store.data.panels.length + 1).padStart(3, "0"),
+          id: panelId,
           companyId: newId,
           companyName: formData.name,
           character: formData.character,
           costume: panelTypeVal,
+          location: panelLocationVal,
           serial: "GG-" + newId,
           lat: latVal,
           lng: lngVal,
+          image: charImg,
           status: "稼働中",
           condition: "良好"
         });
+
+        // 2. Generate Invoices & Payments automatically
+        const todayStr = new Date().toISOString().split("T")[0];
+        const dueStr = new Date(Date.now() + 30*24*60*60*1000).toISOString().split("T")[0];
+
+        // Invoice A: Panel Introduction (請求書で一括清算)
+        store.data.payments.unshift({
+          id: "INV-PN-" + String(store.data.payments.length + 1).padStart(3, "0"),
+          companyId: newId,
+          companyName: formData.name,
+          billingItem: `等身大キャラクターパネル初期導入費 (${formData.panelType})`,
+          amount: Math.round(panelFee * 1.1),
+          method: "請求書で一括清算 (銀行振込)",
+          dueDate: dueStr,
+          paidDate: "-",
+          status: "請求中"
+        });
+
+        // Invoice B: Goods Wholesale Order (請求書で一括清算)
+        if (goodsEnabled && goodsAmount > 0) {
+          store.data.payments.unshift({
+            id: "INV-GD-" + String(store.data.payments.length + 1).padStart(3, "0"),
+            companyId: newId,
+            companyName: formData.name,
+            billingItem: `公式グッズ初回卸仕入れ (${goodsPackage})`,
+            amount: Math.round(goodsAmount * 1.1),
+            method: "請求書で一括清算 (銀行振込)",
+            dueDate: dueStr,
+            paidDate: "-",
+            status: "請求中"
+          });
+          // Update goods shipped totals
+          if (store.data.goods && store.data.goods.length > 0) {
+            store.data.goods.forEach(g => {
+              g.shippedTotal += 20;
+              g.stock = Math.max(0, g.stock - 20);
+            });
+          }
+        }
+
+        // Payment C: SNS Video PR Service (一括請求書 または 毎月クレカ/口座振替)
+        if (snsEnabled) {
+          if (snsBillingType === "一括清算") {
+            store.data.payments.unshift({
+              id: "INV-SNS-" + String(store.data.payments.length + 1).padStart(3, "0"),
+              companyId: newId,
+              companyName: formData.name,
+              billingItem: "SNSショート動画配信PR 年間一括費用 (12ヶ月)",
+              amount: 121000,
+              method: "請求書で一括清算 (年払い)",
+              dueDate: dueStr,
+              paidDate: "-",
+              status: "請求中"
+            });
+          } else {
+            // Monthly Subscription (Credit Card or Bank Debit)
+            store.data.payments.unshift({
+              id: "SUB-SNS-" + String(store.data.payments.length + 1).padStart(3, "0"),
+              companyId: newId,
+              companyName: formData.name,
+              billingItem: "SNSショート動画配信PR 月額利用料（当月分）",
+              amount: 12100,
+              method: snsPaymentMethod,
+              dueDate: todayStr,
+              paidDate: todayStr,
+              status: "入金済"
+            });
+          }
+        }
       }
 
       store.save();
       closeModal();
       renderAll();
-      alert(`「${formData.name}」の提携情報、GPS座標（緯度: ${latVal.toFixed(4)}, 経度: ${lngVal.toFixed(4)}）、パネル画像を保存しました！\nファン側のパネル読み込み機能と即時連携されます。`);
+
+      alert(`✅「${formData.name}」の新規契約・提携登録が完了しました！\n\n・パネル設置: ${formData.character} (${formData.panelType}) / 請求書一括清算\n・グッズ発注: ${goodsEnabled ? `あり (¥${goodsAmount.toLocaleString()}) / 請求書一括清算` : 'なし'}\n・SNS動画PR: ${snsEnabled ? `${snsBillingType} (${snsPaymentMethod})` : 'なし'}\n\n「請求・決済管理」および「売上台帳」に即座に反映されました。`);
     });
   }
 }
@@ -404,9 +591,9 @@ function renderKPIs() {
   const activeCount = companies.filter(c => c.status === "契約中").length;
   const panelsCount = store.data.panels.filter(p => p.status === "稼働中").length;
   
-  // Total Revenue calculation
+  // Dynamic Revenue calculation
   let totalRevenue = companies.reduce((sum, c) => sum + (c.totalAmount || 0), 0);
-  let monthlyRecurring = companies.filter(c => c.status === "契約中" && c.plan.includes("月払い")).length * 11000;
+  let monthlyRecurring = companies.filter(c => c.status === "契約中").reduce((sum, c) => sum + (c.monthlyFee || 0), 0);
 
   const countEl = document.getElementById("kpi-company-count");
   const subEl = document.getElementById("kpi-company-sub");
@@ -418,10 +605,10 @@ function renderKPIs() {
   const renSubEl = document.getElementById("kpi-renewal-sub");
 
   if (countEl) countEl.textContent = `${activeCount} 社`;
-  if (subEl) subEl.textContent = `全提携申請 ${companies.length} 件（審査中 ${companies.length - activeCount} 件）`;
+  if (subEl) subEl.textContent = companies.length > 0 ? `全提携申請 ${companies.length} 件（審査中 ${companies.length - activeCount} 件）` : "全提携申請 0 件";
 
   if (panelEl) panelEl.textContent = `${panelsCount} 台`;
-  if (panelSubEl) panelSubEl.textContent = panelsCount > 0 ? "稼働中パネル" : "稼働中パネル 0 台";
+  if (panelSubEl) panelSubEl.textContent = panelsCount > 0 ? `稼働中パネル ${panelsCount} 台` : "稼働中パネル 0 台";
 
   if (revEl) revEl.textContent = `¥${totalRevenue.toLocaleString()}`;
   if (mrrEl) mrrEl.textContent = `月額サブスク収益: ¥${monthlyRecurring.toLocaleString()}/月`;
@@ -446,7 +633,7 @@ function renderDashboard() {
       `;
     } else {
       dashTableBody.innerHTML = companies.slice(0, 5).map(c => {
-        const statusClass = c.status === "契約中" ? "status-active" : (c.status === "審査中" ? "status-pending" : "status-alert");
+        const statusClass = c.status === "契約中" ? "status-active" : "status-pending";
         return `
           <tr>
             <td><strong>${c.id}</strong></td>
@@ -459,7 +646,11 @@ function renderDashboard() {
             <td>
               <span style="font-weight: 600; color: #b8860b;">${escapeHtml(c.character)}</span>
             </td>
-            <td>${escapeHtml(c.plan)}</td>
+            <td>
+              <div style="font-size: 12px; font-weight: 600;">パネル導入 (請求書一括)</div>
+              ${c.goodsEnabled ? `<div style="font-size: 11px; color: #1a73e8;">グッズ発注 (請求書一括)</div>` : ''}
+              ${c.snsEnabled ? `<div style="font-size: 11px; color: #0284c7;">SNS PR (${c.snsBillingType})</div>` : ''}
+            </td>
             <td>
               <div>${c.startDate}</div>
               <small style="color: #6b778c;">更新: ${c.nextRenewal}</small>
@@ -478,18 +669,17 @@ function renderDashboard() {
         <div style="grid-column: 1 / -1; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 160px; color: #888; background: #fafafa; border-radius: 8px; border: 1px dashed #e2e2e2;">
           <div style="font-size: 28px; margin-bottom: 6px;">📊</div>
           <strong style="color: #555; margin-bottom: 2px;">売上データがありません</strong>
-          <span style="font-size: 12px;">企業・店舗が登録されると、月別売上推移がここに自動集計・グラフ表示されます</span>
+          <span style="font-size: 12px;">新規提携先を登録すると、初期導入費・グッズ卸売・月額PR配信の売上推移がここに自動集計・描画されます</span>
         </div>
       `;
     } else {
-      // Calculate monthly sales from companies
       const months = ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"];
       const totalRev = companies.reduce((sum, c) => sum + (c.totalAmount || 0), 0);
       const avg = Math.round(totalRev / 12);
       
       chartContainer.innerHTML = months.map((m, idx) => {
-        const heightPct = totalRev > 0 ? Math.min(100, Math.max(15, Math.round(((idx + 1) / 12) * 80))) : 0;
-        const estAmount = Math.round(avg * (0.6 + (idx * 0.08)));
+        const heightPct = totalRev > 0 ? Math.min(100, Math.max(20, Math.round(((idx + 1) / 12) * 85))) : 0;
+        const estAmount = Math.round(avg * (0.7 + (idx * 0.06)));
         return `
           <div class="chart-col">
             <div class="chart-bar" style="height: ${heightPct}%;" data-tooltip="${m}: ¥${estAmount.toLocaleString()}"></div>
@@ -523,7 +713,7 @@ function renderCompanies() {
         <td colspan="8" style="text-align: center; padding: 48px 20px; color: #777;">
           <div style="font-size: 32px; margin-bottom: 8px;">🏢</div>
           <strong style="font-size: 15px; color: #333; display: block; margin-bottom: 4px;">提携企業・店舗データがありません</strong>
-          <span>画面右上の「＋ 新規提携先を登録」から、店舗名・住所・パネル画像を登録してテストしてください。</span>
+          <span>画面右上の「＋ 新規提携先を登録」から、店舗情報・パネル画像・契約清算方法を入力して登録してください。</span>
         </td>
       </tr>
     `;
@@ -531,7 +721,25 @@ function renderCompanies() {
   }
 
   tableBody.innerHTML = filtered.map(c => {
-    const statusClass = c.status === "契約中" ? "status-active" : (c.status === "審査中" ? "status-pending" : "status-alert");
+    const statusClass = c.status === "契約中" ? "status-active" : "status-pending";
+    
+    // Format Services & Payment Badges
+    let serviceHtml = `<div style="display: flex; flex-direction: column; gap: 4px;">`;
+    serviceHtml += `<div><span class="billing-badge invoice">🪧 パネル導入 (請求書一括)</span></div>`;
+    if (c.goodsEnabled) {
+      serviceHtml += `<div><span class="billing-badge invoice">🛍️ グッズ発注 (請求書一括)</span></div>`;
+    }
+    if (c.snsEnabled) {
+      if (c.snsBillingType === "一括清算") {
+        serviceHtml += `<div><span class="billing-badge invoice">🎬 SNS動画PR (年払い請求書)</span></div>`;
+      } else if (c.snsPaymentMethod === "クレジットカード毎月決済") {
+        serviceHtml += `<div><span class="billing-badge credit">🎬 SNS動画PR (毎月クレカ)</span></div>`;
+      } else {
+        serviceHtml += `<div><span class="billing-badge bank">🎬 SNS動画PR (毎月口座振替)</span></div>`;
+      }
+    }
+    serviceHtml += `</div>`;
+
     return `
       <tr>
         <td><strong>${c.id}</strong></td>
@@ -542,10 +750,15 @@ function renderCompanies() {
         <td><span class="status-pill ${statusClass}">${c.status}</span></td>
         <td>${escapeHtml(c.industry)}</td>
         <td>
-          <span style="font-weight: 600; color: #b8860b;">${escapeHtml(c.character)}</span>
-          <br><small style="color: #6b778c;">${escapeHtml(c.panelType || "等身大")}</small>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            ${c.characterImg ? `<img src="${c.characterImg}" style="width: 28px; height: 36px; object-fit: contain; border-radius: 4px; background: #fff; border: 1px solid #ddd;">` : ''}
+            <div>
+              <span style="font-weight: 600; color: #b8860b;">${escapeHtml(c.character)}</span>
+              <br><small style="color: #6b778c;">${escapeHtml(c.panelType || "等身大")}</small>
+            </div>
+          </div>
         </td>
-        <td>${escapeHtml(c.plan)}</td>
+        <td>${serviceHtml}</td>
         <td>
           <div>${c.startDate}</div>
           <small style="color: #6b778c;">更新: ${c.nextRenewal}</small>
@@ -562,6 +775,7 @@ function renderCompanies() {
 function editCompany(id) {
   const c = store.data.companies.find(item => item.id === id);
   if (!c) return;
+
   document.getElementById("company-edit-id").value = c.id;
   document.getElementById("form-company-name").value = c.name;
   document.getElementById("form-company-industry").value = c.industry;
@@ -573,20 +787,15 @@ function editCompany(id) {
   const latInput = document.getElementById("form-company-lat");
   const lngInput = document.getElementById("form-company-lng");
   const gpsHint = document.getElementById("gps-status-hint");
-  const panelImgPreview = document.getElementById("company-panel-preview");
-  const charPreviewName = document.getElementById("preview-char-name");
 
   if (latInput) latInput.value = c.lat !== undefined ? Number(c.lat).toFixed(6) : "";
   if (lngInput) lngInput.value = c.lng !== undefined ? Number(c.lng).toFixed(6) : "";
-  if (gpsHint) {
-    if (c.lat && c.lng) {
-      gpsHint.style.color = "#2e7d32";
-      gpsHint.textContent = `📍 登録済みGPS座標: (緯度: ${Number(c.lat).toFixed(4)}, 経度: ${Number(c.lng).toFixed(4)})`;
-    } else {
-      gpsHint.textContent = "";
-    }
+  if (gpsHint && c.lat && c.lng) {
+    gpsHint.style.color = "#2e7d32";
+    gpsHint.textContent = `📍 登録済みGPS: (緯度: ${Number(c.lat).toFixed(4)}, 経度: ${Number(c.lng).toFixed(4)})`;
   }
 
+  // Panel Fields
   const charSelect = document.getElementById("form-company-character");
   const customCharInput = document.getElementById("form-company-custom-char");
   const CHAR_IMAGE_MAP = {
@@ -607,20 +816,57 @@ function editCompany(id) {
   }
 
   const previewSrc = c.characterImg || CHAR_IMAGE_MAP[c.character] || "";
-  setPanelImage(previewSrc, `${c.character} 登録パネル画像`);
+  const panelImgPreview = document.getElementById("company-panel-preview");
+  const panelNoImgLabel = document.getElementById("company-panel-no-img");
+  const panelImgDataInput = document.getElementById("form-company-char-img-data");
+  if (panelImgPreview) {
+    panelImgPreview.src = previewSrc;
+    panelImgPreview.style.display = "block";
+  }
+  if (panelNoImgLabel) panelNoImgLabel.style.display = "none";
+  if (panelImgDataInput) panelImgDataInput.value = previewSrc;
 
   document.getElementById("form-company-panel").value = c.panelType || "";
-  document.getElementById("form-company-plan").value = c.plan;
-  document.getElementById("form-company-status").value = c.status;
+  document.getElementById("form-company-panel-location").value = c.panelLocation || "";
+  document.getElementById("form-company-panel-fee").value = c.panelFee || 150000;
 
-  document.getElementById("modal-company-title").textContent = `提携情報編集: ${c.name}`;
+  // Goods
+  const goodsCheckbox = document.getElementById("form-company-goods-enabled");
+  const goodsDetails = document.getElementById("goods-order-details");
+  if (goodsCheckbox) {
+    goodsCheckbox.checked = !!c.goodsEnabled;
+    if (goodsDetails) goodsDetails.style.display = c.goodsEnabled ? "block" : "none";
+    if (c.goodsPackage) document.getElementById("form-company-goods-package").value = c.goodsPackage;
+    if (c.goodsAmount) document.getElementById("form-company-goods-amount").value = c.goodsAmount;
+  }
+
+  // SNS
+  const snsCheckbox = document.getElementById("form-company-sns-enabled");
+  const snsDetails = document.getElementById("sns-plan-details");
+  if (snsCheckbox) {
+    snsCheckbox.checked = !!c.snsEnabled;
+    if (snsDetails) snsDetails.style.display = c.snsEnabled ? "block" : "none";
+    if (c.snsBillingType === "一括清算") {
+      const annRadio = document.getElementById("sns-type-annual");
+      if (annRadio) annRadio.checked = true;
+    } else {
+      const monRadio = document.getElementById("sns-type-monthly");
+      if (monRadio) monRadio.checked = true;
+    }
+  }
+
+  document.getElementById("form-company-status").value = c.status;
+  document.getElementById("form-company-start-date").value = c.startDate || "";
+
+  document.getElementById("modal-company-title").textContent = `提携情報・契約編集: ${c.name}`;
   document.getElementById("modal-company").classList.add("open");
 }
 
 function deleteCompany(id) {
-  if (confirm("この企業・店舗データを削除しますか？関連するパネル情報も整理されます。")) {
+  if (confirm("この企業・店舗データを削除しますか？関連するパネルおよび未入金請求書データも整理されます。")) {
     store.data.companies = store.data.companies.filter(c => c.id !== id);
     store.data.panels = store.data.panels.filter(p => p.companyId !== id);
+    store.data.payments = store.data.payments.filter(p => p.companyId !== id);
     store.save();
     renderAll();
   }
@@ -636,15 +882,24 @@ function renderSales() {
   }
 
   salesTableBody.innerHTML = store.data.companies.map(c => {
+    let breakdown = `パネル導入`;
+    if (c.goodsEnabled) breakdown += ` + グッズ発注`;
+    if (c.snsEnabled) breakdown += ` + SNS PR`;
+
+    let payMethodDisplay = `<span class="billing-badge invoice">請求書一括</span>`;
+    if (c.snsEnabled && c.snsBillingType === "毎月課金") {
+      payMethodDisplay += `<br><span class="${c.snsPaymentMethod.includes('クレジット') ? 'billing-badge credit' : 'billing-badge bank'}" style="margin-top: 4px;">月額: ${c.snsPaymentMethod}</span>`;
+    }
+
     return `
       <tr>
-        <td><strong>${c.name}</strong></td>
-        <td>${c.plan}</td>
-        <td>¥${(c.initialPaid || 0).toLocaleString()}</td>
-        <td>${c.monthlyFee ? `¥${c.monthlyFee.toLocaleString()}/月` : `一括前払済`}</td>
-        <td><strong style="color: #0052cc;">¥${(c.totalAmount || 0).toLocaleString()}</strong></td>
+        <td><strong>${escapeHtml(c.name)}</strong></td>
+        <td>${breakdown}</td>
+        <td><strong>¥${(c.initialPaid || 0).toLocaleString()}</strong> <small style="color: #666;">(税別)</small></td>
+        <td>${c.monthlyFee ? `<strong style="color: #0284c7;">¥${c.monthlyFee.toLocaleString()}</strong>/月` : `一括前払/なし`}</td>
+        <td>${payMethodDisplay}</td>
+        <td><strong style="color: #0052cc; font-size: 15px;">¥${(c.totalAmount || 0).toLocaleString()}</strong></td>
         <td>${c.nextRenewal}</td>
-        <td><span class="status-pill status-active">継続契約中</span></td>
       </tr>
     `;
   }).join("");
@@ -655,7 +910,7 @@ function renderPayments() {
   if (!paymentTableBody) return;
 
   if (store.data.payments.length === 0) {
-    paymentTableBody.innerHTML = `<tr><td colspan="9" style="text-align: center; padding: 40px; color: #888;">決済・請求データはありません。</td></tr>`;
+    paymentTableBody.innerHTML = `<tr><td colspan="9" style="text-align: center; padding: 40px; color: #888;">決済・請求データはありません。店舗を登録すると自動で請求書が生成されます。</td></tr>`;
     return;
   }
 
@@ -664,16 +919,20 @@ function renderPayments() {
     return `
       <tr>
         <td><strong>${p.id}</strong></td>
-        <td>${escapeHtml(p.companyName)}</td>
+        <td><strong>${escapeHtml(p.companyName)}</strong></td>
         <td>${escapeHtml(p.billingItem)}</td>
-        <td><strong>¥${p.amount.toLocaleString()}</strong></td>
-        <td>${p.method}</td>
+        <td><strong style="color: #172b4d;">¥${p.amount.toLocaleString()}</strong></td>
+        <td>
+          <span class="billing-badge ${p.method.includes('クレジット') ? 'credit' : (p.method.includes('銀行引') ? 'bank' : 'invoice')}">
+            ${p.method}
+          </span>
+        </td>
         <td>${p.dueDate}</td>
         <td>${p.paidDate}</td>
         <td><span class="status-pill ${statusClass}">${p.status}</span></td>
         <td>
           <button class="btn btn-secondary btn-sm" onclick="togglePaymentStatus('${p.id}')">
-            ${p.status === "入金済" ? "取消" : "入金済みにする"}
+            ${p.status === "入金済" ? "未入金に戻す" : "入金済みにする"}
           </button>
         </td>
       </tr>
@@ -700,7 +959,7 @@ function renderPanels() {
   if (!panelTableBody) return;
 
   if (store.data.panels.length === 0) {
-    panelTableBody.innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 40px; color: #888;">設置パネルデータはありません。店舗を登録すると自動でパネルが生成されます。</td></tr>`;
+    panelTableBody.innerHTML = `<tr><td colspan="9" style="text-align: center; padding: 40px; color: #888;">設置パネルデータはありません。店舗を登録すると自動でパネルが登録されます。</td></tr>`;
     return;
   }
 
@@ -709,10 +968,16 @@ function renderPanels() {
       <tr>
         <td><strong>${p.id}</strong></td>
         <td>${escapeHtml(p.serial)}</td>
-        <td><strong>${escapeHtml(p.character)}</strong></td>
+        <td>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            ${p.image ? `<img src="${p.image}" style="width: 28px; height: 36px; object-fit: contain; border-radius: 4px; background: #fff; border: 1px solid #ddd;">` : ''}
+            <strong>${escapeHtml(p.character)}</strong>
+          </div>
+        </td>
         <td>${escapeHtml(p.costume)}</td>
-        <td>${escapeHtml(p.companyName)}</td>
-        <td><small>${(p.lat || 0).toFixed(4)}, ${(p.lng || 0).toFixed(4)}</small></td>
+        <td><strong>${escapeHtml(p.companyName)}</strong></td>
+        <td><span style="color: #444;">${escapeHtml(p.location || "店頭特設")}</span></td>
+        <td><small style="color: #0052cc;">${(p.lat || 0).toFixed(4)}, ${(p.lng || 0).toFixed(4)}</small></td>
         <td><span class="status-pill ${p.status === '稼働中' ? 'status-active' : 'status-pending'}">${p.status}</span></td>
         <td>${p.condition}</td>
       </tr>
@@ -734,7 +999,7 @@ function renderGoods() {
         <td>¥${g.wholesalePrice.toLocaleString()}</td>
         <td>¥${g.retailPrice.toLocaleString()}</td>
         <td><strong style="color: ${g.stock < 150 ? '#de350b' : '#006644'};">${g.stock} 個</strong></td>
-        <td>${g.shippedTotal} 個</td>
+        <td><strong>${g.shippedTotal} 個</strong></td>
         <td>
           <button class="btn btn-secondary btn-sm" onclick="adjustStock('${g.id}')">在庫調整</button>
         </td>
@@ -756,7 +1021,7 @@ function adjustStock(id) {
 
 function escapeHtml(str) {
   if (!str) return "";
-  return str.replace(/[&<>'"]/g, 
+  return String(str).replace(/[&<>'"]/g, 
     tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
   );
 }

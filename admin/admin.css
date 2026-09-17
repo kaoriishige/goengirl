@@ -425,7 +425,7 @@ body {
   background: #fff;
   border-radius: var(--radius-lg);
   width: 90%;
-  max-width: 600px;
+  max-width: 720px;
   max-height: 90vh;
   overflow-y: auto;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
@@ -526,6 +526,104 @@ body {
 .chart-label {
   font-size: 11px;
   color: var(--admin-text-muted);
+}
+
+
+/* Form Sections & Billing Badges */
+.form-section {
+  background: #fcfdfe;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+.form-section.highlight {
+  background: #fbfdff;
+  border-color: #bcd9ff;
+}
+.form-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #edf2f7;
+}
+.form-section-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1a202c;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.billing-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 4px;
+  background: #e6f4ea;
+  color: #137333;
+  border: 1px solid #ceead6;
+}
+.billing-badge.invoice {
+  background: #e8f0fe;
+  color: #1a73e8;
+  border-color: #d2e3fc;
+}
+.billing-badge.credit {
+  background: #fef7e0;
+  color: #b06000;
+  border-color: #feefc3;
+}
+.billing-badge.bank {
+  background: #f3e8fd;
+  color: #8430ce;
+  border-color: #e9d2fd;
+}
+
+.radio-group, .checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.radio-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.radio-card:hover {
+  border-color: #0052cc;
+  background: #f8fbff;
+}
+.radio-card input[type="radio"], .radio-card input[type="checkbox"] {
+  margin-top: 2px;
+  cursor: pointer;
+}
+.radio-card-content {
+  flex: 1;
+}
+.radio-card-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #172b4d;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.radio-card-desc {
+  font-size: 12px;
+  color: #6b778c;
+  margin-top: 2px;
 }
 
 @media (max-width: 900px) {
