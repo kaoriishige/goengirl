@@ -82,9 +82,6 @@
       </div>
       <div class="topbar-right">
         <span style="font-size: 13px; color: var(--admin-text-muted);">管理者: <strong>菊地 孝史 (TS DELY)</strong></span>
-        <button class="btn btn-primary btn-sm" id="btn-sync-phone" style="background: linear-gradient(135deg, #0052cc, #6554c0); border: none; font-weight: 700; box-shadow: 0 2px 8px rgba(0,82,204,0.3);">
-          📱 スマホにデータ共有 (QR)
-        </button>
         <button class="btn btn-secondary btn-sm" onclick="location.reload()">最新情報に更新</button>
       </div>
     </header>
@@ -92,21 +89,6 @@
     <main class="content">
       <!-- 1. DASHBOARD TAB -->
       <section class="tab-pane active" id="tab-dashboard">
-
-        <!-- ★ スマホ同期バナー -->
-        <div id="sync-banner" style="background: linear-gradient(135deg, #e8f0fe, #f3e8ff); border: 2px solid #4285f4; border-radius: 12px; padding: 16px 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
-          <div style="font-size: 28px;">📱</div>
-          <div style="flex: 1; min-width: 200px;">
-            <div style="font-weight: 700; font-size: 15px; color: #1a237e;">スマホにデータを反映するには</div>
-            <div style="font-size: 13px; color: #555; margin-top: 2px;">
-              右上の <strong>「📱 スマホにデータ共有(QR)」</strong> ボタンを押して、
-              表示されたQRコードをスマホのカメラで読み取ってください。
-            </div>
-          </div>
-          <button onclick="document.getElementById('btn-sync-phone').click()" style="background: #4285f4; color: #fff; border: none; padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; white-space: nowrap;">
-            📷 今すぐQRを表示
-          </button>
-        </div>
 
         <!-- KPI Cards -->
         <div class="kpi-grid">
