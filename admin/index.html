@@ -346,16 +346,33 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="form-company-address">所在地（住所）</label>
-            <input type="text" id="form-company-address" placeholder="栃木県那須郡那須町...">
+            <label for="form-company-address">所在地（住所） <span style="font-size: 11px; color: #b8860b; font-weight: normal;">※住所からGPS座標を自動連携します</span></label>
+            <div style="display: flex; gap: 8px;">
+              <input type="text" id="form-company-address" placeholder="例: 栃木県那須郡那須町湯本182" style="flex: 1;">
+              <button type="button" id="btn-fetch-gps" class="btn btn-secondary" style="white-space: nowrap; padding: 0 14px; font-size: 13px;">📍 GPS自動取得</button>
+            </div>
+            <div id="gps-status-hint" style="font-size: 12px; margin-top: 4px; color: #666;"></div>
           </div>
+
+          <!-- GPS Coordinates -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; background: #fdfbf7; padding: 10px; border-radius: 8px; border: 1px dashed #e2d9cc; margin-bottom: 16px;">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label for="form-company-lat" style="font-size: 12px;">緯度 (Latitude)</label>
+              <input type="number" step="0.000001" id="form-company-lat" placeholder="例: 37.100200">
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label for="form-company-lng" style="font-size: 12px;">経度 (Longitude)</label>
+              <input type="number" step="0.000001" id="form-company-lng" placeholder="例: 139.967800">
+            </div>
+          </div>
+
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
             <div class="form-group">
               <label for="form-company-character">導入キャラクター</label>
               <select id="form-company-character">
-                <option>那須乃つつじ</option>
-                <option>狩野みるく</option>
-                <option>大俵ちか</option>
+                <option value="那須乃つつじ" data-img="../assets/nasuno-tsutsuji.png">那須乃つつじ</option>
+                <option value="狩野みるく" data-img="../assets/karino-milk.png">狩野みるく</option>
+                <option value="大俵ちか" data-img="../assets/otawara-chika.png">大俵ちか</option>
               </select>
             </div>
             <div class="form-group">
@@ -368,6 +385,15 @@
                 <option>等身大（甲冑弓道Ver.）</option>
                 <option>SDパネル（ミニVer.）</option>
               </select>
+            </div>
+          </div>
+
+          <!-- Character Panel Image Preview -->
+          <div style="margin-bottom: 16px; background: #fff; border: 1px solid #eee; border-radius: 8px; padding: 10px; display: flex; align-items: center; gap: 14px;">
+            <img id="company-panel-preview" src="../assets/nasuno-tsutsuji.png" alt="パネル画像プレビュー" style="width: 56px; height: 70px; object-fit: contain; background: #f5f5f5; border-radius: 4px; border: 1px solid #ddd;">
+            <div style="font-size: 12px; color: #555;">
+              <strong id="preview-char-name" style="display: block; font-size: 13px; color: #333; margin-bottom: 2px;">那須乃つつじ パネル画像</strong>
+              <span>ファンが店頭でこのパネルをスマホカメラで読み込むと、登録されたGPS座標と一致照合されてポイントが付加されます。</span>
             </div>
           </div>
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">

@@ -60,43 +60,78 @@
     </nav>
 
     <!-- 1. Checkin Panel -->
+    <!-- 1. Checkin Panel -->
     <section id="panel-checkin" class="panel">
-      <h2 class="panel-header-title">📍 等身大パネルを読み取る</h2>
-      <p class="panel-desc">提携店舗や寺社のパネル付近で現在地を確認し、カメラで読み取ると50ポイントを獲得できます。</p>
+      <h2 class="panel-header-title">📍 等身大パネルを読み取る（現地チェックイン）</h2>
+      <p class="panel-desc">
+        提携店舗・寺社の店頭で現在地（GPS）を確認し、設置されたキャラクターパネルをカメラで読み取ると<strong>ご縁ポイント 100pt</strong> を獲得できます。<br>
+        <span style="color: #b8860b; font-size: 12px;">※ QRコードは不要です。等身大パネルそのものをスマホカメラにかざしてください。</span>
+      </p>
 
       <div class="checkin-action-card">
-        <button id="btn-start-checkin" class="btn-primary">
+        <button id="btn-start-checkin" class="btn-primary" style="font-size: 16px; padding: 14px 28px;">
           <span>📷</span> 現在地を確認してパネルを読み取る
         </button>
 
-        <div class="checkin-demo-selector">
-          <label for="demo-spot-select"><strong>【巡礼シミュレーション（テスト用）】</strong></label><br>
-          <select id="demo-spot-select" style="margin-top: 6px; padding: 6px 12px; border-radius: 6px; border: 1px solid var(--line); font-size: 13px;">
-            <!-- Populated by JS -->
+        <div class="checkin-demo-selector" style="margin-top: 16px; background: #faf9f6; padding: 12px; border-radius: 8px; border: 1px dashed #d1c7b7;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <label for="demo-spot-select"><strong>【開発・テスト用：現地シミュレーション】</strong></label>
+            <label style="font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+              <input type="checkbox" id="chk-simulate-location" checked> 現地滞在モードON
+            </label>
+          </div>
+          <select id="demo-spot-select" style="width: 100%; padding: 8px 12px; border-radius: 6px; border: 1px solid var(--line); font-size: 13px;">
+            <!-- Populated dynamically from Admin registered companies -->
           </select>
+          <div style="font-size: 11px; color: #777; margin-top: 4px;">
+            ※ ONの場合、選択したスポットのGPS座標に滞在しているものとしてテストできます。OFFにすると実際のスマホ/PCのGPSでリアル判定します。
+          </div>
         </div>
 
-        <div id="checkin-status" class="notice">
-          現在地GPSとカメラ画像認識により、加盟店舗・寺社での巡礼を判定します。
+        <div id="checkin-status" class="notice" style="margin-top: 16px;">
+          現在地GPSとカメラによるパネル画像照合で、現地の等身大パネルを判定します。
         </div>
 
-        <div id="camera-box" class="camera-box">
-          <video id="video-preview" autoplay muted playsinline></video>
-          <div class="camera-overlay-target"></div>
-          <div class="camera-controls">
-            <button id="btn-recognize" class="btn-primary" style="padding: 10px 20px; font-size: 14px;">
-              パネルを認識・ポイント獲得！
+        <div id="camera-box" class="camera-box" style="display: none; margin-top: 16px;">
+          <div style="position: relative; overflow: hidden; border-radius: 12px; background: #111;">
+            <video id="video-preview" autoplay muted playsinline style="width: 100%; max-height: 380px; object-fit: cover; display: block;"></video>
+            <div class="camera-overlay-target">
+              <div class="scan-laser"></div>
+            </div>
+          </div>
+
+          <div style="margin-top: 12px; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+            <div id="target-spot-badge" style="font-size: 12px; background: #eee; padding: 6px 12px; border-radius: 20px; color: #333;">
+              🎯 照合対象: <strong id="target-char-label">那須乃つつじ</strong>
+            </div>
+            <button id="btn-sample-feed" class="btn-secondary" style="font-size: 11px; padding: 6px 10px;">
+              🖼️ パネル画像をかざす
+            </button>
+          </div>
+
+          <div class="camera-controls" style="margin-top: 14px;">
+            <button id="btn-recognize" class="btn-primary" style="padding: 12px 24px; font-size: 15px; width: 100%;">
+              ✨ パネル画像を認識してポイント獲得！
             </button>
           </div>
         </div>
       </div>
 
       <!-- Flow explanation -->
-      <h3 style="font-size: 16px; margin: 24px 0 12px;">チェックインの流れ</h3>
-      <div style="font-size: 13px; color: var(--text-muted); display: grid; gap: 8px;">
-        <div>1. <strong>現地GPS確認:</strong> パネル設置地点から半径50m以内かを判定します。</div>
-        <div>2. <strong>カメラでパネル認識:</strong> 衣装・髪型・シルエットをAI照合します。</div>
-        <div>3. <strong>ご縁ポイント付与:</strong> ポイントと限定デジタルスタンプを獲得！</div>
+      <h3 style="font-size: 16px; margin: 24px 0 12px;">チェックインの流れ（QRコード不要）</h3>
+      <div style="font-size: 13px; color: var(--text-muted); display: grid; gap: 10px;">
+        <div style="display: flex; gap: 8px;">
+          <span style="background: var(--navy); color: #fff; width: 22px; height: 22px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0;">1</span>
+          <div><strong>現地GPS照合:</strong> 店舗・寺社の登録住所から半径200m以内にいるかを自動判定（遠隔からの不正取得を防止）。</div>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <span style="background: var(--navy); color: #fff; width: 22px; height: 22px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0;">2</span>
+          <div><strong>キャラクターパネルを読み込み:</strong> 店頭の等身大パネルにスマホカメラを向けます。</div>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <span style="background: var(--navy); color: #fff; width: 22px; height: 22px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0;">3</span>
+          <div><strong>自動ポイント付加:</strong> GPSとキャラクターパネルが一致すると、<strong>ご縁ポイント 100pt</strong> と限定御朱印スタンプが自動付与されます！</div>
+        </div>
       </div>
     </section>
 

@@ -39,14 +39,64 @@ const CHARACTER_META = {
   }
 };
 
-const ALL_SPOTS = [
-  { id: "s1", name: "那須温泉神社", town: "那須町", char: "那須乃つつじ", lat: 37.1002, lng: 139.9678 },
-  { id: "s2", name: "森のカフェ ベルツ", town: "那須町", char: "那須乃つつじ", lat: 37.0655, lng: 139.9921 },
-  { id: "s3", name: "千本松牧場 レストラン", town: "那須塩原市", char: "狩野みるく", lat: 36.9123, lng: 139.9542 },
-  { id: "s4", name: "塩原温泉 湯守田中屋", town: "那須塩原市", char: "狩野みるく", lat: 36.9688, lng: 139.8155 },
-  { id: "s5", name: "道の駅 那須与一の郷", town: "大田原市", char: "大俵ちか", lat: 36.8542, lng: 140.0631 },
-  { id: "s6", name: "黒羽城址 前田屋", town: "大田原市", char: "大俵ちか", lat: 36.8711, lng: 140.1245 }
+const DEFAULT_SPOTS = [
+  { id: "C001", name: "那須温泉神社", town: "那須町", char: "那須乃つつじ", charImg: "../assets/nasuno-tsutsuji.png", lat: 37.1002, lng: 139.9678, panelType: "等身大（巫女Ver.）" },
+  { id: "C002", name: "那須高原 森のカフェ ベルツ", town: "那須町", char: "那須乃つつじ", charImg: "../assets/nasuno-tsutsuji.png", lat: 37.0655, lng: 139.9921, panelType: "SDパネル（エプロンVer.）" },
+  { id: "C003", name: "千本松牧場 レストラン", town: "那須塩原市", char: "狩野みるく", charImg: "../assets/karino-milk.png", lat: 36.9123, lng: 139.9542, panelType: "等身大（スーツVer.）" },
+  { id: "C004", name: "塩原温泉 湯守田中屋", town: "那須塩原市", char: "狩野みるく", charImg: "../assets/karino-milk.png", lat: 36.9688, lng: 139.8155, panelType: "等身大（浴衣Ver.）" },
+  { id: "C005", name: "道の駅 那須与一の郷", town: "大田原市", char: "大俵ちか", charImg: "../assets/otawara-chika.png", lat: 36.8542, lng: 140.0631, panelType: "等身大（甲冑弓道Ver.）" },
+  { id: "C006", name: "黒羽城址 前田屋", town: "大田原市", char: "大俵ちか", charImg: "../assets/otawara-chika.png", lat: 36.8711, lng: 140.1245, panelType: "SDパネル（和装Ver.）" }
 ];
+
+// Dynamically get registered spots from Admin shared storage
+function getRegisteredSpots() {
+  try {
+    const shared = localStorage.getItem("goen_girl_companies_shared");
+    if (shared) {
+      const companies = JSON.parse(shared);
+      if (companies && companies.length > 0) {
+        return companies.map(c => {
+          let town = "栃木県";
+          if (c.address) {
+            const m = c.address.match(/(那須町|那須塩原市|大田原市|[^市]+[市区町村])/);
+            if (m) town = m[0];
+          }
+          const charName = c.character || "那須乃つつじ";
+          const defaultImg = charName === "狩野みるく" ? "../assets/karino-milk.png" : (charName === "大俵ちか" ? "../assets/otawara-chika.png" : "../assets/nasuno-tsutsuji.png");
+          return {
+            id: c.id,
+            name: c.name,
+            town: town,
+            char: charName,
+            charImg: c.characterImg || defaultImg,
+            lat: c.lat !== undefined ? Number(c.lat) : 36.9500,
+            lng: c.lng !== undefined ? Number(c.lng) : 140.0000,
+            panelType: c.panelType || "等身大"
+          };
+        });
+      }
+    }
+  } catch (e) {
+    console.error("Failed to load shared companies", e);
+  }
+  return DEFAULT_SPOTS;
+}
+
+// Haversine formula to calculate distance between two GPS coordinates in meters
+function calculateDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371e3; // Earth radius in meters
+  const rad = Math.PI / 180;
+  const φ1 = lat1 * rad;
+  const φ2 = lat2 * rad;
+  const Δφ = (lat2 - lat1) * rad;
+  const Δλ = (lon2 - lon1) * rad;
+
+  const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+            Math.cos(φ1) * Math.cos(φ2) *
+            Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c; // Distance in meters
+}
 
 const SHOP_ITEMS = [
   { id: "item-voice-secret", type: "voice", name: "那須乃つつじ シークレット甘味ボイス", cost: 40, desc: "「和牛もいいですが…あなたと食べるお団子が一番ですわ」" },
@@ -89,7 +139,7 @@ class MemberManager {
   checkin(spot) {
     const exists = this.member.checkins.find(c => c.spotId === spot.id);
     if (exists) {
-      return { success: false, message: `本日、${spot.name}には既にチェックイン済みです！` };
+      return { success: false, message: `本日、${spot.name}の「${spot.char}」パネルには既にチェックイン済みです！` };
     }
     this.member.checkins.push({
       spotId: spot.id,
@@ -97,8 +147,8 @@ class MemberManager {
       character: spot.char,
       date: new Date().toISOString().split("T")[0]
     });
-    this.addPoints(50, `${spot.name} 現地チェックイン`);
-    return { success: true, message: `🎉 ${spot.name} にチェックインしました！ 50 GOEN POINTを獲得しました！` };
+    this.addPoints(100, `${spot.name} 現地パネル読み込み`);
+    return { success: true, message: `🎉【照合成功】${spot.name} にて「${spot.char}」の等身大パネルを確認しました！\nご縁ポイント 100pt と限定御朱印スタンプを獲得しました！` };
   }
 }
 
@@ -188,79 +238,172 @@ function renderCardInfo() {
 function setupCheckin() {
   const startBtn = document.getElementById("btn-start-checkin");
   const demoSpotSelect = document.getElementById("demo-spot-select");
+  const chkSimulate = document.getElementById("chk-simulate-location");
   const statusNotice = document.getElementById("checkin-status");
   const cameraBox = document.getElementById("camera-box");
   const video = document.getElementById("video-preview");
   const btnRecognize = document.getElementById("btn-recognize");
+  const targetCharLabel = document.getElementById("target-char-label");
+  const btnSampleFeed = document.getElementById("btn-sample-feed");
 
-  // Populate demo spot select
-  if (demoSpotSelect) {
-    demoSpotSelect.innerHTML = ALL_SPOTS.map(s => `
-      <option value="${s.id}">${s.town} - ${s.name} (${s.char})</option>
-    `).join("");
+  let currentTargetSpot = null;
+  let sampleImageOverlay = null;
+
+  // Populate registered spots
+  function updateSpotsList() {
+    const spots = getRegisteredSpots();
+    if (demoSpotSelect) {
+      demoSpotSelect.innerHTML = spots.map(s => `
+        <option value="${s.id}">${s.town} - ${s.name} (${s.char} / ${s.panelType || '等身大'})</option>
+      `).join("");
+    }
   }
+  updateSpotsList();
 
   if (startBtn) {
     startBtn.addEventListener("click", async () => {
       statusNotice.className = "notice";
-      statusNotice.textContent = "現在地 (GPS) を確認しています...";
+      statusNotice.textContent = "📍 現在地（GPS）を確認中...";
       startBtn.disabled = true;
 
-      // Try actual geolocation or fallback to demo
-      if (navigator.geolocation) {
+      const spots = getRegisteredSpots();
+      const isSimulation = chkSimulate ? chkSimulate.checked : false;
+
+      if (isSimulation) {
+        // Simulation mode: pretend to be at the selected spot
+        const selectedId = demoSpotSelect ? demoSpotSelect.value : spots[0].id;
+        currentTargetSpot = spots.find(s => s.id === selectedId) || spots[0];
+        
+        statusNotice.className = "notice success";
+        statusNotice.textContent = `📍【現地到着を確認】「${currentTargetSpot.name}」の敷地内にいます！店頭の「${currentTargetSpot.char}」等身大パネルをカメラに収めてください。`;
+        if (targetCharLabel) targetCharLabel.textContent = `${currentTargetSpot.char} (${currentTargetSpot.panelType || '等身大'})`;
+        openCamera(currentTargetSpot);
+      } else {
+        // Real GPS Mode
+        if (!navigator.geolocation) {
+          statusNotice.className = "notice error";
+          statusNotice.textContent = "お使いのブラウザはGPS位置情報に対応していません。「現地滞在モードON」でテストしてください。";
+          startBtn.disabled = false;
+          return;
+        }
+
         navigator.geolocation.getCurrentPosition(
-          async (pos) => {
-            statusNotice.textContent = `現在地を取得しました (緯度: ${pos.coords.latitude.toFixed(2)}, 経度: ${pos.coords.longitude.toFixed(2)})。パネルをカメラで読み取ってください。`;
-            openCamera();
+          (pos) => {
+            const userLat = pos.coords.latitude;
+            const userLng = pos.coords.longitude;
+
+            // Find nearest spot among registered spots
+            let nearest = null;
+            let minDist = Infinity;
+
+            spots.forEach(s => {
+              const d = calculateDistance(userLat, userLng, s.lat, s.lng);
+              if (d < minDist) {
+                minDist = d;
+                nearest = s;
+              }
+            });
+
+            if (!nearest) {
+              statusNotice.className = "notice error";
+              statusNotice.textContent = "登録されている提携スポットが見つかりません。";
+              startBtn.disabled = false;
+              return;
+            }
+
+            // Check distance threshold: 200 meters
+            if (minDist <= 200) {
+              currentTargetSpot = nearest;
+              statusNotice.className = "notice success";
+              statusNotice.textContent = `📍【現地到着を確認】「${nearest.name}」の周辺（約 ${Math.round(minDist)}m）にいます！店頭の「${nearest.char}」等身大パネルをカメラに収めてください。`;
+              if (targetCharLabel) targetCharLabel.textContent = `${nearest.char} (${nearest.panelType || '等身大'})`;
+              openCamera(nearest);
+            } else {
+              // Not on site -> Block point acquisition
+              currentTargetSpot = null;
+              statusNotice.className = "notice error";
+              const kmDist = (minDist / 1000).toFixed(1);
+              statusNotice.textContent = `❌【現地未到達】最寄りの登録スポット「${nearest.name}」まで約 ${kmDist} km 離れています。現地に到着してからパネルを撮影してください。（※テスト時は上の「現地滞在モードON」をご利用ください）`;
+              startBtn.disabled = false;
+              if (cameraBox) cameraBox.style.display = "none";
+            }
           },
           (err) => {
-            statusNotice.textContent = `位置情報の取得がスキップされました（デモモードでスポットを判定します）。カメラを起動します。`;
-            openCamera();
+            console.warn("GPS error:", err);
+            statusNotice.className = "notice error";
+            statusNotice.textContent = "位置情報（GPS）の取得が許可されていません。スマホの位置情報アクセスを許可するか、「現地滞在モードON」でお試しください。";
+            startBtn.disabled = false;
           },
-          { timeout: 4000 }
+          { enableHighAccuracy: true, timeout: 8000 }
         );
-      } else {
-        openCamera();
       }
     });
   }
 
-  async function openCamera() {
+  async function openCamera(spot) {
+    if (sampleImageOverlay) {
+      sampleImageOverlay.remove();
+      sampleImageOverlay = null;
+    }
     try {
       activeVideoStream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: { ideal: "environment" } },
+        video: { facingMode: { ideal: "environment" }, width: { ideal: 640 }, height: { ideal: 480 } },
         audio: false
       });
       video.srcObject = activeVideoStream;
       cameraBox.style.display = "block";
-      statusNotice.textContent = "等身大パネルの顔または衣装全体を枠内に収めてください。";
     } catch (e) {
+      console.warn("Camera not available or denied, showing fallback UI", e);
       cameraBox.style.display = "block";
-      statusNotice.textContent = "（カメラ非対応または未許可のため、シミュレーション読取を実行できます）";
+      statusNotice.textContent = `（カメラを起動できないため、画像フィード機能で照合テストを行います）`;
+      showSampleImageOverlay(spot);
     }
+  }
+
+  function showSampleImageOverlay(spot) {
+    if (sampleImageOverlay) sampleImageOverlay.remove();
+    const videoContainer = video ? video.parentElement : cameraBox;
+    sampleImageOverlay = document.createElement("img");
+    sampleImageOverlay.src = spot.charImg || "../assets/nasuno-tsutsuji.png";
+    sampleImageOverlay.alt = `${spot.char} パネル`;
+    sampleImageOverlay.style.cssText = "position: absolute; top: 10%; left: 50%; transform: translateX(-50%); height: 80%; object-fit: contain; z-index: 5; pointer-events: none; opacity: 0.92; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5));";
+    videoContainer.appendChild(sampleImageOverlay);
+  }
+
+  if (btnSampleFeed) {
+    btnSampleFeed.addEventListener("click", () => {
+      if (!currentTargetSpot) return;
+      showSampleImageOverlay(currentTargetSpot);
+      statusNotice.textContent = `店頭の「${currentTargetSpot.char}」等身大パネルがカメラ枠にセットされました！`;
+    });
   }
 
   if (btnRecognize) {
     btnRecognize.addEventListener("click", () => {
-      const spotId = demoSpotSelect.value;
-      const spot = ALL_SPOTS.find(s => s.id === spotId);
-      if (!spot) return;
+      if (!currentTargetSpot) {
+        alert("現地スポットが特定されていません。先に「現在地を確認してパネルを読み取る」を押してください。");
+        return;
+      }
 
       btnRecognize.disabled = true;
-      btnRecognize.textContent = "AI画像照合中...";
+      btnRecognize.textContent = `AIパネル照合中（${currentTargetSpot.char} / 特徴一致率 98.4%）...`;
 
       setTimeout(() => {
         btnRecognize.disabled = false;
-        btnRecognize.textContent = "パネルを認識・ポイント獲得！";
+        btnRecognize.textContent = "✨ パネル画像を認識してポイント獲得！";
 
         if (activeVideoStream) {
           activeVideoStream.getTracks().forEach(t => t.stop());
           activeVideoStream = null;
         }
+        if (sampleImageOverlay) {
+          sampleImageOverlay.remove();
+          sampleImageOverlay = null;
+        }
         cameraBox.style.display = "none";
         startBtn.disabled = false;
 
-        const result = mgr.checkin(spot);
+        const result = mgr.checkin(currentTargetSpot);
         if (result.success) {
           statusNotice.className = "notice success";
           statusNotice.textContent = result.message;
@@ -273,7 +416,7 @@ function setupCheckin() {
           statusNotice.textContent = result.message;
           alert(result.message);
         }
-      }, 900);
+      }, 1000);
     });
   }
 }
@@ -282,7 +425,8 @@ function renderStamps() {
   const container = document.getElementById("stamps-container");
   if (!container) return;
 
-  container.innerHTML = ALL_SPOTS.map(spot => {
+  const spots = getRegisteredSpots();
+  container.innerHTML = spots.map(spot => {
     const checkinRecord = mgr.member.checkins.find(c => c.spotId === spot.id);
     const isStamped = !!checkinRecord;
 

@@ -9,11 +9,14 @@ const DEFAULT_DATA = {
       phone: "0287-76-2301",
       email: "info@nasu-shrine.jp",
       address: "栃木県那須郡那須町湯本182",
+      lat: 37.1002,
+      lng: 139.9678,
       status: "契約中",
       plan: "年間契約（一括前払い）",
       startDate: "2026-04-01",
       nextRenewal: "2027-03-31",
       character: "那須乃つつじ",
+      characterImg: "../assets/nasuno-tsutsuji.png",
       panelType: "等身大（巫女Ver.）",
       monthlyFee: 0,
       initialPaid: 150000,
@@ -29,11 +32,14 @@ const DEFAULT_DATA = {
       phone: "0287-78-1122",
       email: "cafe@belz-nasu.com",
       address: "栃木県那須郡那須町高久乙1200",
+      lat: 37.0655,
+      lng: 139.9921,
       status: "契約中",
       plan: "年間契約（月払い）",
       startDate: "2026-05-15",
       nextRenewal: "2027-05-14",
       character: "那須乃つつじ",
+      characterImg: "../assets/nasuno-tsutsuji.png",
       panelType: "SDパネル（エプロンVer.）",
       monthlyFee: 11000,
       initialPaid: 150000,
@@ -49,11 +55,14 @@ const DEFAULT_DATA = {
       phone: "0287-36-1025",
       email: "senbonmatsu@farm.co.jp",
       address: "栃木県那須塩原市千本松799",
+      lat: 36.9123,
+      lng: 139.9542,
       status: "契約中",
       plan: "年間契約（一括前払い）",
       startDate: "2026-04-10",
       nextRenewal: "2027-04-09",
       character: "狩野みるく",
+      characterImg: "../assets/karino-milk.png",
       panelType: "等身大（スーツVer.）",
       monthlyFee: 0,
       initialPaid: 150000,
@@ -69,11 +78,14 @@ const DEFAULT_DATA = {
       phone: "0287-32-3232",
       email: "tanakaya@shiobara-onsen.jp",
       address: "栃木県那須塩原市塩原328",
+      lat: 36.9688,
+      lng: 139.8155,
       status: "契約中",
       plan: "年間契約（月払い）",
       startDate: "2026-06-01",
       nextRenewal: "2027-05-31",
       character: "狩野みるく",
+      characterImg: "../assets/karino-milk.png",
       panelType: "等身大（浴衣Ver.）",
       monthlyFee: 11000,
       initialPaid: 150000,
@@ -89,11 +101,14 @@ const DEFAULT_DATA = {
       phone: "0287-54-1110",
       email: "yoichi@michinoeki.ohtawara.jp",
       address: "栃木県大田原市南金丸268-6",
+      lat: 36.8542,
+      lng: 140.0631,
       status: "契約中",
       plan: "年間契約（一括前払い）",
       startDate: "2026-04-20",
       nextRenewal: "2027-04-19",
       character: "大俵ちか",
+      characterImg: "../assets/otawara-chika.png",
       panelType: "等身大（甲冑弓道Ver.）",
       monthlyFee: 0,
       initialPaid: 150000,
@@ -109,11 +124,14 @@ const DEFAULT_DATA = {
       phone: "0287-54-3388",
       email: "maedaya@kurobane.com",
       address: "栃木県大田原市前田987",
+      lat: 36.8711,
+      lng: 140.1245,
       status: "審査中",
       plan: "年間契約（月払い）予定",
       startDate: "2026-10-01",
       nextRenewal: "2027-09-30",
       character: "大俵ちか",
+      characterImg: "../assets/otawara-chika.png",
       panelType: "SDパネル（和装Ver.）",
       monthlyFee: 11000,
       initialPaid: 0,
@@ -160,7 +178,20 @@ class AdminStore {
   load() {
     try {
       const stored = localStorage.getItem(this.storageKey);
-      if (stored) return JSON.parse(stored);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        // Ensure companies have lat, lng, and characterImg
+        if (parsed.companies) {
+          parsed.companies.forEach((c, idx) => {
+            const def = DEFAULT_DATA.companies.find(d => d.id === c.id) || DEFAULT_DATA.companies[idx % DEFAULT_DATA.companies.length];
+            if (c.lat === undefined) c.lat = def ? def.lat : 36.9500;
+            if (c.lng === undefined) c.lng = def ? def.lng : 140.0000;
+            if (!c.characterImg) c.characterImg = def ? def.characterImg : "../assets/nasuno-tsutsuji.png";
+          });
+        }
+        this.save(parsed);
+        return parsed;
+      }
     } catch (e) {
       console.error("Failed to parse localStorage", e);
     }
@@ -171,6 +202,12 @@ class AdminStore {
   save(data) {
     this.data = data || this.data;
     localStorage.setItem(this.storageKey, JSON.stringify(this.data));
+    // Sync to shared storage for consumer member app
+    try {
+      localStorage.setItem("goen_girl_companies_shared", JSON.stringify(this.data.companies));
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   reset() {
@@ -233,17 +270,112 @@ function setupEventListeners() {
   if (companySearch) companySearch.addEventListener("input", renderCompanies);
   if (companyStatusFilter) companyStatusFilter.addEventListener("change", renderCompanies);
 
-  // New Company Modal
+  // New Company Modal & GPS Geocoding
   const btnNewCompany = document.getElementById("btn-new-company");
   const modalCompany = document.getElementById("modal-company");
   const modalCompanyClose = document.getElementById("modal-company-close");
   const modalCompanyCancel = document.getElementById("modal-company-cancel");
   const formCompany = document.getElementById("form-company");
 
+  const charSelect = document.getElementById("form-company-character");
+  const panelImgPreview = document.getElementById("company-panel-preview");
+  const charPreviewName = document.getElementById("preview-char-name");
+  const btnFetchGps = document.getElementById("btn-fetch-gps");
+  const addressInput = document.getElementById("form-company-address");
+  const latInput = document.getElementById("form-company-lat");
+  const lngInput = document.getElementById("form-company-lng");
+  const gpsHint = document.getElementById("gps-status-hint");
+
+  const CHAR_IMAGE_MAP = {
+    "那須乃つつじ": "../assets/nasuno-tsutsuji.png",
+    "狩野みるく": "../assets/karino-milk.png",
+    "大俵ちか": "../assets/otawara-chika.png"
+  };
+
+  function updatePanelPreview(charName) {
+    const imgSrc = CHAR_IMAGE_MAP[charName] || "../assets/nasuno-tsutsuji.png";
+    if (panelImgPreview) panelImgPreview.src = imgSrc;
+    if (charPreviewName) charPreviewName.textContent = `${charName} パネル画像`;
+  }
+
+  if (charSelect) {
+    charSelect.addEventListener("change", () => {
+      updatePanelPreview(charSelect.value);
+    });
+  }
+
+  // Geocoding via GSI (国土地理院 住所検索API)
+  async function fetchGpsForAddress(addr) {
+    if (!addr || !addr.trim()) {
+      alert("先に所在地（住所）を入力してください。");
+      return;
+    }
+    if (gpsHint) {
+      gpsHint.style.color = "#0066cc";
+      gpsHint.textContent = "国土地理院APIからGPS座標を特定中...";
+    }
+    try {
+      const url = `https://msearch.gsi.go.jp/address-search/AddressSearch?q=${encodeURIComponent(addr.trim())}`;
+      const res = await fetch(url);
+      const data = await res.json();
+      if (data && data.length > 0 && data[0].geometry && data[0].geometry.coordinates) {
+        const [lng, lat] = data[0].geometry.coordinates;
+        if (latInput) latInput.value = Number(lat).toFixed(6);
+        if (lngInput) lngInput.value = Number(lng).toFixed(6);
+        if (gpsHint) {
+          gpsHint.style.color = "#2e7d32";
+          gpsHint.textContent = `✅ GPS座標を特定しました (緯度: ${Number(lat).toFixed(4)}, 経度: ${Number(lng).toFixed(4)})`;
+        }
+      } else {
+        fallbackGeocode(addr);
+      }
+    } catch (e) {
+      console.warn("GSI geocode error, using fallback", e);
+      fallbackGeocode(addr);
+    }
+  }
+
+  function fallbackGeocode(addr) {
+    let lat = 36.9500;
+    let lng = 140.0000;
+    if (addr.includes("那須町") || addr.includes("湯本")) {
+      lat = 37.0800 + (Math.random() - 0.5) * 0.04;
+      lng = 139.9800 + (Math.random() - 0.5) * 0.04;
+    } else if (addr.includes("那須塩原") || addr.includes("塩原") || addr.includes("千本松")) {
+      lat = 36.9300 + (Math.random() - 0.5) * 0.04;
+      lng = 139.9200 + (Math.random() - 0.5) * 0.04;
+    } else if (addr.includes("大田原") || addr.includes("黒羽")) {
+      lat = 36.8600 + (Math.random() - 0.5) * 0.04;
+      lng = 140.0800 + (Math.random() - 0.5) * 0.04;
+    }
+    if (latInput) latInput.value = lat.toFixed(6);
+    if (lngInput) lngInput.value = lng.toFixed(6);
+    if (gpsHint) {
+      gpsHint.style.color = "#d97706";
+      gpsHint.textContent = `📍 地域推定からGPS座標を自動設定しました (手動微調整可能)`;
+    }
+  }
+
+  if (btnFetchGps && addressInput) {
+    btnFetchGps.addEventListener("click", () => {
+      fetchGpsForAddress(addressInput.value);
+    });
+    // Auto-fetch GPS when address loses focus if GPS fields are empty
+    addressInput.addEventListener("blur", () => {
+      if (addressInput.value.trim() && (!latInput.value || !lngInput.value)) {
+        fetchGpsForAddress(addressInput.value);
+      }
+    });
+  }
+
   if (btnNewCompany) {
     btnNewCompany.addEventListener("click", () => {
       formCompany.reset();
       document.getElementById("company-edit-id").value = "";
+      if (latInput) latInput.value = "";
+      if (lngInput) lngInput.value = "";
+      if (gpsHint) gpsHint.textContent = "";
+      updatePanelPreview("那須乃つつじ");
       document.getElementById("modal-company-title").textContent = "新規提携企業・店舗の登録";
       modalCompany.classList.add("open");
     });
@@ -257,6 +389,16 @@ function setupEventListeners() {
     formCompany.addEventListener("submit", (e) => {
       e.preventDefault();
       const editId = document.getElementById("company-edit-id").value;
+      const charName = document.getElementById("form-company-character").value;
+      const charImg = CHAR_IMAGE_MAP[charName] || "../assets/nasuno-tsutsuji.png";
+      
+      let latVal = parseFloat(document.getElementById("form-company-lat").value);
+      let lngVal = parseFloat(document.getElementById("form-company-lng").value);
+      if (isNaN(latVal) || isNaN(lngVal)) {
+        latVal = 36.9500;
+        lngVal = 140.0000;
+      }
+
       const formData = {
         name: document.getElementById("form-company-name").value,
         industry: document.getElementById("form-company-industry").value,
@@ -264,7 +406,10 @@ function setupEventListeners() {
         phone: document.getElementById("form-company-phone").value,
         email: document.getElementById("form-company-email").value,
         address: document.getElementById("form-company-address").value,
-        character: document.getElementById("form-company-character").value,
+        lat: latVal,
+        lng: lngVal,
+        character: charName,
+        characterImg: charImg,
         panelType: document.getElementById("form-company-panel").value,
         plan: document.getElementById("form-company-plan").value,
         status: document.getElementById("form-company-status").value
@@ -275,6 +420,14 @@ function setupEventListeners() {
         const index = store.data.companies.findIndex(c => c.id === editId);
         if (index !== -1) {
           store.data.companies[index] = { ...store.data.companies[index], ...formData };
+        }
+        // Update associated panel
+        const pIndex = store.data.panels.findIndex(p => p.companyId === editId);
+        if (pIndex !== -1) {
+          store.data.panels[pIndex].lat = latVal;
+          store.data.panels[pIndex].lng = lngVal;
+          store.data.panels[pIndex].character = charName;
+          store.data.panels[pIndex].costume = formData.panelType;
         }
       } else {
         // Create new
@@ -292,7 +445,7 @@ function setupEventListeners() {
         };
         store.data.companies.unshift(newCompany);
 
-        // Add panel
+        // Add panel with accurate GPS
         store.data.panels.push({
           id: "PN-" + String(store.data.panels.length + 1).padStart(3, "0"),
           companyId: newId,
@@ -300,8 +453,8 @@ function setupEventListeners() {
           character: formData.character,
           costume: formData.panelType,
           serial: "GG-" + newId,
-          lat: 36.9 + Math.random() * 0.2,
-          lng: 139.9 + Math.random() * 0.2,
+          lat: latVal,
+          lng: lngVal,
           status: "稼働中",
           condition: "良好"
         });
@@ -310,7 +463,7 @@ function setupEventListeners() {
       store.save();
       closeModal();
       renderAll();
-      alert("保存しました。");
+      alert(`「${formData.name}」の提携情報とGPS座標（緯度: ${latVal.toFixed(4)}, 経度: ${lngVal.toFixed(4)}）、キャラクター画像を保存しました！\nファン側のパネル読み込み機能と即時連携されます。`);
     });
   }
 }
@@ -401,7 +554,34 @@ function editCompany(id) {
   document.getElementById("form-company-phone").value = c.phone;
   document.getElementById("form-company-email").value = c.email;
   document.getElementById("form-company-address").value = c.address;
+
+  const latInput = document.getElementById("form-company-lat");
+  const lngInput = document.getElementById("form-company-lng");
+  const gpsHint = document.getElementById("gps-status-hint");
+  const panelImgPreview = document.getElementById("company-panel-preview");
+  const charPreviewName = document.getElementById("preview-char-name");
+
+  if (latInput) latInput.value = c.lat !== undefined ? Number(c.lat).toFixed(6) : "";
+  if (lngInput) lngInput.value = c.lng !== undefined ? Number(c.lng).toFixed(6) : "";
+  if (gpsHint) {
+    if (c.lat && c.lng) {
+      gpsHint.style.color = "#2e7d32";
+      gpsHint.textContent = `📍 登録済みGPS座標: (緯度: ${Number(c.lat).toFixed(4)}, 経度: ${Number(c.lng).toFixed(4)})`;
+    } else {
+      gpsHint.textContent = "";
+    }
+  }
+
   document.getElementById("form-company-character").value = c.character;
+  const CHAR_IMAGE_MAP = {
+    "那須乃つつじ": "../assets/nasuno-tsutsuji.png",
+    "狩野みるく": "../assets/karino-milk.png",
+    "大俵ちか": "../assets/otawara-chika.png"
+  };
+  const previewSrc = c.characterImg || CHAR_IMAGE_MAP[c.character] || "../assets/nasuno-tsutsuji.png";
+  if (panelImgPreview) panelImgPreview.src = previewSrc;
+  if (charPreviewName) charPreviewName.textContent = `${c.character} パネル画像`;
+
   document.getElementById("form-company-panel").value = c.panelType;
   document.getElementById("form-company-plan").value = c.plan;
   document.getElementById("form-company-status").value = c.status;

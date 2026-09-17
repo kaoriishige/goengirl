@@ -495,6 +495,76 @@ header {
 .history-pts.plus { color: #00875a; }
 .history-pts.minus { color: #de350b; }
 
+/* Camera & Recognition */
+.camera-box {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.camera-overlay-target {
+  position: absolute;
+  top: 15%;
+  left: 15%;
+  right: 15%;
+  bottom: 15%;
+  border: 2px dashed #e9588d;
+  border-radius: 12px;
+  pointer-events: none;
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.45);
+}
+
+.camera-overlay-target::before,
+.camera-overlay-target::after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-color: #fff;
+  border-style: solid;
+}
+.camera-overlay-target::before {
+  top: -2px;
+  left: -2px;
+  border-width: 3px 0 0 3px;
+}
+.camera-overlay-target::after {
+  bottom: -2px;
+  right: -2px;
+  border-width: 0 3px 3px 0;
+}
+
+.scan-laser {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #e9588d, #fff, #e9588d, transparent);
+  box-shadow: 0 0 12px #e9588d;
+  top: 0;
+  animation: scanMove 2.5s ease-in-out infinite alternate;
+}
+
+@keyframes scanMove {
+  0% { top: 5%; }
+  100% { top: 95%; }
+}
+
+.notice.success {
+  background: #e3fcef;
+  border-color: #abf5d1;
+  color: #006644;
+  font-weight: 700;
+}
+.notice.error {
+  background: #ffebe6;
+  border-color: #ffbdad;
+  color: #bf2600;
+  font-weight: 700;
+}
+
 /* Responsive */
 @media (max-width: 600px) {
   .tabs { grid-template-columns: repeat(2, 1fr); }
