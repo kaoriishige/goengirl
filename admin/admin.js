@@ -6,6 +6,84 @@ const DEFAULT_DATA = {
   payments: []
 };
 
+// ========== GitHub 自動同期 ==========
+const GH_OWNER = "kaoriishige";
+const GH_REPO  = "goengirl";
+const GH_BRANCH = "main";
+const GH_FILE   = "data/companies.json";
+const GH_TOKEN_KEY = "goen_girl_gh_token";
+
+function getGhToken() {
+  return localStorage.getItem(GH_TOKEN_KEY) || "";
+}
+
+function setGhToken(token) {
+  localStorage.setItem(GH_TOKEN_KEY, token.trim());
+}
+
+async function autoSyncToGitHub(companies) {
+  const token = getGhToken();
+  if (!token) return; // トークン未設定の場合はスキップ
+
+  try {
+    const apiUrl = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}`;
+    const headers = {
+      "Authorization": `token ${token}`,
+      "Accept": "application/vnd.github.v3+json",
+      "Content-Type": "application/json"
+    };
+
+    // 現在のファイルのSHAを取得（更新に必要）
+    const getRes = await fetch(`${apiUrl}?ref=${GH_BRANCH}`, { headers });
+    const getJson = await getRes.json();
+    const sha = getJson.sha;
+
+    // Base64エンコードしてPUT
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(companies, null, 2))));
+    const putRes = await fetch(apiUrl, {
+      method: "PUT",
+      headers,
+      body: JSON.stringify({
+        message: `auto-sync: 店舗データ自動更新 (${new Date().toLocaleString("ja-JP")})`,
+        content,
+        sha,
+        branch: GH_BRANCH
+      })
+    });
+
+    if (putRes.ok) {
+      console.log("✅ GitHub自動同期完了 → Netlify自動デプロイ開始（約1〜2分後にスマホ反映）");
+      showSyncToast("✅ スマホに自動反映中... 約1〜2分後に反映されます", "success");
+    } else {
+      const errJson = await putRes.json();
+      console.warn("GitHub sync error:", errJson.message);
+      if (errJson.message && errJson.message.includes("Bad credentials")) {
+        showSyncToast("⚠️ GitHubトークンが無効です。設定を確認してください", "warn");
+      }
+    }
+  } catch (e) {
+    console.warn("GitHub自動同期失敗（ネットワークエラー）:", e);
+  }
+}
+
+function showSyncToast(msg, type) {
+  let toast = document.getElementById("gh-sync-toast");
+  if (!toast) {
+    toast = document.createElement("div");
+    toast.id = "gh-sync-toast";
+    toast.style.cssText = "position:fixed;bottom:24px;right:24px;padding:12px 20px;border-radius:8px;font-size:13px;font-weight:700;z-index:9999;box-shadow:0 4px 12px rgba(0,0,0,0.2);transition:opacity 0.3s;";
+    document.body.appendChild(toast);
+  }
+  toast.textContent = msg;
+  toast.style.background = type === "success" ? "#e3fcef" : "#fffbe6";
+  toast.style.color = type === "success" ? "#006644" : "#7c5c00";
+  toast.style.border = type === "success" ? "1px solid #abf5d1" : "1px solid #ffe58f";
+  toast.style.opacity = "1";
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(() => { toast.style.opacity = "0"; }, 5000);
+}
+// ======================================
+
 // State Manager
 class AdminStore {
   constructor() {
@@ -64,6 +142,8 @@ class AdminStore {
     } catch (e) {
       console.error(e);
     }
+    // GitHub自動同期（非同期・ノンブロッキング）
+    autoSyncToGitHub(this.data.companies).catch(e => console.warn("GitHub sync skip:", e));
   }
 
   reset() {
@@ -86,7 +166,38 @@ document.addEventListener("DOMContentLoaded", () => {
   setupNavigation();
   setupEventListeners();
   renderAll();
+  initGhTokenUI();
 });
+
+function initGhTokenUI() {
+  const statusEl = document.getElementById("gh-token-status");
+  const inputEl = document.getElementById("gh-token-input");
+  const token = getGhToken();
+  if (statusEl) {
+    if (token) {
+      statusEl.innerHTML = '<span style="color:#57d9a3;">✅ 自動同期ON</span>';
+      if (inputEl) inputEl.placeholder = "（設定済み）変更する場合のみ入力";
+    } else {
+      statusEl.innerHTML = '<span style="color:#ff8f73;">⚠️ 未設定（下記参照）</span>';
+    }
+  }
+}
+
+function saveGhTokenFromUI() {
+  const input = document.getElementById("gh-token-input");
+  const statusEl = document.getElementById("gh-token-status");
+  const saveBtn = document.getElementById("gh-save-btn");
+  if (!input || !input.value.trim()) return;
+  setGhToken(input.value.trim());
+  if (statusEl) statusEl.innerHTML = '<span style="color:#57d9a3;">✅ 自動同期ON（次回保存から有効）</span>';
+  if (saveBtn) saveBtn.style.display = "none";
+  input.value = "";
+  input.placeholder = "（設定済み）変更する場合のみ入力";
+  alert("✅ GitHubトークンを保存しました！\n次回から店舗を登録・更新すると自動でスマホに反映されます。");
+}
+window.saveGhTokenFromUI = saveGhTokenFromUI;
+
+
 
 function setupNavigation() {
   const navItems = document.querySelectorAll(".nav-item[data-tab]");

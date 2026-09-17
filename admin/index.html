@@ -55,6 +55,20 @@
 
     <div class="sidebar-footer">
       <div>ご縁ガール運営事務局</div>
+
+      <!-- GitHub自動同期設定 -->
+      <div id="gh-token-section" style="background: rgba(255,255,255,0.07); border-radius: 6px; padding: 8px 10px; margin-top: 4px;">
+        <div style="font-size: 11px; color: #aab4be; margin-bottom: 4px; font-weight: 700;">📱 スマホ自動同期設定</div>
+        <div id="gh-token-status" style="font-size: 11px; margin-bottom: 6px;"></div>
+        <input type="password" id="gh-token-input" placeholder="GitHubトークンを入力..." 
+          style="width: 100%; padding: 5px 8px; font-size: 11px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.1); color: #fff; box-sizing: border-box;"
+          oninput="document.getElementById('gh-save-btn').style.display='block'">
+        <button id="gh-save-btn" onclick="saveGhTokenFromUI()" 
+          style="display:none; margin-top: 4px; width: 100%; padding: 4px; font-size: 11px; background: #4285f4; color: #fff; border: none; border-radius: 4px; cursor: pointer;">
+          設定を保存
+        </button>
+      </div>
+
       <a href="javascript:void(0)" id="btn-reset-data" style="color: #de350b;">🗑️ 全データをクリア（新規テスト）</a>
       <small>© 2026 TS DELY &amp; GOEN GIRL</small>
     </div>
