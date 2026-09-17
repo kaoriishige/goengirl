@@ -9,35 +9,48 @@ const DEFAULT_DATA = {
 // State Manager
 class AdminStore {
   constructor() {
-    this.storageKey = "goen_girl_admin_db_v7";
-    // Force clear old mock data
-    if (!localStorage.getItem("goen_girl_cleaned_mock_v7")) {
-      localStorage.removeItem("goen_girl_admin_db_v1");
-      localStorage.removeItem("goen_girl_admin_db_v2");
-      localStorage.removeItem("goen_girl_admin_db_v3");
-      localStorage.removeItem("goen_girl_admin_db_v4");
-      localStorage.removeItem("goen_girl_admin_db_v5");
-      localStorage.removeItem("goen_girl_admin_db_v6");
-      localStorage.removeItem("goen_girl_companies_shared");
-      localStorage.removeItem("goen_girl_member_session");
-      localStorage.setItem("goen_girl_cleaned_mock_v7", "true");
-      this.reset();
-    }
+    this.storageKey = "goen_girl_admin_db_permanent";
     this.data = this.load();
   }
 
   load() {
+    // 1. Try permanent storage first
     try {
       const stored = localStorage.getItem(this.storageKey);
       if (stored) {
         const parsed = JSON.parse(stored);
-        if (parsed.companies && parsed.panels && parsed.payments) {
+        if (parsed && Array.isArray(parsed.companies)) {
           return parsed;
         }
       }
     } catch (e) {
-      console.error("Failed to parse localStorage", e);
+      console.error("Error loading permanent store", e);
     }
+
+    // 2. Rescue any previously entered data from v7, v6, v5, v4, v3, v2, v1
+    const oldKeys = [
+      "goen_girl_admin_db_v7", "goen_girl_admin_db_v6", "goen_girl_admin_db_v5",
+      "goen_girl_admin_db_v4", "goen_girl_admin_db_v3", "goen_girl_admin_db_v2",
+      "goen_girl_companies_shared"
+    ];
+    for (const k of oldKeys) {
+      try {
+        const val = localStorage.getItem(k);
+        if (val) {
+          const parsed = JSON.parse(val);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            // It was companies array
+            const rescued = { companies: parsed, panels: [], goods: [], payments: [] };
+            this.save(rescued);
+            return rescued;
+          } else if (parsed && Array.isArray(parsed.companies) && parsed.companies.length > 0) {
+            this.save(parsed);
+            return parsed;
+          }
+        }
+      } catch (e) {}
+    }
+
     this.save(DEFAULT_DATA);
     return JSON.parse(JSON.stringify(DEFAULT_DATA));
   }
@@ -139,6 +152,61 @@ function setupEventListeners() {
   const latInput = document.getElementById("form-company-lat");
   const lngInput = document.getElementById("form-company-lng");
   const gpsHint = document.getElementById("gps-status-hint");
+
+  
+  // Mobile Sync QR Modal
+  const btnSyncPhone = document.getElementById("btn-sync-phone");
+  const modalSync = document.getElementById("modal-sync-phone");
+  const modalSyncClose = document.getElementById("modal-sync-close");
+  const qrImgEl = document.getElementById("sync-qr-image");
+  const syncUrlInput = document.getElementById("sync-url-input");
+  const btnCopySyncUrl = document.getElementById("btn-copy-sync-url");
+
+  if (btnSyncPhone) {
+    btnSyncPhone.addEventListener("click", () => {
+      const companies = store.data.companies;
+      if (companies.length === 0) {
+        alert("提携店舗データがまだ登録されていません。先に「＋ 新規提携先を登録」から店舗を登録してください。");
+        return;
+      }
+
+      // Compact sync payload
+      const payload = companies.map(c => ({
+        id: c.id,
+        name: c.name,
+        address: c.address,
+        character: c.character,
+        characterImg: c.characterImg,
+        lat: c.lat,
+        lng: c.lng,
+        panelType: c.panelType,
+        panelLocation: c.panelLocation
+      }));
+
+      const jsonStr = JSON.stringify(payload);
+      const b64 = btoa(encodeURIComponent(jsonStr));
+      const syncUrl = `https://goen-girl.netlify.app/member/?import=${b64}`;
+
+      if (syncUrlInput) syncUrlInput.value = syncUrl;
+      if (qrImgEl) {
+        qrImgEl.src = `https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent(syncUrl)}`;
+      }
+
+      if (modalSync) modalSync.classList.add("open");
+    });
+  }
+
+  if (modalSyncClose) {
+    modalSyncClose.addEventListener("click", () => modalSync.classList.remove("open"));
+  }
+
+  if (btnCopySyncUrl && syncUrlInput) {
+    btnCopySyncUrl.addEventListener("click", () => {
+      syncUrlInput.select();
+      navigator.clipboard.writeText(syncUrlInput.value);
+      alert("✅ スマホ同期用URLをコピーしました！\nスマホのLINEやメールに送って開くことでも同期できます。");
+    });
+  }
 
   // Dynamic Options (Goods & SNS) & Real-time Calculation
   const panelFeeInput = document.getElementById("form-company-panel-fee");

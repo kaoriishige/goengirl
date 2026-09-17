@@ -1,3 +1,25 @@
+// Handle URL import for cross-device sync (PC -> Mobile)
+(function checkUrlImport() {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const importData = params.get("import");
+    if (importData) {
+      const decoded = decodeURIComponent(atob(importData));
+      const companies = JSON.parse(decoded);
+      if (Array.isArray(companies) && companies.length > 0) {
+        localStorage.setItem("goen_girl_companies_shared", JSON.stringify(companies));
+        window.history.replaceState(null, "", window.location.pathname);
+        setTimeout(() => {
+          alert(`🎉 PCから店舗データ（${companies.length}件: ${companies[0].name}等）をスマホに同期しました！\n巡礼スポットやパネルスキャンでご利用いただけます。`);
+          location.reload();
+        }, 100);
+      }
+    }
+  } catch (e) {
+    console.error("Failed to import spots from URL", e);
+  }
+})();
+
 // Default member state if none exists
 const DEFAULT_MEMBER = {
   isLoggedIn: true,
@@ -568,3 +590,98 @@ function renderHistory() {
 
 window.playMemberVoice = playMemberVoice;
 window.exchangeItem = exchangeItem;
+
+
+// Handle Mobile Sync Button & Quick Add Spot Modal
+document.addEventListener("DOMContentLoaded", () => {
+  const btnManualSync = document.getElementById("btn-manual-sync-url");
+  if (btnManualSync) {
+    btnManualSync.addEventListener("click", () => {
+      const inputUrl = prompt("PC管理画面でコピーした「同期URL」またはQRコードのURLをここに貼り付けてください:");
+      if (inputUrl && inputUrl.includes("import=")) {
+        try {
+          const u = new URL(inputUrl);
+          const b64 = u.searchParams.get("import");
+          if (b64) {
+            const decoded = decodeURIComponent(atob(b64));
+            const companies = JSON.parse(decoded);
+            if (Array.isArray(companies)) {
+              localStorage.setItem("goen_girl_companies_shared", JSON.stringify(companies));
+              alert(`🎉 PCから店舗データ（${companies.length}件）をスマホに同期しました！`);
+              location.reload();
+            }
+          }
+        } catch (e) {
+          alert("URLの形式が正しくありません。");
+        }
+      }
+    });
+  }
+
+  const btnQuickAdd = document.getElementById("btn-quick-add-spot");
+  const modalQuick = document.getElementById("modal-quick-spot");
+  const btnCloseQuick = document.getElementById("btn-close-quick-spot");
+  const btnCancelQuick = document.getElementById("btn-cancel-quick-spot");
+  const formQuick = document.getElementById("form-quick-spot");
+  const quickFile = document.getElementById("quick-spot-file");
+  const quickImgData = document.getElementById("quick-spot-img-data");
+
+  if (btnQuickAdd && modalQuick) {
+    btnQuickAdd.addEventListener("click", () => {
+      formQuick.reset();
+      quickImgData.value = "";
+      modalQuick.style.display = "grid";
+    });
+  }
+  const closeQuickModal = () => { if (modalQuick) modalQuick.style.display = "none"; };
+  if (btnCloseQuick) btnCloseQuick.addEventListener("click", closeQuickModal);
+  if (btnCancelQuick) btnCancelQuick.addEventListener("click", closeQuickModal);
+
+  if (quickFile) {
+    quickFile.addEventListener("change", (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+          quickImgData.value = evt.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  }
+
+  if (formQuick) {
+    formQuick.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const name = document.getElementById("quick-spot-name").value.trim();
+      const character = document.getElementById("quick-spot-char").value.trim();
+      const addr = document.getElementById("quick-spot-addr").value.trim();
+      const lat = parseFloat(document.getElementById("quick-spot-lat").value) || 37.08;
+      const lng = parseFloat(document.getElementById("quick-spot-lng").value) || 139.98;
+      const img = quickImgData.value || "../assets/nasuno-tsutsuji.png";
+
+      let existing = [];
+      try {
+        const shared = localStorage.getItem("goen_girl_companies_shared");
+        if (shared) existing = JSON.parse(shared);
+      } catch (err) {}
+
+      const newSpot = {
+        id: "C" + String(existing.length + 1).padStart(3, "0"),
+        name: name,
+        address: addr,
+        character: character,
+        characterImg: img,
+        lat: lat,
+        lng: lng,
+        panelType: "等身大パネル"
+      };
+
+      existing.unshift(newSpot);
+      localStorage.setItem("goen_girl_companies_shared", JSON.stringify(existing));
+      closeQuickModal();
+      alert(`✅ スマホに「${name} (${character})」を巡礼スポットとして登録しました！`);
+      location.reload();
+    });
+  }
+});

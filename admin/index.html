@@ -68,6 +68,9 @@
       </div>
       <div class="topbar-right">
         <span style="font-size: 13px; color: var(--admin-text-muted);">管理者: <strong>菊地 孝史 (TS DELY)</strong></span>
+        <button class="btn btn-primary btn-sm" id="btn-sync-phone" style="background: linear-gradient(135deg, #0052cc, #6554c0); border: none; font-weight: 700; box-shadow: 0 2px 8px rgba(0,82,204,0.3);">
+          📱 スマホにデータ共有 (QR)
+        </button>
         <button class="btn btn-secondary btn-sm" onclick="location.reload()">最新情報に更新</button>
       </div>
     </header>
@@ -293,6 +296,40 @@
         </div>
       </section>
     </main>
+  </div>
+
+    <!-- Modal: Sync Phone QR -->
+  <div class="modal-backdrop" id="modal-sync-phone">
+    <div class="modal-card" style="max-width: 480px; text-align: center;">
+      <div class="modal-header">
+        <h2 class="modal-title">📱 スマホに店舗データを共有</h2>
+        <button class="modal-close" id="modal-sync-close">&times;</button>
+      </div>
+      <div class="modal-body" style="padding: 24px; display: flex; flex-direction: column; align-items: center; gap: 16px;">
+        <div style="font-size: 14px; color: #172b4d; font-weight: 600;">
+          スマホの標準カメラで下のQRコードを読み取ってください
+        </div>
+        <p style="font-size: 12px; color: #6b778c; margin: 0; line-height: 1.5;">
+          このパソコンで登録した提携店舗・GPS座標・パネル情報が、スマホの会員画面（巡礼・スキャナー）に即座に同期されます！
+        </p>
+
+        <div style="background: #fff; padding: 16px; border-radius: 12px; border: 2px dashed #0052cc; box-shadow: 0 4px 16px rgba(0,82,204,0.08);">
+          <img id="sync-qr-image" src="" alt="同期用QRコード" style="width: 220px; height: 220px; display: block; margin: 0 auto;">
+        </div>
+
+        <div style="width: 100%; text-align: left; margin-top: 8px;">
+          <label style="font-size: 11px; font-weight: 700; color: #555;">または同期用URLを直接スマホで開く：</label>
+          <div style="display: flex; gap: 6px; margin-top: 4px;">
+            <input type="text" id="sync-url-input" readonly style="flex: 1; font-size: 11px; padding: 8px; background: #f4f6fa; border: 1px solid #dfe1e6; border-radius: 4px;">
+            <button type="button" class="btn btn-secondary btn-sm" id="btn-copy-sync-url" style="white-space: nowrap;">📋 コピー</button>
+          </div>
+          <small style="color: #888; font-size: 11px;">※LINEやメールに貼り付けてスマホで開いても同期できます。</small>
+        </div>
+      </div>
+      <div class="modal-footer" style="justify-content: center;">
+        <button type="button" class="btn btn-primary" onclick="document.getElementById('modal-sync-phone').classList.remove('open')">閉じる</button>
+      </div>
+    </div>
   </div>
 
   <!-- Modal: Create / Edit Company -->
