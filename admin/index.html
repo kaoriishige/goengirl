@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ご縁ガール 運営管理コンソール</title>
-  <link rel="stylesheet" href="admin.css?v=6">
+  <link rel="stylesheet" href="admin.css?v=7">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext y='.9em' font-size='54'%3E%E6%A1%9C%3C/text%3E%3C/svg%3E">
 </head>
 <body>
@@ -536,7 +536,44 @@
             </div>
           </div>
 
-          <!-- Section 5: ステータス -->
+                    <!-- Section 5: お支払い金額・ご請求計算内訳（リアルタイム連動） -->
+          <div class="form-section highlight" style="background: #f0f7ff; border-color: #70b4ff;">
+            <div class="form-section-header" style="border-bottom-color: #cce4ff;">
+              <span class="form-section-title" style="color: #0043a8;">
+                🧮 お支払い金額・ご請求計算内訳（初年度1年間）
+              </span>
+              <span class="billing-badge invoice" style="background: #0052cc; color: #fff;">1円単位まで完全一致</span>
+            </div>
+            <div style="background: #fff; border-radius: 6px; padding: 12px; border: 1px solid #d0e4ff;">
+              <table style="width: 100%; font-size: 13px; border-collapse: collapse;">
+                <tbody>
+                  <tr style="border-bottom: 1px solid #edf2f7;">
+                    <td style="padding: 6px 0; color: #555;">① 等身大パネル導入費 (請求書一括)</td>
+                    <td style="padding: 6px 0; text-align: right;" id="summary-panel-amount">税別 ¥150,000 <span style="font-weight: 700; color: #172b4d;">(税込 ¥165,000)</span></td>
+                  </tr>
+                  <tr style="border-bottom: 1px solid #edf2f7;" id="summary-goods-row">
+                    <td style="padding: 6px 0; color: #555;">② 公式グッズ初回卸仕入れ (請求書一括)</td>
+                    <td style="padding: 6px 0; text-align: right;" id="summary-goods-amount">発注なし (¥0)</td>
+                  </tr>
+                  <tr style="border-bottom: 1px solid #edf2f7;" id="summary-sns-row">
+                    <td style="padding: 6px 0; color: #555;">③ SNSショート動画配信PR (12ヶ月分)</td>
+                    <td style="padding: 6px 0; text-align: right;" id="summary-sns-amount">税別 ¥120,000 <span style="font-weight: 700; color: #0284c7;">(税込 ¥132,000)</span></td>
+                  </tr>
+                  <tr style="background: #f8fbff; font-weight: 700; font-size: 14px;">
+                    <td style="padding: 10px 0; color: #0052cc;">初年度 お支払い総額（合計）</td>
+                    <td style="padding: 10px 0; text-align: right; color: #0052cc;" id="summary-total-amount">
+                      税別 ¥270,000 <span style="font-size: 16px; color: #d9381e;">(税込 ¥297,000)</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div id="summary-payment-flow" style="font-size: 12px; color: #555; margin-top: 8px; padding-top: 8px; border-top: 1px dashed #d0e4ff; line-height: 1.6;">
+                <!-- Filled dynamically by JS -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 6: ステータス -->
           <div class="form-section">
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
               <div class="form-group">
@@ -562,6 +599,6 @@
     </div>
   </div>
 
-  <script src="admin.js?v=6"></script>
+  <script src="admin.js?v=7"></script>
 </body>
 </html>

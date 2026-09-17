@@ -9,15 +9,18 @@ const DEFAULT_DATA = {
 // State Manager
 class AdminStore {
   constructor() {
-    this.storageKey = "goen_girl_admin_db_v6";
+    this.storageKey = "goen_girl_admin_db_v7";
     // Force clear old mock data
-    if (!localStorage.getItem("goen_girl_cleaned_mock_v6")) {
+    if (!localStorage.getItem("goen_girl_cleaned_mock_v7")) {
       localStorage.removeItem("goen_girl_admin_db_v1");
       localStorage.removeItem("goen_girl_admin_db_v2");
       localStorage.removeItem("goen_girl_admin_db_v3");
+      localStorage.removeItem("goen_girl_admin_db_v4");
+      localStorage.removeItem("goen_girl_admin_db_v5");
+      localStorage.removeItem("goen_girl_admin_db_v6");
       localStorage.removeItem("goen_girl_companies_shared");
       localStorage.removeItem("goen_girl_member_session");
-      localStorage.setItem("goen_girl_cleaned_mock_v6", "true");
+      localStorage.setItem("goen_girl_cleaned_mock_v7", "true");
       this.reset();
     }
     this.data = this.load();
@@ -137,30 +140,109 @@ function setupEventListeners() {
   const lngInput = document.getElementById("form-company-lng");
   const gpsHint = document.getElementById("gps-status-hint");
 
-  // Dynamic Options (Goods & SNS)
+  // Dynamic Options (Goods & SNS) & Real-time Calculation
+  const panelFeeInput = document.getElementById("form-company-panel-fee");
   const goodsCheckbox = document.getElementById("form-company-goods-enabled");
+  const goodsAmountInput = document.getElementById("form-company-goods-amount");
   const goodsDetails = document.getElementById("goods-order-details");
-  if (goodsCheckbox && goodsDetails) {
-    goodsCheckbox.addEventListener("change", () => {
-      goodsDetails.style.display = goodsCheckbox.checked ? "block" : "none";
-    });
-  }
-
   const snsCheckbox = document.getElementById("form-company-sns-enabled");
   const snsDetails = document.getElementById("sns-plan-details");
-  if (snsCheckbox && snsDetails) {
-    snsCheckbox.addEventListener("change", () => {
-      snsDetails.style.display = snsCheckbox.checked ? "block" : "none";
-    });
-  }
-
   const snsTypeRadios = document.querySelectorAll("input[name='form-company-sns-billing-type']");
   const snsMonthlyMethodBox = document.getElementById("sns-monthly-payment-method");
+
+  // Real-time Billing Summary Calculation
+  function updateModalBillingSummary() {
+    const panelFee = parseInt(panelFeeInput?.value, 10) || 0;
+    const panelTax = Math.round(panelFee * 1.1);
+
+    const isGoods = goodsCheckbox?.checked;
+    const goodsFee = isGoods ? (parseInt(goodsAmountInput?.value, 10) || 0) : 0;
+    const goodsTax = Math.round(goodsFee * 1.1);
+
+    const isSns = snsCheckbox?.checked;
+    const selectedSnsType = document.querySelector("input[name='form-company-sns-billing-type']:checked")?.value || "毎月課金";
+    
+    // 10,000 yen (tax excluded) * 12 = 120,000 yen (tax excluded)
+    // 11,000 yen (tax included) * 12 = 132,000 yen (tax included)
+    const snsAnnualFee = isSns ? 120000 : 0;
+    const snsAnnualTax = isSns ? 132000 : 0;
+
+    const totalExcluded = panelFee + goodsFee + snsAnnualFee;
+    const totalTax = Math.round(totalExcluded * 0.1);
+    const totalIncluded = totalExcluded + totalTax;
+
+    // Update UI elements
+    const summaryPanelEl = document.getElementById("summary-panel-amount");
+    const summaryGoodsEl = document.getElementById("summary-goods-amount");
+    const summarySnsEl = document.getElementById("summary-sns-amount");
+    const summaryTotalEl = document.getElementById("summary-total-amount");
+    const summaryFlowEl = document.getElementById("summary-payment-flow");
+
+    if (summaryPanelEl) {
+      summaryPanelEl.innerHTML = `税別 ¥${panelFee.toLocaleString()} <span style="font-weight: 700; color: #172b4d;">(税込 ¥${panelTax.toLocaleString()})</span>`;
+    }
+    if (summaryGoodsEl) {
+      if (isGoods) {
+        summaryGoodsEl.innerHTML = `税別 ¥${goodsFee.toLocaleString()} <span style="font-weight: 700; color: #172b4d;">(税込 ¥${goodsTax.toLocaleString()})</span>`;
+      } else {
+        summaryGoodsEl.innerHTML = `<span style="color: #888;">発注なし (¥0)</span>`;
+      }
+    }
+    if (summarySnsEl) {
+      if (isSns) {
+        if (selectedSnsType === "毎月課金") {
+          summarySnsEl.innerHTML = `月額1万円税別×12ヶ月 = 税別 ¥120,000 <span style="font-weight: 700; color: #0284c7;">(税込 ¥132,000 / 月々¥11,000)</span>`;
+        } else {
+          summarySnsEl.innerHTML = `年払い一括 = 税別 ¥120,000 <span style="font-weight: 700; color: #0284c7;">(税込 ¥132,000)</span>`;
+        }
+      } else {
+        summarySnsEl.innerHTML = `<span style="color: #888;">未契約 (¥0)</span>`;
+      }
+    }
+    if (summaryTotalEl) {
+      summaryTotalEl.innerHTML = `税別 ¥${totalExcluded.toLocaleString()} <span style="font-size: 16px; color: #d9381e;">(税込 ¥${totalIncluded.toLocaleString()})</span>`;
+    }
+
+    if (summaryFlowEl) {
+      if (!isSns || selectedSnsType === "一括清算") {
+        summaryFlowEl.innerHTML = `
+          <strong>【お支払い方法】</strong><br>
+          ・初回一括ご請求書発行額：<strong style="color: #0052cc; font-size: 14px;">¥${totalIncluded.toLocaleString()}（税込）</strong><br>
+          <small style="color: #666;">（内訳: パネル ¥${panelTax.toLocaleString()} ${isGoods ? `+ グッズ ¥${goodsTax.toLocaleString()} ` : ''}${isSns ? '+ SNS年間 ¥132,000' : ''}）</small>
+        `;
+      } else {
+        const initialInvoice = panelTax + goodsTax;
+        summaryFlowEl.innerHTML = `
+          <strong>【お支払い方法】</strong><br>
+          ・初回一括ご請求書発行額（パネル${isGoods ? '+グッズ' : ''}）：<strong style="color: #0052cc;">¥${initialInvoice.toLocaleString()}（税込）</strong><br>
+          ・毎月の継続お支払い額（SNS動画PR）：<strong style="color: #0284c7;">¥11,000 / 月（税込）</strong>（12ヶ月合計: ¥132,000 税込）<br>
+          <strong style="color: #d9381e;">➡ 初年度1年間のお支払い合計：¥${totalIncluded.toLocaleString()}（税込）</strong>
+        `;
+      }
+    }
+  }
+
+  // Bind real-time recalculation
+  if (panelFeeInput) panelFeeInput.addEventListener("input", updateModalBillingSummary);
+  if (goodsAmountInput) goodsAmountInput.addEventListener("input", updateModalBillingSummary);
+  if (goodsCheckbox) {
+    goodsCheckbox.addEventListener("change", () => {
+      if (goodsDetails) goodsDetails.style.display = goodsCheckbox.checked ? "block" : "none";
+      updateModalBillingSummary();
+    });
+  }
+  if (snsCheckbox) {
+    snsCheckbox.addEventListener("change", () => {
+      if (snsDetails) snsDetails.style.display = snsCheckbox.checked ? "block" : "none";
+      updateModalBillingSummary();
+    });
+  }
   snsTypeRadios.forEach(r => {
     r.addEventListener("change", () => {
       if (snsMonthlyMethodBox) {
         snsMonthlyMethodBox.style.display = (r.value === "毎月課金") ? "block" : "none";
       }
+      updateModalBillingSummary();
     });
   });
 
@@ -294,6 +376,9 @@ function setupEventListeners() {
       const startDateInput = document.getElementById("form-company-start-date");
       if (startDateInput) startDateInput.value = new Date().toISOString().split("T")[0];
 
+      // Update real-time summary
+      updateModalBillingSummary();
+
       document.getElementById("modal-company-title").textContent = "新規提携企業・店舗の登録";
       modalCompany.classList.add("open");
     });
@@ -346,33 +431,51 @@ function setupEventListeners() {
         return;
       }
 
-      // Billing & Services Calculation
+      // Accurate Billing & Services Calculation
       const panelFee = parseInt(document.getElementById("form-company-panel-fee").value, 10) || 150000;
+      const panelFeeTax = Math.round(panelFee * 1.1);
+
       const goodsEnabled = document.getElementById("form-company-goods-enabled").checked;
       const goodsPackage = goodsEnabled ? document.getElementById("form-company-goods-package").value : "発注なし";
       const goodsAmount = goodsEnabled ? (parseInt(document.getElementById("form-company-goods-amount").value, 10) || 50000) : 0;
+      const goodsAmountTax = Math.round(goodsAmount * 1.1);
 
       const snsEnabled = document.getElementById("form-company-sns-enabled").checked;
       let snsBillingType = "未契約";
       let snsPaymentMethod = "未契約";
-      let monthlyFee = 0;
-      let snsAnnualFee = 0;
+      let monthlyFee = 0; // Tax excluded
+      let monthlyFeeTax = 0; // Tax included
+      let snsAnnualFee = 0; // Tax excluded
+      let snsAnnualTax = 0; // Tax included
 
       if (snsEnabled) {
         const selectedTypeRadio = document.querySelector("input[name='form-company-sns-billing-type']:checked");
         snsBillingType = selectedTypeRadio ? selectedTypeRadio.value : "毎月課金";
+        
+        // 10,000 yen (tax excluded) * 12 = 120,000 yen (tax excluded)
+        // 11,000 yen (tax included) * 12 = 132,000 yen (tax included)
+        snsAnnualFee = 120000;
+        snsAnnualTax = 132000;
+
         if (snsBillingType === "一括清算") {
-          snsAnnualFee = 120000;
           snsPaymentMethod = "請求書一括清算（年払い）";
         } else {
           monthlyFee = 10000;
+          monthlyFeeTax = 11000;
           const selectedPayRadio = document.querySelector("input[name='form-company-sns-pay-method']:checked");
           snsPaymentMethod = selectedPayRadio ? selectedPayRadio.value : "クレジットカード毎月決済";
         }
       }
 
-      const initialTotal = panelFee + goodsAmount + snsAnnualFee;
-      const annualTotalRevenue = initialTotal + (monthlyFee * 12);
+      // Initial Invoice Total (Immediate Billing)
+      let initialInvoiceTax = panelFeeTax + goodsAmountTax;
+      if (snsEnabled && snsBillingType === "一括清算") {
+        initialInvoiceTax += snsAnnualTax;
+      }
+
+      // Annual Grand Total (Full 1 Year)
+      const annualTotalTaxExcluded = panelFee + goodsAmount + (snsEnabled ? 120000 : 0);
+      const annualTotalTaxIncluded = panelFeeTax + goodsAmountTax + (snsEnabled ? 132000 : 0);
 
       const startDateVal = document.getElementById("form-company-start-date").value || new Date().toISOString().split("T")[0];
       const nextRenewalVal = new Date(new Date(startDateVal).getTime() + 365*24*60*60*1000).toISOString().split("T")[0];
@@ -391,15 +494,21 @@ function setupEventListeners() {
         panelType: panelTypeVal,
         panelLocation: panelLocationVal,
         panelFee: panelFee,
+        panelFeeTax: panelFeeTax,
         goodsEnabled: goodsEnabled,
         goodsPackage: goodsPackage,
         goodsAmount: goodsAmount,
+        goodsAmountTax: goodsAmountTax,
         snsEnabled: snsEnabled,
         snsBillingType: snsBillingType,
         snsPaymentMethod: snsPaymentMethod,
         monthlyFee: monthlyFee,
-        initialPaid: initialTotal,
-        totalAmount: annualTotalRevenue,
+        monthlyFeeTax: monthlyFeeTax,
+        snsAnnualFee: snsAnnualFee,
+        snsAnnualTax: snsAnnualTax,
+        initialInvoiceTax: initialInvoiceTax,
+        totalAmount: annualTotalTaxExcluded, // Tax excluded for book revenue
+        totalAmountTax: annualTotalTaxIncluded, // Tax included
         startDate: startDateVal,
         nextRenewal: nextRenewalVal,
         status: document.getElementById("form-company-status").value
@@ -447,7 +556,7 @@ function setupEventListeners() {
           condition: "良好"
         });
 
-        // 2. Generate Invoices & Payments automatically
+        // 2. Generate Invoices & Payments automatically with exact amounts
         const todayStr = new Date().toISOString().split("T")[0];
         const dueStr = new Date(Date.now() + 30*24*60*60*1000).toISOString().split("T")[0];
 
@@ -456,8 +565,8 @@ function setupEventListeners() {
           id: "INV-PN-" + String(store.data.payments.length + 1).padStart(3, "0"),
           companyId: newId,
           companyName: formData.name,
-          billingItem: `等身大キャラクターパネル初期導入費 (${formData.panelType})`,
-          amount: Math.round(panelFee * 1.1),
+          billingItem: `等身大キャラクターパネル初期導入費 (${formData.panelType}) [税別¥${panelFee.toLocaleString()} + 税¥${(panelFeeTax - panelFee).toLocaleString()}]`,
+          amount: panelFeeTax,
           method: "請求書で一括清算 (銀行振込)",
           dueDate: dueStr,
           paidDate: "-",
@@ -470,8 +579,8 @@ function setupEventListeners() {
             id: "INV-GD-" + String(store.data.payments.length + 1).padStart(3, "0"),
             companyId: newId,
             companyName: formData.name,
-            billingItem: `公式グッズ初回卸仕入れ (${goodsPackage})`,
-            amount: Math.round(goodsAmount * 1.1),
+            billingItem: `公式グッズ初回卸仕入れ (${goodsPackage}) [税別¥${goodsAmount.toLocaleString()} + 税¥${(goodsAmountTax - goodsAmount).toLocaleString()}]`,
+            amount: goodsAmountTax,
             method: "請求書で一括清算 (銀行振込)",
             dueDate: dueStr,
             paidDate: "-",
@@ -479,7 +588,7 @@ function setupEventListeners() {
           });
         }
 
-        // Payment C: SNS Video PR Service (一括請求書 または 毎月クレカ/口座振替)
+        // Payment C: SNS Video PR Service (11,000円×12 = 132,000円)
         if (snsEnabled) {
           if (snsBillingType === "一括清算") {
             store.data.payments.unshift({
@@ -494,12 +603,12 @@ function setupEventListeners() {
               status: "請求中"
             });
           } else {
-            // Monthly Subscription (Credit Card or Bank Debit)
+            // Monthly Subscription (11,000 yen / month)
             store.data.payments.unshift({
               id: "SUB-SNS-" + String(store.data.payments.length + 1).padStart(3, "0"),
               companyId: newId,
               companyName: formData.name,
-              billingItem: "SNSショート動画配信PR 月額利用料（税別10,000円 / 税込11,000円）",
+              billingItem: "SNSショート動画配信PR 月額利用料（初回当月分 / 税込11,000円）",
               amount: 11000,
               method: snsPaymentMethod,
               dueDate: todayStr,
@@ -514,7 +623,7 @@ function setupEventListeners() {
       closeModal();
       renderAll();
 
-      alert(`✅「${formData.name}」の新規契約・提携登録が完了しました！\n\n・導入キャラクター: ${formData.character}\n・パネル仕様: ${formData.panelType}\n・設置場所: ${formData.panelLocation}\n・清算: パネル導入(請求書一括)${goodsEnabled ? ' + グッズ(請求書一括)' : ''}${snsEnabled ? ` + SNS PR(${snsBillingType})` : ''}\n\n「請求・決済管理」および「売上台帳」に即座に反映されました。`);
+      alert(`✅「${formData.name}」の契約登録が完了しました！\n\n【初年度お支払い総額（合計）】\n・税別合計: ¥${annualTotalTaxExcluded.toLocaleString()}\n・税込合計: ¥${annualTotalTaxIncluded.toLocaleString()}\n\n【内訳】\n・パネル導入: ¥${panelFeeTax.toLocaleString()} (税込 / 請求書一括)\n${goodsEnabled ? `・グッズ発注: ¥${goodsAmountTax.toLocaleString()} (税込 / 請求書一括)\n` : ''}${snsEnabled ? `・SNS動画PR: ¥132,000 (税込 / 11,000円×12ヶ月 / ${snsBillingType})\n` : ''}\n売上台帳・請求書に1円の狂いなく反映されました。`);
     });
   }
 }
@@ -534,9 +643,12 @@ function renderKPIs() {
   const activeCount = companies.filter(c => c.status === "契約中").length;
   const panelsCount = store.data.panels.filter(p => p.status === "稼働中").length;
   
-  // Dynamic Revenue calculation
-  let totalRevenue = companies.reduce((sum, c) => sum + (c.totalAmount || 0), 0);
-  let monthlyRecurring = companies.filter(c => c.status === "契約中").reduce((sum, c) => sum + (c.monthlyFee || 0), 0);
+  // Dynamic Revenue calculation (Tax excluded & Tax included)
+  let totalRevenueExcluded = companies.reduce((sum, c) => sum + (c.totalAmount || 0), 0);
+  let totalRevenueIncluded = companies.reduce((sum, c) => sum + (c.totalAmountTax || Math.round((c.totalAmount || 0) * 1.1)), 0);
+
+  let monthlyRecurringExcluded = companies.filter(c => c.status === "契約中").reduce((sum, c) => sum + (c.monthlyFee || 0), 0);
+  let monthlyRecurringIncluded = companies.filter(c => c.status === "契約中").reduce((sum, c) => sum + (c.monthlyFeeTax || Math.round((c.monthlyFee || 0) * 1.1)), 0);
 
   const countEl = document.getElementById("kpi-company-count");
   const subEl = document.getElementById("kpi-company-sub");
@@ -553,8 +665,21 @@ function renderKPIs() {
   if (panelEl) panelEl.textContent = `${panelsCount} 台`;
   if (panelSubEl) panelSubEl.textContent = panelsCount > 0 ? `稼働中パネル ${panelsCount} 台` : "稼働中パネル 0 台";
 
-  if (revEl) revEl.textContent = `¥${totalRevenue.toLocaleString()}`;
-  if (mrrEl) mrrEl.textContent = `月額サブスク収益: ¥${monthlyRecurring.toLocaleString()}/月`;
+  if (revEl) {
+    if (totalRevenueIncluded > 0) {
+      revEl.innerHTML = `¥${totalRevenueExcluded.toLocaleString()} <span style="font-size: 13px; font-weight: normal; color: #555;">(税込 ¥${totalRevenueIncluded.toLocaleString()})</span>`;
+    } else {
+      revEl.textContent = "¥0";
+    }
+  }
+
+  if (mrrEl) {
+    if (monthlyRecurringIncluded > 0) {
+      mrrEl.textContent = `月額サブスク: 税別¥${monthlyRecurringExcluded.toLocaleString()}/月 (税込¥${monthlyRecurringIncluded.toLocaleString()}/月)`;
+    } else {
+      mrrEl.textContent = "月額サブスク収益: ¥0/月";
+    }
+  }
 
   if (renEl) renEl.textContent = activeCount > 0 ? "100%" : "0%";
   if (renSubEl) renSubEl.textContent = activeCount > 0 ? "中途解約 0件 (1年自動更新)" : "提携企業数 0 件";
@@ -668,17 +793,17 @@ function renderCompanies() {
     
     // Format Services & Payment Badges
     let serviceHtml = `<div style="display: flex; flex-direction: column; gap: 4px;">`;
-    serviceHtml += `<div><span class="billing-badge invoice">🪧 パネル導入 (請求書一括)</span></div>`;
+    serviceHtml += `<div><span class="billing-badge invoice">🪧 パネル導入 (税込¥${(c.panelFeeTax || 165000).toLocaleString()})</span></div>`;
     if (c.goodsEnabled) {
-      serviceHtml += `<div><span class="billing-badge invoice">🛍️ グッズ発注 (請求書一括)</span></div>`;
+      serviceHtml += `<div><span class="billing-badge invoice">🛍️ グッズ発注 (税込¥${(c.goodsAmountTax || 55000).toLocaleString()})</span></div>`;
     }
     if (c.snsEnabled) {
       if (c.snsBillingType === "一括清算") {
-        serviceHtml += `<div><span class="billing-badge invoice">🎬 SNS動画PR (年払い請求書)</span></div>`;
+        serviceHtml += `<div><span class="billing-badge invoice">🎬 SNS動画PR (年払い一括 税込¥132,000)</span></div>`;
       } else if (c.snsPaymentMethod === "クレジットカード毎月決済") {
-        serviceHtml += `<div><span class="billing-badge credit">🎬 SNS動画PR (毎月クレカ)</span></div>`;
+        serviceHtml += `<div><span class="billing-badge credit">🎬 SNS動画PR (毎月クレカ 税込¥11,000/月)</span></div>`;
       } else {
-        serviceHtml += `<div><span class="billing-badge bank">🎬 SNS動画PR (毎月口座振替)</span></div>`;
+        serviceHtml += `<div><span class="billing-badge bank">🎬 SNS動画PR (毎月口座振替 税込¥11,000/月)</span></div>`;
       }
     }
     serviceHtml += `</div>`;
@@ -785,6 +910,10 @@ function editCompany(id) {
   document.getElementById("form-company-status").value = c.status;
   document.getElementById("form-company-start-date").value = c.startDate || "";
 
+  // Trigger real-time calculation in modal
+  const panelFeeInput = document.getElementById("form-company-panel-fee");
+  if (panelFeeInput) panelFeeInput.dispatchEvent(new Event("input"));
+
   document.getElementById("modal-company-title").textContent = `提携情報・契約編集: ${c.name}`;
   document.getElementById("modal-company").classList.add("open");
 }
@@ -809,23 +938,43 @@ function renderSales() {
   }
 
   salesTableBody.innerHTML = store.data.companies.map(c => {
-    let breakdown = `パネル導入`;
-    if (c.goodsEnabled) breakdown += ` + グッズ発注`;
-    if (c.snsEnabled) breakdown += ` + SNS PR`;
+    let breakdown = `パネル (税込¥${(c.panelFeeTax || 165000).toLocaleString()})`;
+    if (c.goodsEnabled) breakdown += `<br>+ グッズ (税込¥${(c.goodsAmountTax || 55000).toLocaleString()})`;
+    if (c.snsEnabled) breakdown += `<br>+ SNS PR (年間税込¥132,000)`;
 
-    let payMethodDisplay = `<span class="billing-badge invoice">請求書一括</span>`;
-    if (c.snsEnabled && c.snsBillingType === "毎月課金") {
-      payMethodDisplay += `<br><span class="${c.snsPaymentMethod.includes('クレジット') ? 'billing-badge credit' : 'billing-badge bank'}" style="margin-top: 4px;">月額: ${c.snsPaymentMethod}</span>`;
+    let payMethodDisplay = `<span class="billing-badge invoice">パネル: 請求書一括</span>`;
+    if (c.goodsEnabled) {
+      payMethodDisplay += `<br><span class="billing-badge invoice" style="margin-top:2px;">グッズ: 請求書一括</span>`;
     }
+    if (c.snsEnabled) {
+      if (c.snsBillingType === "一括清算") {
+        payMethodDisplay += `<br><span class="billing-badge invoice" style="margin-top:2px;">SNS: 請求書一括(年払い)</span>`;
+      } else {
+        const badgeClass = c.snsPaymentMethod.includes('クレジット') ? 'credit' : 'bank';
+        payMethodDisplay += `<br><span class="billing-badge ${badgeClass}" style="margin-top:2px;">SNS: ${c.snsPaymentMethod}</span>`;
+      }
+    }
+
+    const initialTotalTax = (c.panelFeeTax || 165000) + (c.goodsEnabled ? (c.goodsAmountTax || 55000) : 0);
+    const totalTaxIncluded = c.totalAmountTax || (c.totalAmount ? Math.round(c.totalAmount * 1.1) : 297000);
+    const totalTaxExcluded = c.totalAmount || Math.round(totalTaxIncluded / 1.1);
 
     return `
       <tr>
         <td><strong>${escapeHtml(c.name)}</strong></td>
         <td>${breakdown}</td>
-        <td><strong>¥${(c.initialPaid || 0).toLocaleString()}</strong> <small style="color: #666;">(税別)</small></td>
-        <td>${c.monthlyFee ? `<strong style="color: #0284c7;">¥${c.monthlyFee.toLocaleString()}</strong>/月` : `一括前払/なし`}</td>
+        <td>
+          <strong>¥${initialTotalTax.toLocaleString()}</strong> <small style="color: #666;">(税込)</small>
+          <br><small style="color: #888;">税別 ¥${((c.panelFee || 150000) + (c.goodsEnabled ? (c.goodsAmount || 50000) : 0)).toLocaleString()}</small>
+        </td>
+        <td>
+          ${c.monthlyFeeTax ? `<strong style="color: #0284c7;">¥${c.monthlyFeeTax.toLocaleString()}</strong>/月 <small style="color:#666;">(税込)</small><br><small style="color: #888;">税別 ¥${c.monthlyFee.toLocaleString()}/月</small>` : (c.snsEnabled ? `一括年払済 (税込¥132,000)` : `未契約`)}
+        </td>
         <td>${payMethodDisplay}</td>
-        <td><strong style="color: #0052cc; font-size: 15px;">¥${(c.totalAmount || 0).toLocaleString()}</strong></td>
+        <td>
+          <strong style="color: #0052cc; font-size: 15px;">¥${totalTaxIncluded.toLocaleString()}</strong> <small style="color:#666;">(税込)</small>
+          <br><small style="color: #888;">税別 ¥${totalTaxExcluded.toLocaleString()}</small>
+        </td>
         <td>${c.nextRenewal}</td>
       </tr>
     `;
@@ -848,7 +997,7 @@ function renderPayments() {
         <td><strong>${p.id}</strong></td>
         <td><strong>${escapeHtml(p.companyName)}</strong></td>
         <td>${escapeHtml(p.billingItem)}</td>
-        <td><strong style="color: #172b4d;">¥${p.amount.toLocaleString()}</strong></td>
+        <td><strong style="color: #172b4d; font-size: 14px;">¥${p.amount.toLocaleString()}</strong> <small style="color: #666;">(税込)</small></td>
         <td>
           <span class="billing-badge ${p.method.includes('クレジット') ? 'credit' : (p.method.includes('銀行引') ? 'bank' : 'invoice')}">
             ${p.method}
