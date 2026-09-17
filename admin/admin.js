@@ -278,8 +278,14 @@ function setupEventListeners() {
   const formCompany = document.getElementById("form-company");
 
   const charSelect = document.getElementById("form-company-character");
+  const customCharInput = document.getElementById("form-company-custom-char");
   const panelImgPreview = document.getElementById("company-panel-preview");
-  const charPreviewName = document.getElementById("preview-char-name");
+  const panelNoImgLabel = document.getElementById("company-panel-no-img");
+  const panelFileInput = document.getElementById("company-panel-file");
+  const btnClearPanelImg = document.getElementById("btn-clear-panel-img");
+  const panelImgDataInput = document.getElementById("form-company-char-img-data");
+  const panelFilenameLabel = document.getElementById("panel-img-filename");
+
   const btnFetchGps = document.getElementById("btn-fetch-gps");
   const addressInput = document.getElementById("form-company-address");
   const latInput = document.getElementById("form-company-lat");
@@ -292,15 +298,64 @@ function setupEventListeners() {
     "大俵ちか": "../assets/otawara-chika.png"
   };
 
-  function updatePanelPreview(charName) {
-    const imgSrc = CHAR_IMAGE_MAP[charName] || "../assets/nasuno-tsutsuji.png";
-    if (panelImgPreview) panelImgPreview.src = imgSrc;
-    if (charPreviewName) charPreviewName.textContent = `${charName} パネル画像`;
+  function setPanelImage(src, filename) {
+    if (src) {
+      if (panelImgPreview) {
+        panelImgPreview.src = src;
+        panelImgPreview.style.display = "block";
+      }
+      if (panelNoImgLabel) panelNoImgLabel.style.display = "none";
+      if (panelImgDataInput) panelImgDataInput.value = src;
+      if (panelFilenameLabel) panelFilenameLabel.textContent = filename ? `選択中: ${filename}` : "パネル画像が設定されています";
+    } else {
+      if (panelImgPreview) {
+        panelImgPreview.src = "";
+        panelImgPreview.style.display = "none";
+      }
+      if (panelNoImgLabel) panelNoImgLabel.style.display = "block";
+      if (panelImgDataInput) panelImgDataInput.value = "";
+      if (panelFilenameLabel) panelFilenameLabel.textContent = "画像未選択（パソコンから選択するか、キャラクターを選択してください）";
+    }
   }
 
+  // Handle Character Dropdown Change
   if (charSelect) {
     charSelect.addEventListener("change", () => {
-      updatePanelPreview(charSelect.value);
+      const val = charSelect.value;
+      if (val === "__custom__") {
+        if (customCharInput) {
+          customCharInput.style.display = "block";
+          customCharInput.focus();
+        }
+      } else {
+        if (customCharInput) customCharInput.style.display = "none";
+        if (val && CHAR_IMAGE_MAP[val]) {
+          setPanelImage(CHAR_IMAGE_MAP[val], `${val} 公式パネル画像`);
+        }
+      }
+    });
+  }
+
+  // Handle File Upload from User PC
+  if (panelFileInput) {
+    panelFileInput.addEventListener("change", (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        const base64Data = evt.target.result;
+        setPanelImage(base64Data, file.name);
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // Clear Image Button
+  if (btnClearPanelImg) {
+    btnClearPanelImg.addEventListener("click", () => {
+      setPanelImage("", "");
+      if (panelFileInput) panelFileInput.value = "";
     });
   }
 
@@ -360,7 +415,6 @@ function setupEventListeners() {
     btnFetchGps.addEventListener("click", () => {
       fetchGpsForAddress(addressInput.value);
     });
-    // Auto-fetch GPS when address loses focus if GPS fields are empty
     addressInput.addEventListener("blur", () => {
       if (addressInput.value.trim() && (!latInput.value || !lngInput.value)) {
         fetchGpsForAddress(addressInput.value);
@@ -368,6 +422,7 @@ function setupEventListeners() {
     });
   }
 
+  // Open New Company Modal (Reset to completely empty)
   if (btnNewCompany) {
     btnNewCompany.addEventListener("click", () => {
       formCompany.reset();
@@ -375,7 +430,14 @@ function setupEventListeners() {
       if (latInput) latInput.value = "";
       if (lngInput) lngInput.value = "";
       if (gpsHint) gpsHint.textContent = "";
-      updatePanelPreview("那須乃つつじ");
+      if (customCharInput) {
+        customCharInput.value = "";
+        customCharInput.style.display = "none";
+      }
+      if (charSelect) charSelect.value = "";
+      setPanelImage("", "");
+      if (panelFileInput) panelFileInput.value = "";
+
       document.getElementById("modal-company-title").textContent = "新規提携企業・店舗の登録";
       modalCompany.classList.add("open");
     });
@@ -389,8 +451,21 @@ function setupEventListeners() {
     formCompany.addEventListener("submit", (e) => {
       e.preventDefault();
       const editId = document.getElementById("company-edit-id").value;
-      const charName = document.getElementById("form-company-character").value;
-      const charImg = CHAR_IMAGE_MAP[charName] || "../assets/nasuno-tsutsuji.png";
+
+      // Determine character name
+      let charName = charSelect.value;
+      if (charName === "__custom__") {
+        charName = customCharInput.value.trim() || "オリジナルキャラクター";
+      }
+      if (!charName) {
+        charName = "那須乃つつじ";
+      }
+
+      // Determine panel image
+      let charImg = panelImgDataInput.value;
+      if (!charImg) {
+        charImg = CHAR_IMAGE_MAP[charName] || "../assets/nasuno-tsutsuji.png";
+      }
       
       let latVal = parseFloat(document.getElementById("form-company-lat").value);
       let lngVal = parseFloat(document.getElementById("form-company-lng").value);
@@ -398,6 +473,8 @@ function setupEventListeners() {
         latVal = 36.9500;
         lngVal = 140.0000;
       }
+
+      const panelTypeVal = document.getElementById("form-company-panel").value || "等身大パネル";
 
       const formData = {
         name: document.getElementById("form-company-name").value,
@@ -410,7 +487,7 @@ function setupEventListeners() {
         lng: lngVal,
         character: charName,
         characterImg: charImg,
-        panelType: document.getElementById("form-company-panel").value,
+        panelType: panelTypeVal,
         plan: document.getElementById("form-company-plan").value,
         status: document.getElementById("form-company-status").value
       };
@@ -427,7 +504,7 @@ function setupEventListeners() {
           store.data.panels[pIndex].lat = latVal;
           store.data.panels[pIndex].lng = lngVal;
           store.data.panels[pIndex].character = charName;
-          store.data.panels[pIndex].costume = formData.panelType;
+          store.data.panels[pIndex].costume = panelTypeVal;
         }
       } else {
         // Create new
@@ -451,7 +528,7 @@ function setupEventListeners() {
           companyId: newId,
           companyName: formData.name,
           character: formData.character,
-          costume: formData.panelType,
+          costume: panelTypeVal,
           serial: "GG-" + newId,
           lat: latVal,
           lng: lngVal,
@@ -463,7 +540,7 @@ function setupEventListeners() {
       store.save();
       closeModal();
       renderAll();
-      alert(`「${formData.name}」の提携情報とGPS座標（緯度: ${latVal.toFixed(4)}, 経度: ${lngVal.toFixed(4)}）、キャラクター画像を保存しました！\nファン側のパネル読み込み機能と即時連携されます。`);
+      alert(`「${formData.name}」の提携情報、GPS座標（緯度: ${latVal.toFixed(4)}, 経度: ${lngVal.toFixed(4)}）、パネル画像を保存しました！\nファン側のパネル読み込み機能と即時連携されます。`);
     });
   }
 }
@@ -572,17 +649,29 @@ function editCompany(id) {
     }
   }
 
-  document.getElementById("form-company-character").value = c.character;
+  const charSelect = document.getElementById("form-company-character");
+  const customCharInput = document.getElementById("form-company-custom-char");
   const CHAR_IMAGE_MAP = {
     "那須乃つつじ": "../assets/nasuno-tsutsuji.png",
     "狩野みるく": "../assets/karino-milk.png",
     "大俵ちか": "../assets/otawara-chika.png"
   };
-  const previewSrc = c.characterImg || CHAR_IMAGE_MAP[c.character] || "../assets/nasuno-tsutsuji.png";
-  if (panelImgPreview) panelImgPreview.src = previewSrc;
-  if (charPreviewName) charPreviewName.textContent = `${c.character} パネル画像`;
 
-  document.getElementById("form-company-panel").value = c.panelType;
+  if (CHAR_IMAGE_MAP[c.character]) {
+    charSelect.value = c.character;
+    if (customCharInput) customCharInput.style.display = "none";
+  } else {
+    charSelect.value = "__custom__";
+    if (customCharInput) {
+      customCharInput.value = c.character || "";
+      customCharInput.style.display = "block";
+    }
+  }
+
+  const previewSrc = c.characterImg || CHAR_IMAGE_MAP[c.character] || "";
+  setPanelImage(previewSrc, `${c.character} 登録パネル画像`);
+
+  document.getElementById("form-company-panel").value = c.panelType || "";
   document.getElementById("form-company-plan").value = c.plan;
   document.getElementById("form-company-status").value = c.status;
 

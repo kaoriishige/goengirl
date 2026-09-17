@@ -370,31 +370,42 @@
             <div class="form-group">
               <label for="form-company-character">導入キャラクター</label>
               <select id="form-company-character">
-                <option value="那須乃つつじ" data-img="../assets/nasuno-tsutsuji.png">那須乃つつじ</option>
-                <option value="狩野みるく" data-img="../assets/karino-milk.png">狩野みるく</option>
-                <option value="大俵ちか" data-img="../assets/otawara-chika.png">大俵ちか</option>
+                <option value="">-- キャラクターを選択または新規入力 --</option>
+                <option value="那須乃つつじ" data-img="../assets/nasuno-tsutsuji.png">那須乃つつじ (那須町)</option>
+                <option value="狩野みるく" data-img="../assets/karino-milk.png">狩野みるく (那須塩原市)</option>
+                <option value="大俵ちか" data-img="../assets/otawara-chika.png">大俵ちか (大田原市)</option>
+                <option value="__custom__">✨ 新規オリジナルキャラクター（自由入力）</option>
               </select>
+              <input type="text" id="form-company-custom-char" placeholder="キャラクター名を入力" style="display: none; margin-top: 6px;">
             </div>
             <div class="form-group">
-              <label for="form-company-panel">パネル形態</label>
-              <select id="form-company-panel">
-                <option>等身大（通常Ver.）</option>
-                <option>等身大（巫女Ver.）</option>
-                <option>等身大（浴衣Ver.）</option>
-                <option>等身大（スーツVer.）</option>
-                <option>等身大（甲冑弓道Ver.）</option>
-                <option>SDパネル（ミニVer.）</option>
-              </select>
+              <label for="form-company-panel">パネル形態・衣装</label>
+              <input type="text" id="form-company-panel" placeholder="例: 等身大（巫女Ver.） / SDパネル">
             </div>
           </div>
 
-          <!-- Character Panel Image Preview -->
-          <div style="margin-bottom: 16px; background: #fff; border: 1px solid #eee; border-radius: 8px; padding: 10px; display: flex; align-items: center; gap: 14px;">
-            <img id="company-panel-preview" src="../assets/nasuno-tsutsuji.png" alt="パネル画像プレビュー" style="width: 56px; height: 70px; object-fit: contain; background: #f5f5f5; border-radius: 4px; border: 1px solid #ddd;">
-            <div style="font-size: 12px; color: #555;">
-              <strong id="preview-char-name" style="display: block; font-size: 13px; color: #333; margin-bottom: 2px;">那須乃つつじ パネル画像</strong>
-              <span>ファンが店頭でこのパネルをスマホカメラで読み込むと、登録されたGPS座標と一致照合されてポイントが付加されます。</span>
+          <!-- Character Panel Image Upload & Preview -->
+          <div class="form-group" style="margin-bottom: 16px;">
+            <label>設置パネルの画像登録 <span style="font-size: 11px; color: #b8860b; font-weight: normal;">※店頭でファンがカメラ照合する画像</span></label>
+            <div style="background: #fff; border: 1px dashed #d1c7b7; border-radius: 8px; padding: 12px; display: flex; align-items: center; gap: 14px;">
+              <div style="width: 64px; height: 80px; background: #f5f5f5; border-radius: 6px; border: 1px solid #ddd; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
+                <img id="company-panel-preview" src="" alt="未選択" style="width: 100%; height: 100%; object-fit: contain; display: none;">
+                <span id="company-panel-no-img" style="font-size: 10px; color: #999; text-align: center; padding: 4px;">画像未登録</span>
+              </div>
+              <div style="flex: 1;">
+                <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                  <label for="company-panel-file" class="btn btn-secondary btn-sm" style="cursor: pointer; margin-bottom: 0;">
+                    📁 パソコンからパネル画像を選択
+                  </label>
+                  <input type="file" id="company-panel-file" accept="image/*" style="display: none;">
+                  <button type="button" id="btn-clear-panel-img" class="btn btn-sm" style="color: #666; background: #f0f0f0; border: none; padding: 4px 10px; font-size: 11px;">画像をクリア</button>
+                </div>
+                <div id="panel-img-filename" style="font-size: 11px; color: #666; margin-top: 6px;">
+                  キャラクターを選択するか、お好きなパネル画像ファイル（PNG/JPG）を直接登録できます。
+                </div>
+              </div>
             </div>
+            <input type="hidden" id="form-company-char-img-data">
           </div>
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
             <div class="form-group">
