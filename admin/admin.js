@@ -9,15 +9,15 @@ const DEFAULT_DATA = {
 // State Manager
 class AdminStore {
   constructor() {
-    this.storageKey = "goen_girl_admin_db_v5";
+    this.storageKey = "goen_girl_admin_db_v6";
     // Force clear old mock data
-    if (!localStorage.getItem("goen_girl_cleaned_mock_v5")) {
+    if (!localStorage.getItem("goen_girl_cleaned_mock_v6")) {
       localStorage.removeItem("goen_girl_admin_db_v1");
       localStorage.removeItem("goen_girl_admin_db_v2");
       localStorage.removeItem("goen_girl_admin_db_v3");
       localStorage.removeItem("goen_girl_companies_shared");
       localStorage.removeItem("goen_girl_member_session");
-      localStorage.setItem("goen_girl_cleaned_mock_v5", "true");
+      localStorage.setItem("goen_girl_cleaned_mock_v6", "true");
       this.reset();
     }
     this.data = this.load();
@@ -362,7 +362,7 @@ function setupEventListeners() {
         const selectedTypeRadio = document.querySelector("input[name='form-company-sns-billing-type']:checked");
         snsBillingType = selectedTypeRadio ? selectedTypeRadio.value : "毎月課金";
         if (snsBillingType === "一括清算") {
-          snsAnnualFee = 100000;
+          snsAnnualFee = 120000;
           snsPaymentMethod = "請求書一括清算（年払い）";
         } else {
           monthlyFee = 10000;
@@ -486,8 +486,8 @@ function setupEventListeners() {
               id: "INV-SNS-" + String(store.data.payments.length + 1).padStart(3, "0"),
               companyId: newId,
               companyName: formData.name,
-              billingItem: "SNSショート動画配信PR 年間一括費用 (税別10万円 / 税込11万円)",
-              amount: 110000,
+              billingItem: "SNSショート動画配信PR 年間一括費用 (税込132,000円 / 11,000円×12ヶ月)",
+              amount: 132000,
               method: "請求書で一括清算 (年払い)",
               dueDate: dueStr,
               paidDate: "-",
