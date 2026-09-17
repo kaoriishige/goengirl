@@ -135,34 +135,40 @@ class AdminStore {
     return JSON.parse(JSON.stringify(DEFAULT_DATA));
   }
 
-  // localStorage が空の場合、data/companies.json を自動フェッチ
-  async _initFromServer() {
-    if (this.data.companies.length > 0) return; // すでにデータあり
+  // data/companies.json を自動フェッチして同期
+  async _initFromServer(force = false) {
     try {
       const res = await fetch("../data/companies.json?v=" + Date.now());
       if (res.ok) {
         const companies = await res.json();
         if (Array.isArray(companies) && companies.length > 0) {
-          this.data.companies = companies;
-          // パネル・請求データも補完
-          if (!this.data.panels || this.data.panels.length === 0) {
+          const currentFirst = this.data.companies[0]?.name;
+          const serverFirst = companies[0]?.name;
+          const isDifferent = !this.data.companies.length || (currentFirst !== serverFirst) || (this.data.companies[0]?.totalAmount !== companies[0]?.totalAmount);
+          
+          if (force || isDifferent) {
+            this.data.companies = companies;
+            // パネルデータ補完
             this.data.panels = companies.map((c, i) => ({
               id: `PN-${String(i+1).padStart(3,"0")}`,
               serial: `GG-${c.id}`,
-              character: c.character || "那須乃つつじ",
+              character: c.character || "狩野みるく",
               costume: c.panelType || "等身大",
               companyId: c.id,
               companyName: c.name,
-              location: c.panelLocation || "店頭特設",
+              location: c.panelLocation || "ロビー特設",
               lat: c.lat || 0,
               lng: c.lng || 0,
               status: "稼働中",
               condition: "良好",
               image: c.characterImg || ""
             }));
+            localStorage.setItem(this.storageKey, JSON.stringify(this.data));
+            try {
+              localStorage.setItem("goen_girl_companies_shared", JSON.stringify(this.data.companies));
+            } catch (e) {}
+            if (typeof renderAll === "function") renderAll();
           }
-          // localStorageには書かない（読み取り専用として利用）
-          renderAll(); // UIを再描画
         }
       }
     } catch (e) {

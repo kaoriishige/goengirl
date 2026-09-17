@@ -115,21 +115,8 @@ function getRegisteredSpots() {
       const data = await res.json();
       if (Array.isArray(data) && data.length > 0) {
         window._serverCompanies = data;
-        // 常に最新のサーバーデータをlocalStorageに反映（管理者がdata/companies.jsonを更新した場合も対応）
-        const stored = localStorage.getItem("goen_girl_companies_shared");
-        let shouldUpdate = true;
-        if (stored) {
-          try {
-            const localData = JSON.parse(stored);
-            // ローカルのデータがサーバーより古い（件数が少ない）場合は上書き
-            if (Array.isArray(localData) && localData.length >= data.length) {
-              shouldUpdate = false;
-            }
-          } catch(e) {}
-        }
-        if (shouldUpdate) {
-          localStorage.setItem("goen_girl_companies_shared", JSON.stringify(data));
-        }
+        // 常に最新のサーバーデータ（マスター）をlocalStorageに反映
+        localStorage.setItem("goen_girl_companies_shared", JSON.stringify(data));
         // 必ずUI再描画（スポット選択肢・スタンプ帳）
         const demoSelect = document.getElementById("demo-spot-select");
         if (demoSelect) {
