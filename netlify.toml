@@ -2,6 +2,17 @@
   publish = "."
 
 [[redirects]]
+  from = "/"
+  to = "/admin/"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/lp"
+  to = "/lp/"
+  status = 301
+
+[[redirects]]
   from = "/thanks"
   to = "/thanks.html"
   status = 200
