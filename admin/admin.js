@@ -417,8 +417,9 @@ function setupEventListeners() {
     const snsAnnualTax = isSns ? 132000 : 0;
 
     const totalExcluded = panelFee + goodsFee + snsAnnualFee;
-    const totalTax = Math.round(totalExcluded * 0.1);
-    const totalIncluded = totalExcluded + totalTax;
+    // 各項目の税込額を個別に合算（二重課税防止）
+    const totalIncluded = panelTax + goodsTax + snsAnnualTax;
+
 
     // Update UI elements
     const summaryPanelEl = document.getElementById("summary-panel-amount");
