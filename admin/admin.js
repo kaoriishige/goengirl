@@ -9,7 +9,15 @@ const DEFAULT_DATA = {
 // State Manager
 class AdminStore {
   constructor() {
-    this.storageKey = "goen_girl_admin_db_v1";
+    this.storageKey = "goen_girl_admin_db_v2";
+    // Force clear old mock data from v1
+    if (!localStorage.getItem("goen_girl_cleaned_mock_v2")) {
+      localStorage.removeItem("goen_girl_admin_db_v1");
+      localStorage.removeItem("goen_girl_companies_shared");
+      localStorage.removeItem("goen_girl_member_session");
+      localStorage.setItem("goen_girl_cleaned_mock_v2", "true");
+      this.reset();
+    }
     this.data = this.load();
   }
 
@@ -19,7 +27,6 @@ class AdminStore {
       if (stored) {
         const parsed = JSON.parse(stored);
         if (parsed.companies) {
-          this.save(parsed);
           return parsed;
         }
       }

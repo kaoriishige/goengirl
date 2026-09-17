@@ -96,7 +96,7 @@ const SHOP_ITEMS = [
 
 class MemberManager {
   constructor() {
-    this.key = "goen_girl_member_session";
+    this.key = "goen_girl_member_session_v2";
     this.member = this.load();
   }
 
