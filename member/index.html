@@ -20,7 +20,12 @@
       </a>
       <nav class="header-nav">
         <a class="header-link" href="#section-plans" id="nav-link-plan"><span class="plan-pill" id="header-plan-badge">無料会員</span></a>
-        <button class="btn-header-action" id="btn-toggle-login">ログアウト</button>
+        <button class="btn-header-action" id="btn-toggle-login" data-i18n="logoutBtn">ログアウト</button>
+        <!-- Language Switcher -->
+        <div class="member-lang-switcher" id="member-lang-switcher" aria-label="Language Switcher">
+          <button type="button" class="member-lang-btn active" data-lang="ja">JP</button>
+          <button type="button" class="member-lang-btn" data-lang="en">EN</button>
+        </div>
       </nav>
     </header>
 
@@ -39,8 +44,8 @@
           <h2 id="pass-nickname">ご縁巡礼者 様</h2>
           <div class="pass-user-oshi" id="pass-oshi-name">推し: 那須乃つつじ</div>
           <div class="pass-stats-row">
-            <span class="pass-stat-item">巡礼施設: <b id="pass-visit-count">1</b> 施設</span>
-            <span class="pass-stat-item">訪問地域: <b id="pass-region-count">1</b> 地域</span>
+            <span class="pass-stat-item"><span data-i18n="passSpotsLabel">巡礼施設</span>: <b id="pass-visit-count">1</b> <span data-i18n="passSpotsUnit">施設</span></span>
+            <span class="pass-stat-item"><span data-i18n="passRegionsLabel">訪問地域</span>: <b id="pass-region-count">1</b> <span data-i18n="passRegionsUnit">地域</span></span>
           </div>
         </div>
         <img src="../assets/nasuno-tsutsuji.png" alt="推しガール" class="pass-character-thumb" id="pass-avatar">
@@ -48,12 +53,12 @@
 
       <div class="pass-bottom-row">
         <div class="pass-points">
-          <span style="font-size: 11px; opacity: 0.85; display: block;">保有ご縁ポイント</span>
+          <span style="font-size: 11px; opacity: 0.85; display: block;" data-i18n="passHoldingPoints">保有ご縁ポイント</span>
           <b id="pass-points">100</b> <span style="font-size: 13px; font-weight: 700;">pt</span>
         </div>
         <div style="display: flex; gap: 8px;">
-          <button class="pass-btn-sub" id="btn-open-plans">プラン変更 ✦</button>
-          <button class="pass-change-oshi-btn" id="btn-change-oshi">推し変更 🔄</button>
+          <button class="pass-btn-sub" id="btn-open-plans" data-i18n="passChangePlanBtn">プラン変更 ✦</button>
+          <button class="pass-change-oshi-btn" id="btn-change-oshi" data-i18n="passChangeOshiBtn">推し変更 🔄</button>
         </div>
       </div>
     </section>
@@ -61,14 +66,14 @@
     <!-- 1. 推しの近況・次の楽しみ -->
     <section class="dashboard-section" id="section-oshi-news">
       <div class="section-head">
-        <h3 class="section-title">🌸 <span id="oshi-headline-name">那須乃つつじ</span> の近況と旅のお便り</h3>
+        <h3 class="section-title">🌸 <span id="oshi-headline-name">那須乃つつじ</span><span data-i18n="oshiNewsHead"> の近況と旅のお便り</span></h3>
       </div>
       <div class="oshi-card" id="oshi-news-box">
         <div class="oshi-speech-bubble" id="oshi-message-text">
           「いらっしゃいませ！今日もご縁を結んでくださり感謝いたしますわ。まずは気になる3か所のスポットを巡ってみませんか？」
         </div>
         <div class="oshi-sub-info" id="oshi-sub-info">
-          <span class="oshi-tag">最新情報</span> 高野山真言宗 高福寺の新緑が美しい季節です。店頭の等身大パネルで皆様をお待ちしております！
+          <span class="oshi-tag" data-i18n="oshiLatestTag">最新情報</span> <span data-i18n="oshiDefaultNews">高野山真言宗 高福寺の新緑が美しい季節です。店頭の等身大パネルで皆様をお待ちしております！</span>
         </div>
       </div>
     </section>
@@ -79,34 +84,34 @@
         <div class="checkin-hero-content">
           <div class="checkin-icon">📍</div>
           <div>
-            <h3 style="font-size: 18px; margin-bottom: 4px; font-weight: 800;">現地チェックイン</h3>
-            <p style="font-size: 12px; color: var(--text-muted); margin: 0;">
+            <h3 style="font-size: 18px; margin-bottom: 4px; font-weight: 800;" data-i18n="checkinTitle">現地チェックイン</h3>
+            <p style="font-size: 12px; color: var(--text-muted); margin: 0;" data-i18n="checkinDesc">
               提携施設に到着したらGPSとカメラで等身大パネルを読み取ろう！<br>
               <span style="color: #b8860b; font-size: 11px;">※ QRコードは不要です。等身大パネルにスマホカメラを向けます。</span>
             </p>
           </div>
         </div>
-        <button id="btn-start-checkin" class="btn-checkin-main">
+        <button id="btn-start-checkin" class="btn-checkin-main" data-i18n="checkinBtn">
           <span>📷</span> 現在地を確認してパネルを読み取る
         </button>
 
-        <!-- 開発・テスト用 シミュレーションバー（現地未訪問テスト・現地滞在テスト用） -->
+        <!-- 開発・テスト用 シミュレーションバー -->
         <div class="checkin-test-bar">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-            <span style="font-size: 12px; font-weight: 700; color: #555;">【テスト・検証用GPSモード】</span>
+            <span style="font-size: 12px; font-weight: 700; color: #555;" data-i18n="checkinTestModeTitle">【テスト・検証用GPSモード】</span>
             <label style="font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 4px;">
-              <input type="checkbox" id="chk-simulate-location" checked> 現地滞在モードON
+              <input type="checkbox" id="chk-simulate-location" checked> <span data-i18n="checkinTestStayOn">現地滞在モードON</span>
             </label>
           </div>
           <select id="demo-spot-select" class="form-select-sm">
             <!-- 動的生成 -->
           </select>
-          <div style="font-size: 11px; color: #777; margin-top: 4px;">
+          <div style="font-size: 11px; color: #777; margin-top: 4px;" data-i18n="checkinTestDesc">
             ※ チェックON時は選択スポットに滞在しているものとして判定します。OFFにすると実際の端末GPSで半径判定します。
           </div>
         </div>
 
-        <div id="checkin-status" class="notice" style="margin-top: 12px;">
+        <div id="checkin-status" class="notice" style="margin-top: 12px;" data-i18n="checkinStatusInit">
           GPS現在地とカメラでの等身大パネル照合で、現地の訪問を記録します。
         </div>
 
@@ -117,22 +122,22 @@
             <div class="camera-overlay-target">
               <div class="scan-laser"></div>
               <div class="camera-frame-box">
-                <span style="color: #fff; font-size: 11px; background: rgba(0,0,0,0.6); padding: 2px 8px; border-radius: 4px;">枠内に等身大パネルを合わせてください</span>
+                <span style="color: #fff; font-size: 11px; background: rgba(0,0,0,0.6); padding: 2px 8px; border-radius: 4px;" data-i18n="cameraFrameGuide">枠内に等身大パネルを合わせてください</span>
               </div>
             </div>
           </div>
 
           <div style="margin-top: 10px; display: flex; align-items: center; justify-content: space-between; gap: 8px;">
             <div id="target-spot-badge" style="font-size: 12px; background: #eee; padding: 6px 12px; border-radius: 20px; color: #333;">
-              🎯 照合対象: <strong id="target-char-label">那須乃つつじ</strong>
+              <span data-i18n="cameraTargetLabel">🎯 照合対象: </span><strong id="target-char-label">那須乃つつじ</strong>
             </div>
-            <button id="btn-sample-feed" class="btn-secondary" style="font-size: 11px; padding: 6px 10px;">
+            <button id="btn-sample-feed" class="btn-secondary" style="font-size: 11px; padding: 6px 10px;" data-i18n="cameraSampleFeedBtn">
               🖼️ パネル画像を表示
             </button>
           </div>
 
           <div class="camera-controls" style="margin-top: 12px;">
-            <button id="btn-recognize" class="btn-primary" style="padding: 12px 20px; font-size: 14px; width: 100%;">
+            <button id="btn-recognize" class="btn-primary" style="padding: 12px 20px; font-size: 14px; width: 100%;" data-i18n="cameraConfirmBtn">
               ✨ パネルを確認して訪問を確定する
             </button>
           </div>
@@ -143,28 +148,28 @@
     <!-- 3. ポイント残高・訪問数・称号 -->
     <section class="dashboard-section" id="section-stats-achievements">
       <div class="section-head">
-        <h3 class="section-title">🏆 旅の実績と称号</h3>
+        <h3 class="section-title" data-i18n="statsHead">🏆 旅の実績と称号</h3>
       </div>
       <div class="stats-grid-3">
         <div class="stat-card">
-          <div class="stat-label">保有ポイント</div>
+          <div class="stat-label" data-i18n="statsPointsLabel">保有ポイント</div>
           <div class="stat-value" id="stats-point-val">100 <span class="unit">pt</span></div>
-          <div class="stat-sub">交換で利用可能</div>
+          <div class="stat-sub" data-i18n="statsPointsSub">交換で利用可能</div>
         </div>
         <div class="stat-card">
-          <div class="stat-label">訪問施設数</div>
+          <div class="stat-label" data-i18n="statsFacilitiesLabel">訪問施設数</div>
           <div class="stat-value" id="stats-facility-val">1 <span class="unit">施設</span></div>
-          <div class="stat-sub">目指せ10施設！</div>
+          <div class="stat-sub" data-i18n="statsFacilitiesSub">目指せ10施設！</div>
         </div>
         <div class="stat-card">
-          <div class="stat-label">獲得称号数</div>
+          <div class="stat-label" data-i18n="statsTitlesLabel">獲得称号数</div>
           <div class="stat-value" id="stats-title-val">1 <span class="unit">個</span></div>
           <div class="stat-sub" id="stats-current-title">初めてのご縁</div>
         </div>
       </div>
 
       <div class="achievements-list-box" style="margin-top: 14px;">
-        <h4 style="font-size: 13px; color: var(--navy); margin-bottom: 8px;">🎖️ 達成型称号一覧（行動実績で獲得）</h4>
+        <h4 style="font-size: 13px; color: var(--navy); margin-bottom: 8px;" data-i18n="statsTitlesListHead">🎖️ 達成型称号一覧（行動実績で獲得）</h4>
         <div class="titles-grid" id="titles-container">
           <!-- JSでレンダリング -->
         </div>
@@ -174,11 +179,11 @@
     <!-- 4. 次に行きたい場所 -->
     <section class="dashboard-section" id="section-next-destinations">
       <div class="section-head">
-        <h3 class="section-title">🧭 次に行きたい場所・おすすめスポット</h3>
-        <span style="font-size: 11px; color: var(--text-muted);">営業時間・取扱商品を確認できます</span>
+        <h3 class="section-title" data-i18n="destHead">🧭 次に行きたい場所・おすすめスポット</h3>
+        <span style="font-size: 11px; color: var(--text-muted);" data-i18n="destSub">営業時間・取扱商品を確認できます</span>
       </div>
       <div class="destinations-scroll" id="destinations-container">
-        <!-- JSで推しの未訪問衣装・行きたい登録施設・近隣施設を動的生成 -->
+        <!-- JSで動的生成 -->
       </div>
     </section>
 
@@ -186,21 +191,21 @@
     <section class="dashboard-section" id="section-stamp-book">
       <div class="section-head">
         <div>
-          <h3 class="section-title">🎴 ご縁スタンプ帳（訪問スタンプ）</h3>
-          <p class="section-desc">「まずは気になる３か所で、ご縁を結ぼう」</p>
+          <h3 class="section-title" data-i18n="stampHead">🎴 ご縁スタンプ帳（訪問スタンプ）</h3>
+          <p class="section-desc" data-i18n="stampSub">「まずは気になる３か所で、ご縁を結ぼう」</p>
         </div>
       </div>
 
-      <!-- 絞り込みフィルター（全国・都道府県・市区町村・キャラクター） -->
+      <!-- 絞り込みフィルター -->
       <div class="stamp-filter-bar">
         <select id="filter-region-select" class="filter-select">
-          <option value="all">全国（全地域）</option>
+          <option value="all" data-i18n="stampFilterAllReg">全国（全地域）</option>
           <option value="REG_NASUSHIOBARA">栃木県 那須塩原市</option>
           <option value="REG_NASUMACHI">栃木県 那須町</option>
           <option value="REG_OTAWARA">栃木県 大田原市</option>
         </select>
         <select id="filter-character-select" class="filter-select">
-          <option value="all">全キャラクター</option>
+          <option value="all" data-i18n="stampFilterAllChar">全キャラクター</option>
           <option value="CHAR_MILK">狩野くるみ</option>
           <option value="CHAR_TSUTSUJI">那須乃つつじ</option>
           <option value="CHAR_CHIKA">大俵ちか</option>
@@ -216,17 +221,17 @@
     <section class="dashboard-section" id="section-goods-collection">
       <div class="section-head">
         <div>
-          <h3 class="section-title">🛍️ 公式グッズ ＆ マイコレクション</h3>
-          <p class="section-desc">「持っている」「欲しい」を登録してコレクションを管理！</p>
+          <h3 class="section-title" data-i18n="goodsHead">🛍️ 公式グッズ ＆ マイコレクション</h3>
+          <p class="section-desc" data-i18n="goodsSub">「持っている」「欲しい」を登録してコレクションを管理！</p>
         </div>
       </div>
 
       <!-- グッズタブ切り替え -->
       <div class="goods-tabs">
-        <button class="goods-tab-btn active" data-goodstab="all">すべて</button>
-        <button class="goods-tab-btn" data-goodstab="wants">欲しいリスト ❤️</button>
-        <button class="goods-tab-btn" data-goodstab="owns">持っている 🎒</button>
-        <button class="goods-tab-btn" data-goodstab="reservations">現地受取予約 🎫</button>
+        <button class="goods-tab-btn active" data-goodstab="all" data-i18n="goodsTabAll">すべて</button>
+        <button class="goods-tab-btn" data-goodstab="wants" data-i18n="goodsTabWants">欲しいリスト ❤️</button>
+        <button class="goods-tab-btn" data-goodstab="owns" data-i18n="goodsTabOwns">持っている 🎒</button>
+        <button class="goods-tab-btn" data-goodstab="reservations" data-i18n="goodsTabRes">現地受取予約 🎫</button>
       </div>
 
       <div class="goods-list-grid" id="goods-container">
@@ -237,10 +242,10 @@
     <!-- 7. 会員コンテンツ -->
     <section class="dashboard-section" id="section-member-contents">
       <div class="section-head">
-        <h3 class="section-title">🎙️ 会員限定コンテンツ・推し便り</h3>
+        <h3 class="section-title" data-i18n="contentsHead">🎙️ 会員限定コンテンツ・推し便り</h3>
       </div>
       <div class="media-grid" id="contents-container">
-        <!-- JSでレンダリング（無料・応援会員480円・共創会員980円・交換獲得の区分） -->
+        <!-- JSでレンダリング -->
       </div>
     </section>
 
@@ -248,14 +253,14 @@
     <section class="dashboard-section" id="section-community">
       <div class="section-head">
         <div>
-          <h3 class="section-title">🌸 会員交流コミュニティ「ご縁ひろば」</h3>
-          <p class="section-desc">旅の思い出、推しの魅力、グッズの楽しみ方を全国の仲間と共有しよう！</p>
+          <h3 class="section-title" data-i18n="hirobaHead">🌸 会員交流コミュニティ「ご縁ひろば」</h3>
+          <p class="section-desc" data-i18n="hirobaSub">旅の思い出、推しの魅力、グッズの楽しみ方を全国の仲間と共有しよう！</p>
         </div>
         <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-          <a href="hiroba-guide.html" class="btn-secondary" style="font-size: 12px; padding: 6px 12px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
+          <a href="hiroba-guide.html" class="btn-secondary" style="font-size: 12px; padding: 6px 12px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;" data-i18n="hirobaGuideBtn">
             📖 使い方ガイド
           </a>
-          <button class="btn-primary" id="btn-open-post-modal" onclick="if(window.hiroba) hiroba.openPostModal()" style="font-size: 12px; padding: 6px 14px;">
+          <button class="btn-primary" id="btn-open-post-modal" onclick="if(window.hiroba) hiroba.openPostModal()" style="font-size: 12px; padding: 6px 14px;" data-i18n="hirobaPostBtn">
             ✍️ 旅の思い出を投稿
           </button>
         </div>
@@ -265,8 +270,8 @@
       <div class="hiroba-welcome-banner">
         <div class="hiroba-banner-icon">🌸</div>
         <div class="hiroba-banner-text">
-          <strong>みんなの投稿を見て「ここに行ってみたい！」「この衣装に会いたい！」を見つけよう！</strong>
-          <p>
+          <strong data-i18n="hirobaBannerTitle">みんなの投稿を見て「ここに行ってみたい！」「この衣装に会いたい！」を見つけよう！</strong>
+          <p data-i18n="hirobaBannerDesc">
             栃木県3市（那須塩原・那須・大田原）をはじめ、全国の聖地巡礼や推し活の記録が集まる場所です。<br>
             <span style="font-size: 11px; opacity: 0.85;">※ 健全で温かい交流のため、投稿や交流によるポイント付与は設けておりません。</span>
           </p>
@@ -275,47 +280,47 @@
 
       <!-- 話題（カテゴリ）タブ切り替え -->
       <div class="hiroba-categories-bar" id="hiroba-cat-bar">
-        <button class="hiroba-cat-chip active" data-cat="all">すべて</button>
-        <button class="hiroba-cat-chip" data-cat="trip">🗺️ 旅の思い出</button>
-        <button class="hiroba-cat-chip" data-cat="oshi">🌸 推しガール自慢</button>
-        <button class="hiroba-cat-chip" data-cat="goods">🛍️ グッズ写真</button>
-        <button class="hiroba-cat-chip" data-cat="report">🧭 聖地巡礼レポ</button>
-        <button class="hiroba-cat-chip" data-cat="official">📢 運営便り</button>
+        <button class="hiroba-cat-chip active" data-cat="all" data-i18n="hirobaCatAll">すべて</button>
+        <button class="hiroba-cat-chip" data-cat="trip" data-i18n="hirobaCatTrip">🗺️ 旅の思い出</button>
+        <button class="hiroba-cat-chip" data-cat="oshi" data-i18n="hirobaCatOshi">🌸 推しガール自慢</button>
+        <button class="hiroba-cat-chip" data-cat="goods" data-i18n="hirobaCatGoods">🛍️ グッズ写真</button>
+        <button class="hiroba-cat-chip" data-cat="report" data-i18n="hirobaCatReport">🧭 聖地巡礼レポ</button>
+        <button class="hiroba-cat-chip" data-cat="official" data-i18n="hirobaCatOfficial">📢 運営便り</button>
       </div>
 
-      <!-- 絞り込みフィルターバー（キャラクター・地域・保存済み） -->
+      <!-- 絞り込みフィルターバー -->
       <div class="hiroba-sub-filter-bar">
         <div style="display: flex; gap: 8px; flex: 1; flex-wrap: wrap;">
           <select id="hiroba-filter-char" class="filter-select" style="min-width: 130px;">
-            <option value="all">全キャラクター</option>
+            <option value="all" data-i18n="hirobaFilterCharAll">全キャラクター</option>
             <option value="狩野くるみ">狩野くるみ</option>
             <option value="那須乃つつじ">那須乃つつじ</option>
             <option value="大俵ちか">大俵ちか</option>
           </select>
           <select id="hiroba-filter-region" class="filter-select" style="min-width: 120px;">
-            <option value="all">全地域</option>
+            <option value="all" data-i18n="hirobaFilterRegAll">全地域</option>
             <option value="那須塩原市">那須塩原市</option>
             <option value="那須町">那須町</option>
             <option value="大田原市">大田原市</option>
           </select>
         </div>
-        <button class="btn-secondary btn-saved-filter" id="btn-hiroba-saved-toggle" style="font-size: 11px; padding: 5px 10px;">
+        <button class="btn-secondary btn-saved-filter" id="btn-hiroba-saved-toggle" style="font-size: 11px; padding: 5px 10px;" data-i18n="hirobaSavedBtn">
           🔖 保存した投稿を見る
         </button>
       </div>
 
-      <!-- 投稿一覧ストリーム（hiroba.jsで動的描画） -->
+      <!-- 投稿一覧ストリーム -->
       <div class="posts-stream hiroba-posts-stream" id="posts-container">
         <!-- JSでレンダリング -->
       </div>
 
-      <!-- 共創会員向け 企画候補投票ボックス（要件15） -->
+      <!-- 共創会員向け 企画候補投票ボックス -->
       <div class="vote-box" id="community-vote-box" style="margin-top: 24px;">
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
-          <h4 style="font-size: 14px; margin: 0; color: #0043a8;">🗳️ 【共創会員限定】新企画アイデア投票</h4>
+          <h4 style="font-size: 14px; margin: 0; color: #0043a8;" data-i18n="hirobaVoteTitle">🗳️ 【共創会員限定】新企画アイデア投票</h4>
           <span class="plan-pill-sm" style="background: #e6f0ff; color: #0043a8;">共創会員（月額980円）</span>
         </div>
-        <p style="font-size: 12px; color: #555; margin-bottom: 12px;">運営が選定した実施可能な次期企画候補です。共創会員の皆様の投票で優先度が決まります。</p>
+        <p style="font-size: 12px; color: #555; margin-bottom: 12px;" data-i18n="hirobaVoteDesc">運営が選定した実施可能な次期企画候補です。共創会員の皆様の投票で優先度が決まります。</p>
         <div id="vote-options-container">
           <!-- JSでレンダリング -->
         </div>
@@ -326,8 +331,8 @@
     <section class="dashboard-section" id="section-rewards-shop">
       <div class="section-head">
         <div>
-          <h3 class="section-title">🎁 ご縁ポイント交換所</h3>
-          <p class="section-desc">巡礼で貯まったポイントを使って、限定ボイスや特製壁紙、現地特典をアンロック！</p>
+          <h3 class="section-title" data-i18n="shopHead">🎁 ご縁ポイント交換所</h3>
+          <p class="section-desc" data-i18n="shopSub">巡礼で貯まったポイントを使って、限定ボイスや特製壁紙、現地特典をアンロック！</p>
         </div>
       </div>
       <div class="shop-grid" id="shop-container">
@@ -336,7 +341,7 @@
 
       <!-- ポイント台帳・履歴 -->
       <div style="margin-top: 24px; background: #fff; padding: 18px; border-radius: 14px; border: 1px solid var(--line);">
-        <h4 style="font-size: 14px; margin-bottom: 12px; font-weight: 700;">📜 ポイント台帳・増減履歴</h4>
+        <h4 style="font-size: 14px; margin-bottom: 12px; font-weight: 700;" data-i18n="shopLedgerHead">📜 ポイント台帳・増減履歴</h4>
         <ul class="history-list" id="ledger-history-container">
           <!-- JSでレンダリング -->
         </ul>
@@ -346,15 +351,15 @@
     <!-- 10. 会員プラン・設定 -->
     <section class="dashboard-section" id="section-plans">
       <div class="section-head">
-        <h3 class="section-title">💎 会員プラン・契約設定</h3>
+        <h3 class="section-title" data-i18n="plansHead">💎 会員プラン・契約設定</h3>
       </div>
       
       <div class="plans-comparison-grid">
         <!-- 無料会員 -->
         <div class="plan-card" id="plan-card-free">
           <div class="plan-head">
-            <h4 class="plan-name">無料会員</h4>
-            <div class="plan-price">0円</div>
+            <h4 class="plan-name" data-i18n="planFreeTitle">無料会員</h4>
+            <div class="plan-price" data-i18n="planFreePrice">0円</div>
           </div>
           <ul class="plan-features">
             <li>✔ キャラクター・施設・グッズ閲覧</li>
@@ -365,7 +370,7 @@
             <li>✔ 旅の投稿・基本交流</li>
           </ul>
           <div class="plan-action">
-            <button class="btn-plan-select" id="btn-select-free" disabled>利用中</button>
+            <button class="btn-plan-select" id="btn-select-free" disabled data-i18n="planFreeBtnActive">利用中</button>
           </div>
         </div>
 
@@ -373,8 +378,8 @@
         <div class="plan-card highlight" id="plan-card-supporter">
           <div class="plan-badge-rec">人気</div>
           <div class="plan-head">
-            <h4 class="plan-name">応援会員</h4>
-            <div class="plan-price">月額 480円 <span style="font-size: 12px; font-weight: 400;">(税込)</span></div>
+            <h4 class="plan-name" data-i18n="planSupporterTitle">応援会員</h4>
+            <div class="plan-price" data-i18n="planSupporterPrice">月額 480円 (税込)</div>
           </div>
           <ul class="plan-features">
             <li>✔ <strong>無料会員のすべての機能</strong></li>
@@ -386,15 +391,15 @@
             <li>✔ 会員向け商品の優先購入機会</li>
           </ul>
           <div class="plan-action">
-            <button class="btn-plan-select btn-primary" id="btn-select-supporter">応援会員に変更 (¥480/月)</button>
+            <button class="btn-plan-select btn-primary" id="btn-select-supporter" data-i18n="planSupporterBtn">応援会員に変更 (¥480/月)</button>
           </div>
         </div>
 
         <!-- 共創会員 -->
         <div class="plan-card special" id="plan-card-cocreation">
           <div class="plan-head">
-            <h4 class="plan-name">共創会員</h4>
-            <div class="plan-price">月額 980円 <span style="font-size: 12px; font-weight: 400;">(税込)</span></div>
+            <h4 class="plan-name" data-i18n="planCocreateTitle">共創会員</h4>
+            <div class="plan-price" data-i18n="planCocreatePrice">月額 980円 (税込)</div>
           </div>
           <ul class="plan-features">
             <li>✔ <strong>応援会員のすべての機能</strong></li>
@@ -404,48 +409,44 @@
             <li>✔ 提案採用結果や進捗報告</li>
           </ul>
           <div class="plan-action">
-            <button class="btn-plan-select btn-primary" id="btn-select-cocreation">共創会員に変更 (¥980/月)</button>
+            <button class="btn-plan-select btn-primary" id="btn-select-cocreation" data-i18n="planCocreateBtn">共創会員に変更 (¥980/月)</button>
           </div>
         </div>
-      </div>
-
-      <div class="plan-billing-info" id="plan-billing-info" style="margin-top: 16px;">
-        <!-- 現在の契約情報・次回更新日 -->
       </div>
     </section>
 
     <!-- Footer Links -->
     <div style="text-align: center; margin-top: 36px; padding-bottom: 20px; font-size: 13px;">
-      <a href="../portal/" style="color: var(--navy); text-decoration: underline; margin-right: 16px;">← 公式情報ポータルへ戻る</a>
-      <a href="../lp/" style="color: var(--navy); text-decoration: underline;">企業・店舗様向けご案内</a>
+      <a href="../portal/" style="color: var(--navy); text-decoration: underline; margin-right: 16px;" data-i18n="portalLink">← 公式情報ポータルへ戻る</a>
+      <a href="../lp/" style="color: var(--navy); text-decoration: underline;" data-i18n="lpLink">企業・店舗様向けご案内</a>
     </div>
   </main>
 
-  <!-- スマホ最適化 下部固定ナビゲーション（要件16: ホーム・探す・チェックイン・コレクション・交流） -->
+  <!-- スマホ最適化 下部固定ナビゲーション -->
   <nav class="bottom-nav">
     <button class="bottom-nav-item active" data-nav="home">
       <span class="nav-icon">🏠</span>
-      <span class="nav-text">ホーム</span>
+      <span class="nav-text" data-i18n="navHome">ホーム</span>
     </button>
     <button class="bottom-nav-item" data-nav="explore">
       <span class="nav-icon">🧭</span>
-      <span class="nav-text">探す</span>
+      <span class="nav-text" data-i18n="navExplore">探す</span>
     </button>
     <button class="bottom-nav-item" data-nav="checkin">
       <span class="nav-icon">📍</span>
-      <span class="nav-text">チェックイン</span>
+      <span class="nav-text" data-i18n="navCheckin">チェックイン</span>
     </button>
     <button class="bottom-nav-item" data-nav="collection">
       <span class="nav-icon">🎴</span>
-      <span class="nav-text">コレクション</span>
+      <span class="nav-text" data-i18n="navCollection">コレクション</span>
     </button>
     <button class="bottom-nav-item" data-nav="community">
       <span class="nav-icon">🌸</span>
-      <span class="nav-text">ご縁ひろば</span>
+      <span class="nav-text" data-i18n="navCommunity">ご縁ひろば</span>
     </button>
   </nav>
 
-  <!-- Modal: チェックイン完了画面（要件8 完全準拠） -->
+  <!-- Modal: チェックイン完了画面 -->
   <div id="modal-checkin-complete" class="custom-modal" style="display: none;">
     <div class="modal-backdrop"></div>
     <div class="modal-dialog">
@@ -458,34 +459,34 @@
         <div class="complete-actions-grid">
           <button type="button" class="btn-action-tile" id="btn-comp-goods">
             <span class="tile-icon">🛍️</span>
-            <span class="tile-text">この店舗のグッズを見る</span>
+            <span class="tile-text" data-i18n="compBtnGoods">この店舗のグッズを見る</span>
           </button>
           <button type="button" class="btn-action-tile" id="btn-comp-costumes">
             <span class="tile-icon">👘</span>
-            <span class="tile-text">近くで会える別衣装を見る</span>
+            <span class="tile-text" data-i18n="compBtnCostumes">近くで会える別衣装を見る</span>
           </button>
           <button type="button" class="btn-action-tile" id="btn-comp-exp">
             <span class="tile-icon">☕</span>
-            <span class="tile-text">この場所の体験を見る</span>
+            <span class="tile-text" data-i18n="compBtnExp">この場所の体験を見る</span>
           </button>
           <button type="button" class="btn-action-tile" id="btn-comp-post">
             <span class="tile-icon">📷</span>
-            <span class="tile-text">旅の写真を残す</span>
+            <span class="tile-text" data-i18n="compBtnPost">旅の写真を残す</span>
           </button>
         </div>
 
-        <button type="button" class="btn-modal-close" id="btn-close-complete-modal">閉じる</button>
+        <button type="button" class="btn-modal-close" id="btn-close-complete-modal" data-i18n="compBtnClose">閉じる</button>
       </div>
     </div>
   </div>
 
-  <!-- Modal: 現地受取予約（要件11） -->
+  <!-- Modal: 現地受取予約 -->
   <div id="modal-reservation" class="custom-modal" style="display: none;">
     <div class="modal-backdrop"></div>
     <div class="modal-dialog">
       <div class="modal-inner-card">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-          <h3 style="margin: 0; font-size: 16px;">🎫 現地受取予約</h3>
+          <h3 style="margin: 0; font-size: 16px;" data-i18n="goodsTabRes">🎫 現地受取予約</h3>
           <button type="button" class="btn-close-modal" id="btn-close-res-modal">&times;</button>
         </div>
         <div id="reservation-form-content">
@@ -580,137 +581,6 @@
             この内容で投稿する 🌸
           </button>
         </form>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal: 初回投稿時 コミュニティ利用ルール同意 -->
-  <div id="modal-hiroba-rule" class="custom-modal" style="display: none;">
-    <div class="modal-backdrop"></div>
-    <div class="modal-dialog" style="max-width: 460px;">
-      <div class="modal-inner-card" style="padding: 24px 20px;">
-        <div style="text-align: center; margin-bottom: 14px;">
-          <div style="font-size: 36px;">🌸</div>
-          <h3 style="font-size: 17px; color: var(--navy); margin-top: 4px;">ご縁ひろば 初回ルールのご確認</h3>
-        </div>
-        <p style="font-size: 12px; color: #555; line-height: 1.6; margin-bottom: 12px;">
-          ご縁ひろばは、旅の思い出や推しへの愛を全国の会員と温かく分かち合う場所です。皆様が安心・安全に楽しむため、以下のルールへの同意をお願いしております。
-        </p>
-        <div style="background: #f8fafc; border: 1px solid var(--line); border-radius: 8px; padding: 12px; font-size: 12px; color: #444; max-height: 160px; overflow-y: auto; margin-bottom: 16px; line-height: 1.6;">
-          <strong>【お守りいただきたいこと】</strong><br>
-          1. 他者への誹謗中傷、攻撃的な発言、差別的な表現を禁じます。<br>
-          2. 一般の方の顔や車のナンバーなど、プライバシー情報の無断掲載を禁じます。<br>
-          3. 立ち入り禁止区域や店舗の撮影禁止ルールを厳守してください。<br>
-          4. 商業宣伝、スパム、個人間取引はできません。<br>
-          5. 健全な交流のため、投稿によるポイント付与は行っておりません。
-        </div>
-        <button type="button" class="btn-primary" style="width: 100%; padding: 12px;" onclick="if(window.hiroba) hiroba.agreeRuleAndContinue()">
-          ルールに同意して投稿画面へ進む
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal: 初回訪問 3ステップガイド -->
-  <div id="modal-hiroba-guide" class="custom-modal" style="display: none;">
-    <div class="modal-backdrop"></div>
-    <div class="modal-dialog" style="max-width: 460px;">
-      <div class="modal-inner-card" style="padding: 26px 22px; text-align: center;">
-        <!-- Step 1 -->
-        <div id="guide-step-1" class="guide-step-content">
-          <div style="font-size: 40px; margin-bottom: 10px;">🌸</div>
-          <h3 style="font-size: 18px; color: var(--navy); margin-bottom: 8px;">ご縁ひろばへようこそ！</h3>
-          <p style="font-size: 13px; color: #555; line-height: 1.6; margin-bottom: 16px;">
-            旅先で出会った等身大パネル、美味しかった名物、手に入れた限定グッズなど、あなたの推し活の思い出を全国の仲間とシェアしましょう！
-          </p>
-        </div>
-
-        <!-- Step 2 -->
-        <div id="guide-step-2" class="guide-step-content" style="display: none;">
-          <div style="font-size: 40px; margin-bottom: 10px;">🧭</div>
-          <h3 style="font-size: 18px; color: var(--navy); margin-bottom: 8px;">「行きたい場所」が見つかる！</h3>
-          <p style="font-size: 13px; color: #555; line-height: 1.6; margin-bottom: 16px;">
-            みんなの投稿を見れば、「この衣装に会いたい！」「このホテルに泊まりたい！」がすぐ見つかります。気になる投稿は「保存」して次の旅の計画に役立てましょう！
-          </p>
-        </div>
-
-        <!-- Step 3 -->
-        <div id="guide-step-3" class="guide-step-content" style="display: none;">
-          <div style="font-size: 40px; margin-bottom: 10px;">🤝</div>
-          <h3 style="font-size: 18px; color: var(--navy); margin-bottom: 8px;">安心・安全のコミュニティ</h3>
-          <p style="font-size: 13px; color: #555; line-height: 1.6; margin-bottom: 16px;">
-            写真の位置情報（Exif）は自動削除されるため安心です。温かいコメントやいいねで、ご縁の輪をどんどん広げてくださいね！
-          </p>
-        </div>
-
-        <!-- インジケータードット -->
-        <div class="guide-dots-row">
-          <span class="guide-dot active" id="guide-dot-1"></span>
-          <span class="guide-dot" id="guide-dot-2"></span>
-          <span class="guide-dot" id="guide-dot-3"></span>
-        </div>
-
-        <div style="display: flex; gap: 10px; margin-top: 18px;">
-          <button type="button" class="btn-secondary" id="btn-guide-prev" style="flex: 1; visibility: hidden;" onclick="if(window.hiroba) hiroba.prevGuideStep()">❮ 戻る</button>
-          <button type="button" class="btn-primary" id="btn-guide-next" style="flex: 2;" onclick="if(window.hiroba) hiroba.nextGuideStep()">次へ ❯</button>
-        </div>
-
-        <div style="margin-top: 14px; font-size: 12px; color: #777;">
-          <label style="cursor: pointer;">
-            <input type="checkbox" id="chk-hide-guide"> 次回から自動表示しない
-          </label>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal: 通報モーダル -->
-  <div id="modal-hiroba-report" class="custom-modal" style="display: none;">
-    <div class="modal-backdrop" onclick="document.getElementById('modal-hiroba-report').style.display='none'"></div>
-    <div class="modal-dialog" style="max-width: 440px;">
-      <div class="modal-inner-card" style="padding: 22px 20px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
-          <h3 style="margin: 0; font-size: 16px; color: #de350b;">🚩 投稿の通報</h3>
-          <button type="button" class="btn-close-modal" onclick="document.getElementById('modal-hiroba-report').style.display='none'">&times;</button>
-        </div>
-        <input type="hidden" id="report-target-post-id">
-        <p style="font-size: 12px; color: #555; margin-bottom: 12px;">
-          不適切な表現やルール違反と思われる投稿について、該当する理由を選択してください。運営事務局が確認のうえ適切に対応いたします。
-        </p>
-        <div class="form-group">
-          <label class="form-label">通報理由</label>
-          <select id="report-reason-select" class="form-input">
-            <option value="誹謗中傷・迷惑行為">誹謗中傷・迷惑行為・不快な表現</option>
-            <option value="プライバシー侵害">個人情報・プライバシーの侵害</option>
-            <option value="不適切な画像">公序良俗に反する画像・無断撮影</option>
-            <option value="商業宣伝・スパム">宣伝・勧誘・スパム・金銭取引</option>
-            <option value="その他">その他（運営への相談）</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label">詳細な状況（任意）</label>
-          <textarea id="report-detail-input" class="form-textarea" rows="3" placeholder="問題箇所の詳細などがあればご記入ください"></textarea>
-        </div>
-        <div style="display: flex; gap: 8px; margin-top: 14px;">
-          <button type="button" class="btn-secondary" style="flex: 1;" onclick="document.getElementById('modal-hiroba-report').style.display='none'">キャンセル</button>
-          <button type="button" class="btn-primary" style="flex: 1; background: #de350b;" onclick="if(window.hiroba) hiroba.submitReportFromModal()">通報を送信</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal: プラン変更・決済案内（要件4: 未接続明示・テストシミュレーション） -->
-  <div id="modal-plan-change" class="custom-modal" style="display: none;">
-    <div class="modal-backdrop"></div>
-    <div class="modal-dialog">
-      <div class="modal-inner-card">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-          <h3 style="margin: 0; font-size: 16px;">💳 会員プランの変更</h3>
-          <button type="button" class="btn-close-modal" id="btn-close-plan-modal">&times;</button>
-        </div>
-        <div id="plan-modal-body">
-          <!-- JSでレンダリング（Stripe未接続バナー、次回更新日案内、テスト切替ボタン） -->
-        </div>
       </div>
     </div>
   </div>

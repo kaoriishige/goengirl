@@ -8,16 +8,16 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&family=Noto+Serif+JP:wght@600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="portal.css?v=20260918">
+  <link rel="stylesheet" href="portal.css?v=20260919">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext y='.9em' font-size='54'%3E%E6%A1%9C%3C/text%3E%3C/svg%3E">
 </head>
 <body>
 
   <!-- Top Announcement Bar (新規入会キャンペーン) -->
   <aside class="announcement-bar">
-    <span class="announcement-badge">新規入会特典</span>
-    <span>今なら無料会員登録で<strong>即時100pt ＆ 推しガールデジタル会員証</strong>をプレゼント中！</span>
-    <a href="../join/" class="announcement-link">10秒で無料登録する →</a>
+    <span class="announcement-badge" data-i18n="announcementBadge">新規入会特典</span>
+    <span data-i18n="announcementText">今なら無料会員登録で<strong>即時100pt ＆ 推しガールデジタル会員証</strong>をプレゼント中！</span>
+    <a href="../join/" class="announcement-link" data-i18n="announcementLink">10秒で無料登録する →</a>
   </aside>
 
   <!-- Header -->
@@ -26,20 +26,25 @@
       <a href="./" class="portal-brand">
         <img src="../assets/goen-girl-logo.png?v=2" alt="ご縁ガール ロゴ" class="portal-brand-logo">
         <div>
-          <span class="portal-brand-text">ご縁ガール ポータル</span>
-          <span class="portal-brand-tagline">人とご縁で、日本を豊かに。公式巡礼ポータル</span>
+          <span class="portal-brand-text" data-i18n="portalTitle">ご縁ガール ポータル</span>
+          <span class="portal-brand-tagline" data-i18n="portalTagline">人とご縁で、日本を豊かに。公式巡礼ポータル</span>
         </div>
       </a>
 
       <nav class="portal-nav">
-        <a href="#benefits" class="portal-nav-link">会員特典</a>
-        <a href="#rewards" class="portal-nav-link">特典カタログ</a>
-        <a href="#characters" class="portal-nav-link">キャラクター</a>
-        <a href="#panels" class="portal-nav-link">設置パネル</a>
-        <a href="#goods" class="portal-nav-link">限定グッズ</a>
-        <a href="#plans" class="portal-nav-link">料金プラン</a>
-        <a href="../join/" class="portal-nav-btn-primary">🎁 無料会員登録 (0円)</a>
-        <a href="../member/" class="portal-nav-btn">会員マイページ ↗</a>
+        <a href="#benefits" class="portal-nav-link" data-i18n="navBenefits">会員特典</a>
+        <a href="#rewards" class="portal-nav-link" data-i18n="navRewards">特典カタログ</a>
+        <a href="#characters" class="portal-nav-link" data-i18n="navCharacters">キャラクター</a>
+        <a href="#panels" class="portal-nav-link" data-i18n="navPanels">設置パネル</a>
+        <a href="#goods" class="portal-nav-link" data-i18n="navGoods">限定グッズ</a>
+        <a href="#plans" class="portal-nav-link" data-i18n="navPlans">料金プラン</a>
+        <a href="../join/" class="portal-nav-btn-primary" data-i18n="navJoinBtn">🎁 無料会員登録 (0円)</a>
+        <a href="../member/" class="portal-nav-btn" data-i18n="navMemberBtn">会員マイページ ↗</a>
+        <!-- Language Switcher -->
+        <div class="lang-switcher" id="lang-switcher" aria-label="Language Selector">
+          <button type="button" class="lang-btn active" data-lang="ja">JP</button>
+          <button type="button" class="lang-btn" data-lang="en">EN</button>
+        </div>
       </nav>
     </div>
   </header>
@@ -49,26 +54,26 @@
 
   <!-- Breadcrumb -->
   <nav class="breadcrumb-container" aria-label="パンくずリスト">
-    <a href="../lp/">ホーム（企業・店舗向けLP）</a>
+    <a href="../lp/" data-i18n="breadcrumbHome">ホーム（企業・店舗向けLP）</a>
     <span>&gt;</span>
-    <span>情報ポータル TOP</span>
+    <span data-i18n="breadcrumbTop">情報ポータル TOP</span>
   </nav>
 
   <!-- Hero Section with Digital Pass Preview -->
   <section class="portal-hero">
     <div class="hero-content">
-      <div class="hero-tag">✿ 公式ファン支援・聖地巡礼サービス</div>
-      <h1 class="hero-heading">地域をめぐって、<br><span>推しとご縁</span>を結ぼう。</h1>
-      <p class="hero-description">
+      <div class="hero-tag" data-i18n="heroTag">✿ 公式ファン支援・聖地巡礼サービス</div>
+      <h1 class="hero-heading" data-i18n="heroHeading">地域をめぐって、<br><span>推しとご縁</span>を結ぼう。</h1>
+      <p class="hero-description" data-i18n="heroDesc">
         栃木県の那須町・那須塩原市・大田原市をはじめ、全国の寺社や名所・老舗店舗に広がる「ご縁ガール」の世界。<br>
         現地に設置された等身大パネルで<strong>GPSチェックイン</strong>してポイント獲得！<br>
         集めたポイントで<strong>限定ボイスや特製壁紙</strong>を解放し、あなただけの巡礼スタンプ帳を完成させよう。
       </p>
       <div class="hero-actions">
-        <a href="../join/" class="btn-hero-primary" style="background: linear-gradient(135deg, #ff4757, #ff6b81); box-shadow: 0 6px 18px rgba(255, 71, 87, 0.4);">
+        <a href="../join/" class="btn-hero-primary" style="background: linear-gradient(135deg, #ff4757, #ff6b81); box-shadow: 0 6px 18px rgba(255, 71, 87, 0.4);" data-i18n="heroJoinBtn">
           🎁 今すぐ無料で会員証を発行する (100pt進呈)
         </a>
-        <a href="#benefits" class="btn-hero-secondary">
+        <a href="#benefits" class="btn-hero-secondary" data-i18n="heroBenefitsBtn">
           🔍 無料会員でできること
         </a>
       </div>
@@ -78,7 +83,7 @@
     <div class="hero-visual-area">
       <div class="hero-pass-preview-wrapper">
         <div class="hero-pass-preview-header">
-          <span class="hero-pass-preview-title">🎴 デジタル会員証プレビュー</span>
+          <span class="hero-pass-preview-title" data-i18n="passPreviewTitle">🎴 デジタル会員証プレビュー</span>
           <div class="char-selector-tabs" id="pass-char-tabs">
             <button class="char-tab-btn active" data-char="tsutsuji">つつじ</button>
             <button class="char-tab-btn" data-char="milk">くるみ</button>
@@ -105,11 +110,11 @@
           </div>
           <div class="mini-pass-bottom">
             <div class="mini-pass-points">
-              <span class="mini-pass-pts-label">HOLDING POINTS</span>
+              <span class="mini-pass-pts-label" data-i18n="passPtsLabel">HOLDING POINTS</span>
               <span class="mini-pass-pts-val">100<small>pt</small></span>
             </div>
             <div style="font-size: 11px; opacity: 0.9; text-align: right;">
-              推し: <strong id="mini-pass-fav-girl">那須乃つつじ</strong>
+              <span data-i18n="passOshiLabel">推し: </span><strong id="mini-pass-fav-girl">那須乃つつじ</strong>
             </div>
           </div>
         </div>
@@ -117,46 +122,46 @@
         <div class="bonus-balloon">
           <span class="bonus-balloon-icon">💡</span>
           <div>
-            <strong>無料登録でこの会員証がすぐ届く！</strong><br>
-            推しガールを選ぶと会員証のテーマ色が変化します。
+            <strong data-i18n="passBalloonTitle">無料登録でこの会員証がすぐ届く！</strong><br>
+            <span data-i18n="passBalloonDesc">推しガールを選ぶと会員証のテーマ色が変化します。</span>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Quick Search Section (ぽかログ風) -->
+  <!-- Quick Search Section -->
   <section class="quick-search-section">
     <div class="search-boxes">
       <a href="#panels" class="search-card-btn">
         <div class="search-card-icon">🗺️</div>
         <div>
-          <strong class="search-card-title">設置スポットから探す</strong>
-          <span class="search-card-desc">那須町・那須塩原市・大田原市の設置店舗</span>
+          <strong class="search-card-title" data-i18n="searchSpotTitle">設置スポットから探す</strong>
+          <span class="search-card-desc" data-i18n="searchSpotDesc">那須町・那須塩原市・大田原市の設置店舗</span>
         </div>
       </a>
       <a href="#characters" class="search-card-btn">
         <div class="search-card-icon">🌸</div>
         <div>
-          <strong class="search-card-title">キャラクターから探す</strong>
-          <span class="search-card-desc">つつじ・くるみ・ちかのプロフィールとボイス</span>
+          <strong class="search-card-title" data-i18n="searchCharTitle">キャラクターから探す</strong>
+          <span class="search-card-desc" data-i18n="searchCharDesc">つつじ・くるみ・ちかのプロフィールとボイス</span>
         </div>
       </a>
       <a href="#goods" class="search-card-btn">
         <div class="search-card-icon">🛍️</div>
         <div>
-          <strong class="search-card-title">取扱グッズから探す</strong>
-          <span class="search-card-desc">御朱印カード・アクスタ・限定アイテム</span>
+          <strong class="search-card-title" data-i18n="searchGoodsTitle">取扱グッズから探す</strong>
+          <span class="search-card-desc" data-i18n="searchGoodsDesc">御朱印カード・アクスタ・限定アイテム</span>
         </div>
       </a>
     </div>
   </section>
 
-  <!-- NEW: 5-Key Experiences Section (会員ダッシュボードで広がる体験) -->
+  <!-- 5-Key Experiences Section -->
   <section id="benefits" class="portal-section">
     <div class="section-header-area">
-      <h2 class="section-title">ご縁ガール無料会員で広がる 5つの体験</h2>
-      <span style="font-size: 13px; color: var(--goen-text-muted);">スマホ1つでいつものお出かけ・観光がドラマチックな聖地巡礼に変わる</span>
+      <h2 class="section-title" data-i18n="expTitle">ご縁ガール無料会員で広がる 5つの体験</h2>
+      <span style="font-size: 13px; color: var(--goen-text-muted);" data-i18n="expSubtitle">スマホ1つでいつものお出かけ・観光がドラマチックな聖地巡礼に変わる</span>
     </div>
 
     <div class="features-5-grid">
@@ -164,78 +169,78 @@
       <div class="feature-5-card">
         <span class="feature-5-step">01</span>
         <div class="feature-5-icon-wrap">🎴</div>
-        <h3 class="feature-5-title">推し色に染まる<br>デジタル会員証</h3>
-        <p class="feature-5-desc">
+        <h3 class="feature-5-title" data-i18n="exp1Title">推し色に染まる<br>デジタル会員証</h3>
+        <p class="feature-5-desc" data-i18n="exp1Desc">
           登録するだけで専用のファンIDが即時発行。つつじ・くるみ・ちかの中から推しガールを選ぶと、会員証が推しカラーに美しく染まります。
         </p>
-        <span class="feature-5-tag">ずっと無料発行</span>
+        <span class="feature-5-tag" data-i18n="exp1Tag">ずっと無料発行</span>
       </div>
 
       <!-- 2. チェックイン -->
       <div class="feature-5-card">
         <span class="feature-5-step">02</span>
         <div class="feature-5-icon-wrap">📍</div>
-        <h3 class="feature-5-title">等身大パネルで<br>GPSチェックイン</h3>
-        <p class="feature-5-desc">
-          提携スポットでマイページを開いてチェックイン！初回訪問で<strong>100pt</strong>、同一地域3施設制覇でボーナス<strong>+100pt</strong>が手に入ります。
+        <h3 class="feature-5-title" data-i18n="exp2Title">等身大パネルで<br>GPSチェックイン</h3>
+        <p class="feature-5-desc" data-i18n="exp2Desc">
+          提携スポットでマイページを開いてチェックイン！初回訪問で100pt、同一地域3施設制覇でボーナス+100ptが手に入ります。
         </p>
-        <span class="feature-5-tag">初回訪問 100pt獲得</span>
+        <span class="feature-5-tag" data-i18n="exp2Tag">初回訪問 100pt獲得</span>
       </div>
 
       <!-- 3. 特典交換 -->
       <div class="feature-5-card">
         <span class="feature-5-step">03</span>
         <div class="feature-5-icon-wrap">🎙️</div>
-        <h3 class="feature-5-title">限定ボイス＆特製壁紙を<br>即時アンロック</h3>
-        <p class="feature-5-desc">
-          貯めたポイントはシークレット甘味ボイスや限定壁紙といつでも交換可能。入会特典の100ptを使えば、<strong>登録直後に最初の特典</strong>を楽しめます。
+        <h3 class="feature-5-title" data-i18n="exp3Title">限定ボイス＆特製壁紙を<br>即時アンロック</h3>
+        <p class="feature-5-desc" data-i18n="exp3Desc">
+          貯めたポイントはシークレット甘味ボイスや限定壁紙といつでも交換可能。入会特典の100ptを使えば、登録直後に最初の特典を楽しめます。
         </p>
-        <span class="feature-5-tag">40pt〜で交換可能</span>
+        <span class="feature-5-tag" data-i18n="exp3Tag">40pt〜で交換可能</span>
       </div>
 
       <!-- 4. グッズ予約 -->
       <div class="feature-5-card">
         <span class="feature-5-step">04</span>
         <div class="feature-5-icon-wrap">🛍️</div>
-        <h3 class="feature-5-title">限定グッズの<br>現地お取り置き予約</h3>
-        <p class="feature-5-desc">
-          「せっかく現地に行ったのに売り切れ…」を防ぐため、対象グッズをマイページから事前予約可能（応援会員限定機能）。確実に思い出をお持ち帰りいただけます。
+        <h3 class="feature-5-title" data-i18n="exp4Title">限定グッズの<br>現地お取り置き予約</h3>
+        <p class="feature-5-desc" data-i18n="exp4Desc">
+          「せっかく現地に行ったのに売り切れ…」を防ぐため、対象グッズをマイページから事前予約可能（応援会員機能）。確実に思い出をお持ち帰りいただけます。
         </p>
-        <span class="feature-5-tag">引換コード即時発行</span>
+        <span class="feature-5-tag" data-i18n="exp4Tag">引換コード即時発行</span>
       </div>
 
       <!-- 5. コミュニティ -->
       <div class="feature-5-card">
         <span class="feature-5-step">05</span>
         <div class="feature-5-icon-wrap">📸</div>
-        <h3 class="feature-5-title">旅の写真共有 ＆<br>新企画ファン投票</h3>
-        <p class="feature-5-desc">
-          パネルと撮った思い出写真を全国のファンと共有！さらに新グッズやコラボ企画を決めるファン投票に参加して、キャラクターと一緒に地域を盛り上げましょう。
+        <h3 class="feature-5-title" data-i18n="exp5Title">旅の写真共有 ＆<br>新企画ファン投票</h3>
+        <p class="feature-5-desc" data-i18n="exp5Desc">
+          パネルと撮った思い出写真を全国のファンと共有！さらに新グッズやコラボ企画を決めるファン投票に参加して、地域を一緒に盛り上げましょう。
         </p>
-        <span class="feature-5-tag">コミュニティ参加</span>
+        <span class="feature-5-tag" data-i18n="exp5Tag">コミュニティ参加</span>
       </div>
     </div>
 
     <div style="text-align: center; margin-top: 32px;">
-      <a href="../join/" class="btn-hero-primary" style="background: linear-gradient(135deg, #ff4757, #ff6b81); box-shadow: 0 6px 18px rgba(255, 71, 87, 0.4); display: inline-flex;">
+      <a href="../join/" class="btn-hero-primary" style="background: linear-gradient(135deg, #ff4757, #ff6b81); box-shadow: 0 6px 18px rgba(255, 71, 87, 0.4); display: inline-flex;" data-i18n="expJoinCta">
         🌸 10秒で無料会員登録して始める（0円）
       </a>
     </div>
   </section>
 
-  <!-- NEW: Rewards Catalog Section (ポイント特典カタログ) -->
+  <!-- Rewards Catalog Section -->
   <section id="rewards" class="portal-section">
     <div class="section-header-area">
-      <h2 class="section-title">貯まる！もらえる！限定特典カタログ</h2>
-      <span style="font-size: 13px; color: var(--goen-text-muted);">現地チェックインや入会で手に入るポイントで交換できる豪華デジタル＆リアル特典</span>
+      <h2 class="section-title" data-i18n="rewardsTitle">貯まる！もらえる！限定特典カタログ</h2>
+      <span style="font-size: 13px; color: var(--goen-text-muted);" data-i18n="rewardsSubtitle">現地チェックインや入会で手に入るポイントで交換できる豪華デジタル＆リアル特典</span>
     </div>
 
     <!-- Promotion Ribbon -->
     <div class="rewards-catalog-intro">
-      <div class="rewards-intro-text">
+      <div class="rewards-intro-text" data-i18n="rewardsIntro">
         ✨ <strong>新規入会キャンペーン特典:</strong> 今なら無料登録するだけで <strong>100pt</strong> がすぐに付与されます！
       </div>
-      <span class="rewards-intro-badge">登録直後にボイスや壁紙と交換OK！</span>
+      <span class="rewards-intro-badge" data-i18n="rewardsIntroBadge">登録直後にボイスや壁紙と交換OK！</span>
     </div>
 
     <div class="rewards-catalog-grid" id="rewards-catalog-container">
@@ -281,7 +286,7 @@
     </div>
 
     <div style="text-align: center; margin-top: 28px;">
-      <a href="../join/" class="btn-hero-secondary" style="display: inline-flex; border-color: #f59e0b; color: #92400e; background: #fffdf0;">
+      <a href="../join/" class="btn-hero-secondary" style="display: inline-flex; border-color: #f59e0b; color: #92400e; background: #fffdf0;" data-i18n="rewardsCta">
         🎁 無料登録して100ptを受け取る →
       </a>
     </div>
@@ -290,8 +295,8 @@
   <!-- 1. Characters Section -->
   <section id="characters" class="portal-section">
     <div class="section-header-area">
-      <h2 class="section-title">地域の守護少女たち</h2>
-      <span style="font-size: 13px; color: var(--goen-text-muted);">ボイスボタンでメッセージが再生されます（会員になると限定ボイスが解放されます）</span>
+      <h2 class="section-title" data-i18n="charSectionTitle">地域の守護少女たち</h2>
+      <span style="font-size: 13px; color: var(--goen-text-muted);" data-i18n="charSectionSubtitle">ボイスボタンでメッセージが再生されます（会員になると限定ボイスが解放されます）</span>
     </div>
     <div class="char-grid" id="char-container">
       <!-- Rendered by portal.js -->
@@ -301,8 +306,8 @@
   <!-- 2. New Panels Section -->
   <section id="panels" class="portal-section">
     <div class="section-header-area">
-      <h2 class="section-title">新着パネル一覧（チェックイン対象スポット）</h2>
-      <span style="font-size: 13px; color: var(--goen-text-muted);">現地に行くとGPSチェックインで<strong>初回100pt</strong>を獲得できます！</span>
+      <h2 class="section-title" data-i18n="panelSectionTitle">新着パネル一覧（チェックイン対象スポット）</h2>
+      <span style="font-size: 13px; color: var(--goen-text-muted);" data-i18n="panelSectionSubtitle">現地に行くとGPSチェックインで初回100ptを獲得できます！</span>
     </div>
     <div class="card-grid" id="panel-container">
       <!-- Rendered by portal.js -->
@@ -312,8 +317,8 @@
   <!-- 3. New Goods Section -->
   <section id="goods" class="portal-section">
     <div class="section-header-area">
-      <h2 class="section-title">新着グッズ一覧（コレクション＆現地受取予約）</h2>
-      <span style="font-size: 13px; color: var(--goen-text-muted);">現地限定アイテムをマイページで「欲しい／持っている」コレクション管理できます</span>
+      <h2 class="section-title" data-i18n="goodsSectionTitle">新着グッズ一覧（コレクション＆現地受取予約）</h2>
+      <span style="font-size: 13px; color: var(--goen-text-muted);" data-i18n="goodsSectionSubtitle">現地限定アイテムをマイページで「欲しい／持っている」コレクション管理できます</span>
     </div>
     <div class="card-grid" id="goods-container">
       <!-- Rendered by portal.js -->
@@ -323,28 +328,28 @@
   <!-- 4. New Collabs Section -->
   <section id="collabs" class="portal-section">
     <div class="section-header-area">
-      <h2 class="section-title">新着コラボ・宿泊プラン一覧</h2>
-      <span style="font-size: 13px; color: var(--goen-text-muted);">地域店舗・宿泊施設との特別タイアップ</span>
+      <h2 class="section-title" data-i18n="collabSectionTitle">新着コラボ・宿泊プラン一覧</h2>
+      <span style="font-size: 13px; color: var(--goen-text-muted);" data-i18n="collabSectionSubtitle">地域店舗・宿泊施設との特別タイアップ</span>
     </div>
     <div class="card-grid" id="collab-container">
       <!-- Rendered by portal.js -->
     </div>
   </section>
 
-  <!-- NEW: Membership Plans Section (安心の3つのプラン比較) -->
+  <!-- Membership Plans Section -->
   <section id="plans" class="portal-section">
     <div class="section-header-area">
-      <h2 class="section-title">選べる3つの会員プラン</h2>
-      <span style="font-size: 13px; color: var(--goen-text-muted);">まずは完全無料のフリー会員でOK！あなたの推し活スタイルに合わせて選べます</span>
+      <h2 class="section-title" data-i18n="plansTitle">選べる3つの会員プラン</h2>
+      <span style="font-size: 13px; color: var(--goen-text-muted);" data-i18n="plansSubtitle">まずは完全無料のフリー会員でOK！あなたの推し活スタイルに合わせて選べます</span>
     </div>
 
     <div class="plans-grid-portal">
       <!-- Free Plan -->
       <div class="plan-card-portal highlight">
-        <span class="plan-popular-badge">まずはここから！</span>
-        <h3 class="plan-title-portal">無料会員</h3>
-        <div class="plan-price-portal">¥0 <small>/ ずっと無料</small></div>
-        <p style="font-size: 12px; color: #666; text-align: center; margin-bottom: 12px;">無料で好きになり、現地で思い出とコレクションが増える基本プラン</p>
+        <span class="plan-popular-badge" data-i18n="planFreeBadge">まずはここから！</span>
+        <h3 class="plan-title-portal" data-i18n="planFreeTitle">無料会員</h3>
+        <div class="plan-price-portal"><span data-i18n="planFreePrice">¥0</span> <small data-i18n="planFreePriceUnit">/ ずっと無料</small></div>
+        <p style="font-size: 12px; color: #666; text-align: center; margin-bottom: 12px;" data-i18n="planFreeDesc">無料で好きになり、現地で思い出とコレクションが増える基本プラン</p>
         <ul class="plan-features-list">
           <li>推し色デジタル会員証の発行</li>
           <li>現地GPSパネルチェックイン (初回100pt)</li>
@@ -354,16 +359,16 @@
           <li>旅の写真投稿コミュニティ</li>
           <li>新規入会特典 100pt 付与</li>
         </ul>
-        <a href="../join/" class="plan-btn-portal primary">
+        <a href="../join/" class="plan-btn-portal primary" data-i18n="planFreeCta">
           🎁 無料で今すぐ登録する
         </a>
       </div>
 
       <!-- Supporter Plan -->
       <div class="plan-card-portal">
-        <h3 class="plan-title-portal">応援会員</h3>
-        <div class="plan-price-portal">¥480 <small>/ 月 (税込)</small></div>
-        <p style="font-size: 12px; color: #666; text-align: center; margin-bottom: 12px;">現地巡礼やコレクションをさらに深く楽しみたいファンのためのプラン</p>
+        <h3 class="plan-title-portal" data-i18n="planSupporterTitle">応援会員</h3>
+        <div class="plan-price-portal"><span data-i18n="planSupporterPrice">¥480</span> <small data-i18n="planSupporterPriceUnit">/ 月 (税込)</small></div>
+        <p style="font-size: 12px; color: #666; text-align: center; margin-bottom: 12px;" data-i18n="planSupporterDesc">現地巡礼やコレクションをさらに深く楽しみたいファンのためのプラン</p>
         <ul class="plan-features-list">
           <li>無料会員のすべての機能</li>
           <li><strong>対象グッズの現地お取り置き・受取予約</strong></li>
@@ -372,16 +377,16 @@
           <li>提携店舗での会員限定プチ特典</li>
           <li>月額480円（いつでも解約可能）</li>
         </ul>
-        <a href="../member/" class="plan-btn-portal secondary">
+        <a href="../member/" class="plan-btn-portal secondary" data-i18n="planSupporterCta">
           マイページで詳細を見る
         </a>
       </div>
 
       <!-- Co-creation Plan -->
       <div class="plan-card-portal">
-        <h3 class="plan-title-portal">共創会員</h3>
-        <div class="plan-price-portal">¥980 <small>/ 月 (税込)</small></div>
-        <p style="font-size: 12px; color: #666; text-align: center; margin-bottom: 12px;">新企画や新グッズの開発に直接投票・参加できるプレミアムプラン</p>
+        <h3 class="plan-title-portal" data-i18n="planCocreateTitle">共創会員</h3>
+        <div class="plan-price-portal"><span data-i18n="planCocreatePrice">¥980</span> <small data-i18n="planCocreatePriceUnit">/ 月 (税込)</small></div>
+        <p style="font-size: 12px; color: #666; text-align: center; margin-bottom: 12px;" data-i18n="planCocreateDesc">新企画や新グッズの開発に直接投票・参加できるプレミアムプラン</p>
         <ul class="plan-features-list">
           <li>応援会員のすべての特典</li>
           <li><strong>新企画・公式グッズ化のファン投票権</strong></li>
@@ -390,26 +395,26 @@
           <li>限定プレミアム称号の付与</li>
           <li>月額980円（いつでも解約可能）</li>
         </ul>
-        <a href="../member/" class="plan-btn-portal secondary">
+        <a href="../member/" class="plan-btn-portal secondary" data-i18n="planCocreateCta">
           マイページで詳細を見る
         </a>
       </div>
     </div>
   </section>
 
-  <!-- NEW: Large Bottom Conversion CTA Banner -->
+  <!-- Bottom Conversion CTA Banner -->
   <section class="bottom-cta-banner">
-    <span class="bottom-cta-tag">JOIN THE JOURNEY</span>
-    <h2 class="bottom-cta-title">スマホ片手に、<br>新しいご縁の巡礼旅へ出かけよう。</h2>
-    <p class="bottom-cta-desc">
+    <span class="bottom-cta-tag" data-i18n="bottomTag">JOIN THE JOURNEY</span>
+    <h2 class="bottom-cta-title" data-i18n="bottomTitle">スマホ片手に、<br>新しいご縁の巡礼旅へ出かけよう。</h2>
+    <p class="bottom-cta-desc" data-i18n="bottomDesc">
       無料登録はわずか10秒。面倒な入力なしですぐにあなただけのデジタル会員証を発行！<br>
       今なら新規登録で<strong>100ptをプレゼント</strong>。登録直後に最初の限定ボイスをアンロックできます。
     </p>
     <div class="bottom-cta-actions">
-      <a href="../join/" class="btn-bottom-primary">
+      <a href="../join/" class="btn-bottom-primary" data-i18n="bottomJoinBtn">
         🎁 10秒で無料会員証を発行する (100pt進呈)
       </a>
-      <a href="../member/" class="btn-bottom-secondary">
+      <a href="../member/" class="btn-bottom-secondary" data-i18n="bottomLoginBtn">
         既に会員の方（ログイン / マイページへ）
       </a>
     </div>
@@ -420,12 +425,12 @@
     <div class="portal-footer-inner">
       <img src="../assets/goen-girl-logo.png?v=2" alt="ご縁ガール ロゴ" style="height: 44px; background: #fff; padding: 4px 12px; border-radius: 6px;">
       <nav class="footer-links">
-        <a href="../lp/">企業・店舗向けトップページ</a>
-        <a href="../join/">ファン無料会員登録</a>
-        <a href="../member/">会員ダッシュボード</a>
-        <a href="../privacy.html">プライバシーポリシー</a>
-        <a href="../tokusho.html">特定商取引法に基づく表記</a>
-        <a href="../admin/">運営管理コンソール</a>
+        <a href="../lp/" data-i18n="footerLp">企業・店舗向けトップページ</a>
+        <a href="../join/" data-i18n="footerJoin">ファン無料会員登録</a>
+        <a href="../member/" data-i18n="footerMember">会員ダッシュボード</a>
+        <a href="../privacy.html" data-i18n="footerPrivacy">プライバシーポリシー</a>
+        <a href="../tokusho.html" data-i18n="footerTokusho">特定商取引法に基づく表記</a>
+        <a href="../admin/" data-i18n="footerAdmin">運営管理コンソール</a>
       </nav>
       <p class="footer-copy">© 2026 GOEN GIRL PROJECT / TS DELY. All Rights Reserved.</p>
     </div>
@@ -439,6 +444,6 @@
     </div>
   </div>
 
-  <script src="portal.js?v=20260918"></script>
+  <script src="portal.js?v=20260919"></script>
 </body>
 </html>

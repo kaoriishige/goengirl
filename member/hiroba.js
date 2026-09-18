@@ -28,11 +28,11 @@ const HIROBA_KEYS = {
 
 // 話題（カテゴリ）定義
 const HIROBA_CATEGORIES = {
-  trip: { label: "旅の思い出", icon: "🗺️", color: "#1199c4", desc: "観光スポット、現地グルメ、旅の風景" },
-  oshi: { label: "推しガール自慢", icon: "🌸", color: "#e9588d", desc: "等身大パネル、推し活、衣装の魅力" },
-  goods: { label: "グッズ写真", icon: "🛍️", color: "#d4a337", desc: "購入したグッズ、現地限定品、飾り方" },
-  report: { label: "聖地巡礼レポート", icon: "🧭", color: "#00875a", desc: "おすすめ巡礼ルート、見どころ、アドバイス" },
-  official: { label: "運営からのお便り", icon: "📢", color: "#0f2740", desc: "公式お知らせ、新企画情報、先行レポート" }
+  trip: { label: "旅の思い出", labelEn: "Travel Memories", icon: "🗺️", color: "#1199c4", desc: "観光スポット、現地グルメ、旅の風景", descEn: "Scenic sights, local food & travel moments" },
+  oshi: { label: "推しガール自慢", labelEn: "Oshi Moments", icon: "🌸", color: "#e9588d", desc: "等身大パネル、推し活、衣装の魅力", descEn: "Life-sized standees, oshi photos & costume charms" },
+  goods: { label: "グッズ写真", labelEn: "Goods Photos", icon: "🛍️", color: "#d4a337", desc: "購入したグッズ、現地限定品、飾り方", descEn: "Purchased merchandise, regional goods & displays" },
+  report: { label: "聖地巡礼レポート", labelEn: "Pilgrimage Reports", icon: "🧭", color: "#00875a", desc: "おすすめ巡礼ルート、見どころ、アドバイス", descEn: "Pilgrimage routes, scenic spots & tips" },
+  official: { label: "運営からのお便り", labelEn: "Official News", icon: "📢", color: "#0f2740", desc: "公式お知らせ、新企画情報、先行レポート", descEn: "Official updates, project news & reports" }
 };
 
 // 初期ダミー投稿データ（初回ロード時に登録）
@@ -211,7 +211,13 @@ class HirobaManager {
     this.page = 1;
     this.pageSize = 20;
     this.tempUploadedImages = []; // 投稿用アップロード済みBase64画像
+    this.lang = localStorage.getItem("goen_lang") || "ja";
     this.initStorage();
+  }
+
+  setLanguage(lang) {
+    this.lang = (lang === "en") ? "en" : "ja";
+    this.render();
   }
 
   initStorage() {
@@ -613,16 +619,18 @@ class HirobaManager {
     // 会員限定投稿のロック判定
     const isLocked = (post.visibility === "supporter" && currentMember.plan === "free" && !isAuthor && !post.isOfficial);
 
+    const isEn = (this.lang === "en");
+
     // プランバッジ
     let planBadge = "";
     if (post.isOfficial) {
-      planBadge = `<span class="hiroba-plan-badge official">公式運営</span>`;
+      planBadge = `<span class="hiroba-plan-badge official">${isEn ? 'Official Staff' : '公式運営'}</span>`;
     } else if (post.authorPlan === "cocreation") {
-      planBadge = `<span class="hiroba-plan-badge cocreation">共創会員</span>`;
+      planBadge = `<span class="hiroba-plan-badge cocreation">${isEn ? 'Co-Creation' : '共創会員'}</span>`;
     } else if (post.authorPlan === "supporter") {
-      planBadge = `<span class="hiroba-plan-badge supporter">応援会員</span>`;
+      planBadge = `<span class="hiroba-plan-badge supporter">${isEn ? 'Supporter' : '応援会員'}</span>`;
     } else {
-      planBadge = `<span class="hiroba-plan-badge free">無料会員</span>`;
+      planBadge = `<span class="hiroba-plan-badge free">${isEn ? 'Free Member' : '無料会員'}</span>`;
     }
 
     // 画像ギャラリーHTML
@@ -746,19 +754,19 @@ class HirobaManager {
         <div class="hiroba-actions-bar">
           <button class="hiroba-btn-action ${isLiked ? 'active' : ''}" onclick="hiroba.handleLike('${post.id}')" id="btn-like-${post.id}">
             <span class="hiroba-action-icon">${isLiked ? '❤️' : '🤍'}</span>
-            <span class="hiroba-action-text">いいね</span>
+            <span class="hiroba-action-text">${isEn ? 'Like' : 'いいね'}</span>
             <span class="hiroba-count" id="count-like-${post.id}">${post.likesCount}</span>
           </button>
 
           <button class="hiroba-btn-action" onclick="hiroba.toggleCommentSection('${post.id}')" id="btn-comm-${post.id}">
             <span class="hiroba-action-icon">💬</span>
-            <span class="hiroba-action-text">コメント</span>
+            <span class="hiroba-action-text">${isEn ? 'Comment' : 'コメント'}</span>
             <span class="hiroba-count" id="count-comm-${post.id}">${post.commentsCount}</span>
           </button>
 
           <button class="hiroba-btn-action ${isSaved ? 'active' : ''}" onclick="hiroba.handleSave('${post.id}')" id="btn-save-${post.id}">
             <span class="hiroba-action-icon">${isSaved ? '🔖' : '📑'}</span>
-            <span class="hiroba-action-text">${isSaved ? '保存済み' : '保存'}</span>
+            <span class="hiroba-action-text">${isSaved ? (isEn ? 'Saved' : '保存済み') : (isEn ? 'Save' : '保存')}</span>
           </button>
         </div>
 
@@ -768,8 +776,8 @@ class HirobaManager {
             <!-- コメント一覧を動的生成 -->
           </div>
           <div class="hiroba-comment-form">
-            <input type="text" class="hiroba-comment-input" id="input-comm-${post.id}" placeholder="温かいコメントを書き込もう…（最大500文字）" maxlength="500">
-            <button class="hiroba-comment-submit" onclick="hiroba.submitComment('${post.id}')">送信</button>
+            <input type="text" class="hiroba-comment-input" id="input-comm-${post.id}" placeholder="${isEn ? 'Write a friendly comment... (max 500 chars)' : '温かいコメントを書き込もう…（最大500文字）'}" maxlength="500">
+            <button class="hiroba-comment-submit" onclick="hiroba.submitComment('${post.id}')">${isEn ? 'Send' : '送信'}</button>
           </div>
         </div>
       </article>
