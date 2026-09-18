@@ -152,7 +152,7 @@ class AdminStore {
             this.data.panels = companies.map((c, i) => ({
               id: `PN-${String(i+1).padStart(3,"0")}`,
               serial: `GG-${c.id}`,
-              character: c.character || "狩野みるく",
+              character: c.character || "狩野くるみ",
               costume: c.panelType || "等身大",
               companyId: c.id,
               companyName: c.name,

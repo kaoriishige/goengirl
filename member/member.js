@@ -20,7 +20,7 @@ const DEFAULT_MEMBER = {
     {
       spotId: "FAC_C001",
       spotName: "那須ミッドシティホテル",
-      character: "狩野みるく",
+      character: "狩野くるみ",
       costumeName: "那須ミッドシティホテル制服",
       regionId: "REG_NASUSHIOBARA",
       date: new Date().toISOString().split("T")[0],
@@ -56,7 +56,7 @@ const CHARACTER_META = {
     color: "#e9588d",
     greeting: "ご縁に感謝いたしますわ。今日も素敵な一日になりますように。"
   },
-  "狩野みるく": {
+  "狩野くるみ": {
     themeClass: "theme-milk",
     avatar: "../assets/karino-milk.png",
     color: "#1199c4",
@@ -73,8 +73,8 @@ const CHARACTER_META = {
 // 企画投票の選択肢（要件15: 運営が選定した実施可能候補）
 const VOTE_CANDIDATES = [
   { id: "VOTE_01", title: "栃木3市連携 湯巡り御朱印スタンプラリー", votes: 42, desc: "那須塩原・那須・大田原の温泉施設とコラボした特製スタンプ帳企画" },
-  { id: "VOTE_02", title: "狩野みるく 地元牧場コラボ ミルクスイーツ開発", votes: 68, desc: "那須塩原の生乳を使用した特製チーズケーキ＆缶バッジセット" },
-  { id: "VOTE_03", title: "那須乃つつじ＆大俵ちか 合同秋祭りミニ色紙", votes: 35, desc: "那須温泉神社例大祭・与一まつり記念の合同記念品" }
+  { id: "VOTE_02", title: "狩野くるみ 那須ミッドシティホテルコラボ 宿泊体験プラン", votes: 68, desc: "那須塩原の生乳を使用した特製チーズケーキ＆缶バッジセット" },
+  { id: "VOTE_03", title: "那須乃つつじ＆大俵ちか 合同秋祭りミニ色紙", votes: 35, desc: "高野山真言宗 高福寺例大祭・与一まつり記念の合同記念品" }
 ];
 
 // コミュニティ初期投稿データ
@@ -83,10 +83,10 @@ const INITIAL_POSTS = [
     id: "P001",
     userName: "とちぎ巡礼団",
     userPlan: "共創会員",
-    character: "狩野みるく",
+    character: "狩野くるみ",
     spotName: "那須ミッドシティホテル",
     region: "那須塩原市",
-    text: "那須ミッドシティホテルのロビーでみるくちゃんの等身大パネルに会えました！フロントの方も親切で最高でした。",
+    text: "那須ミッドシティホテルのロビーでくるみちゃんの等身大パネルに会えました！フロントの方も親切で最高でした。",
     likes: 12,
     date: "2026-09-17"
   },
@@ -95,9 +95,9 @@ const INITIAL_POSTS = [
     userName: "つつじ推し",
     userPlan: "応援会員",
     character: "那須乃つつじ",
-    spotName: "那須温泉神社",
+    spotName: "高野山真言宗 高福寺",
     region: "那須町",
-    text: "那須温泉神社でつつじちゃんの巫女装束を拝見！境内を散策しながら限定の御朱印も受けることができました。",
+    text: "高野山真言宗 高福寺でつつじちゃんの巫女装束を拝見！境内を散策しながら限定の御朱印も受けることができました。",
     likes: 18,
     date: "2026-09-16"
   }
@@ -407,7 +407,7 @@ async function loadMasterData() {
         { id: "REG_OTAWARA", name: "大田原市", pref: "栃木県", characterId: "CHAR_CHIKA" }
       ],
       characters: [
-        { id: "CHAR_MILK", name: "狩野みるく", avatar: "../assets/karino-milk.png", color: "#1199c4" },
+        { id: "CHAR_MILK", name: "狩野くるみ", avatar: "../assets/karino-milk.png", color: "#1199c4" },
         { id: "CHAR_TSUTSUJI", name: "那須乃つつじ", avatar: "../assets/nasuno-tsutsuji.png", color: "#e9588d" },
         { id: "CHAR_CHIKA", name: "大俵ちか", avatar: "../assets/otawara-chika.png", color: "#c84127" }
       ],
@@ -420,7 +420,7 @@ async function loadMasterData() {
           lat: 36.933365,
           lng: 140.017654,
           allowedDistance: 200,
-          character: "狩野みるく",
+          character: "狩野くるみ",
           openingHours: "フロント 24h"
         }
       ],
@@ -1347,7 +1347,7 @@ function setupModals() {
         userPlan: mgr.member.plan === "free" ? "無料会員" : (mgr.member.plan === "supporter" ? "応援会員" : "共創会員"),
         character: char,
         spotName: spot,
-        region: char === "狩野みるく" ? "那須塩原市" : (char === "那須乃つつじ" ? "那須町" : "大田原市"),
+        region: char === "狩野くるみ" ? "那須塩原市" : (char === "那須乃つつじ" ? "那須町" : "大田原市"),
         text: text,
         likes: 0,
         date: new Date().toISOString().split("T")[0]

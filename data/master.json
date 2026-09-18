@@ -22,7 +22,7 @@
   "characters": [
     {
       "id": "CHAR_MILK",
-      "name": "狩野みるく",
+      "name": "狩野くるみ",
       "regionId": "REG_NASUSHIOBARA",
       "avatar": "../assets/karino-milk.png",
       "color": "#1199c4",
@@ -73,35 +73,35 @@
     },
     {
       "id": "FAC_C002",
-      "name": "那須温泉神社",
+      "name": "高野山真言宗 高福寺",
       "regionId": "REG_NASUMACHI",
       "industry": "寺社・仏閣",
       "representative": "社務所",
       "phone": "0287762301",
       "email": "info@nasu-yuzen.jp",
-      "address": "栃木県那須郡那須町湯本182",
-      "lat": 37.098800,
-      "lng": 139.998500,
+      "address": "栃木県那須郡那須町大字高久甲578",
+      "lat": 36.989213,
+      "lng": 140.067075,
       "allowedDistance": 250,
       "status": "open",
       "openingHours": "境内自由 / 社務所 9:00〜16:30",
-      "description": "白面金毛九尾の狐伝説や那須与一ゆかりの由緒ある名社。"
+      "description": "弘法大師ゆかりの由緒ある寺院。緑豊かな自然に抱かれた那須の祈りの地。"
     },
     {
       "id": "FAC_C003",
-      "name": "大田原ツーリズムセンター",
+      "name": "光丸山法輪寺",
       "regionId": "REG_OTAWARA",
       "industry": "観光案内・物産館",
       "representative": "案内窓口",
       "phone": "0287238700",
       "email": "info@ohtawara-tourism.jp",
-      "address": "栃木県大田原市本町1-3-1",
-      "lat": 36.871500,
-      "lng": 140.015200,
+      "address": "栃木県大田原市佐良土1401",
+      "lat": 36.8335,
+      "lng": 140.0934,
       "allowedDistance": 200,
       "status": "open",
       "openingHours": "9:00〜17:00 (月曜休館)",
-      "description": "大俵ちかのグッズや大田原市の特産品・観光情報を案内する情報拠点。"
+      "description": "天狗伝説と日本一の大天狗面で知られる名刹。多くの参拝者が訪れるパワースポット。"
     }
   ],
   "costumes": [
@@ -111,23 +111,23 @@
       "facilityId": "FAC_C001",
       "name": "那須ミッドシティホテル制服",
       "image": "../assets/karino-milk.png",
-      "desc": "那須ミッドシティホテルのフロントスタッフ制服をスマートに着こなすみるく。"
+      "desc": "那須ミッドシティホテルのフロントスタッフ制服をスマートに着こなすくるみ。"
     },
     {
       "id": "COST_TSUTSUJI_SHRINE",
       "characterId": "CHAR_TSUTSUJI",
       "facilityId": "FAC_C002",
-      "name": "那須温泉神社 巫女装束",
+      "name": "高野山真言宗 高福寺 参拝装束",
       "image": "../assets/nasuno-tsutsuji.png",
-      "desc": "神聖な境内に咲くつつじをあしらった格式高い巫女装束。"
+      "desc": "静寂な境内に佇む清楚な参拝装束姿のつつじ。"
     },
     {
       "id": "COST_CHIKA_FESTIVAL",
       "characterId": "CHAR_CHIKA",
       "facilityId": "FAC_C003",
-      "name": "大田原与一まつり 法被姿",
+      "name": "光丸山法輪寺 門前法被姿",
       "image": "../assets/otawara-chika.png",
-      "desc": "与一まつりを盛り上げる勇ましい法被と弓矢のスタイル。"
+      "desc": "法輪寺の歴史ある門前を盛り上げる勇ましい法被と弓矢のスタイル。"
     }
   ],
   "panels": [
@@ -142,21 +142,21 @@
       "id": "PANEL_C002_1",
       "facilityId": "FAC_C002",
       "costumeId": "COST_TSUTSUJI_SHRINE",
-      "locationName": "社務所前広場",
+      "locationName": "本堂前広場",
       "panelType": "等身大パネル"
     },
     {
       "id": "PANEL_C003_1",
       "facilityId": "FAC_C003",
       "costumeId": "COST_CHIKA_FESTIVAL",
-      "locationName": "エントランス正面",
+      "locationName": "大天狗面堂前",
       "panelType": "等身大パネル"
     }
   ],
   "goods": [
     {
       "id": "GOODS_001",
-      "name": "狩野みるく アクリルキーホルダー（那須ミッドシティホテルver）",
+      "name": "狩野くるみ アクリルキーホルダー（那須ミッドシティホテルver）",
       "category": "アクリルキーホルダー",
       "price": 880,
       "characterId": "CHAR_MILK",
@@ -172,7 +172,7 @@
     },
     {
       "id": "GOODS_002",
-      "name": "狩野みるく 等身大イラストアクリルスタンド",
+      "name": "狩野くるみ 等身大イラストアクリルスタンド",
       "category": "アクリルスタンド",
       "price": 1650,
       "characterId": "CHAR_MILK",
@@ -188,7 +188,7 @@
     },
     {
       "id": "GOODS_003",
-      "name": "那須乃つつじ 公式参拝御朱印（記念和紙）",
+      "name": "那須乃つつじ 公式参拝御朱印（高福寺記念和紙）",
       "category": "御朱印",
       "price": 500,
       "characterId": "CHAR_TSUTSUJI",
@@ -270,7 +270,7 @@
     },
     {
       "id": "rew-midcity-special",
-      "name": "那須ミッドシティホテル限定 狩野みるく館内放送ボイス",
+      "name": "那須ミッドシティホテル限定 狩野くるみ館内放送ボイス",
       "cost": 200,
       "type": "voice",
       "requiredFacilityId": "FAC_C001",

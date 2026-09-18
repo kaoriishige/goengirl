@@ -18,7 +18,7 @@ const PORTAL_DATA = {
     },
     {
       id: "milk",
-      name: "狩野みるく",
+      name: "狩野くるみ",
       region: "栃木県 那須塩原市",
       color: "#1199c4",
       image: "../assets/karino-milk.png",
@@ -52,30 +52,30 @@ const PORTAL_DATA = {
       id: "p1",
       title: "巫女装束Ver. 等身大パネル",
       character: "那須乃つつじ",
-      spotName: "那須温泉神社",
-      address: "栃木県那須郡那須町湯本182",
+      spotName: "高野山真言宗 高福寺",
+      address: "栃木県那須郡那須町大字高久甲578",
       image: "../assets/nasuno-tsutsuji.png",
       category: "等身大パネル",
       isNew: true,
-      description: "那須温泉神社の社務所前に設置された等身大パネル。神聖な巫女装束を纏ったつつじちゃんが出迎えてくれます。"
+      description: "高野山真言宗 高福寺の社務所前に設置された等身大パネル。神聖な巫女装束を纏ったつつじちゃんが出迎えてくれます。"
     },
     {
       id: "p2",
       title: "フォーマルスーツVer. 等身大パネル",
-      character: "狩野みるく",
-      spotName: "千本松牧場 レストラン",
-      address: "栃木県那須塩原市千本松799",
+      character: "狩野くるみ",
+      spotName: "那須ミッドシティホテル",
+      address: "栃木県那須塩原市方京1-1-10",
       image: "../assets/karino-milk.png",
       category: "等身大パネル",
       isNew: true,
-      description: "千本松牧場のメインエントランスに設置。牧場長スタイルのキリッとしたみるくちゃんと記念撮影が楽しめます。"
+      description: "那須ミッドシティホテルのメインエントランスに設置。牧場長スタイルのキリッとしたくるみちゃんと記念撮影が楽しめます。"
     },
     {
       id: "p3",
       title: "那須与一弓道着Ver. 等身大パネル",
       character: "大俵ちか",
-      spotName: "道の駅 那須与一の郷",
-      address: "栃木県大田原市南金丸268-6",
+      spotName: "光丸山法輪寺",
+      address: "栃木県大田原市佐良土1401",
       image: "../assets/otawara-chika.png",
       category: "等身大パネル",
       isNew: true,
@@ -85,8 +85,8 @@ const PORTAL_DATA = {
       id: "p4",
       title: "エプロンカフェVer. SDパネル",
       character: "那須乃つつじ",
-      spotName: "森のカフェ ベルツ",
-      address: "栃木県那須郡那須町高久乙1200",
+      spotName: "高野山真言宗 高福寺",
+      address: "栃木県那須郡那須町大字高久甲578",
       image: "../assets/nasuno-tsutsuji.png",
       category: "SDパネル",
       isNew: false,
@@ -95,13 +95,13 @@ const PORTAL_DATA = {
     {
       id: "p5",
       title: "温泉浴衣Ver. 等身大パネル",
-      character: "狩野みるく",
-      spotName: "塩原温泉 湯守田中屋",
-      address: "栃木県那須塩原市塩原328",
+      character: "狩野くるみ",
+      spotName: "那須ミッドシティホテル",
+      address: "栃木県那須塩原市方京1-1-10",
       image: "../assets/karino-milk.png",
       category: "等身大パネル",
       isNew: false,
-      description: "渓谷の絶景を望む野天風呂ロビーに設置。湯上がりに爽やかなみるくちゃんがお出迎えします。"
+      description: "渓谷の絶景を望む野天風呂ロビーに設置。湯上がりに爽やかなくるみちゃんがお出迎えします。"
     }
   ],
   goods: [
@@ -109,7 +109,7 @@ const PORTAL_DATA = {
       id: "g1",
       name: "ご縁結び御朱印カード (那須乃つつじ)",
       character: "那須乃つつじ",
-      spotName: "那須温泉神社",
+      spotName: "高野山真言宗 高福寺",
       price: 500,
       category: "御朱印風カード",
       image: "../assets/nasuno-tsutsuji.png",
@@ -120,7 +120,7 @@ const PORTAL_DATA = {
       id: "g2",
       name: "アクリルスタンド 巫女Ver. (那須乃つつじ)",
       character: "那須乃つつじ",
-      spotName: "那須温泉神社 / ベルツ",
+      spotName: "高野山真言宗 高福寺 / ベルツ",
       price: 1500,
       category: "アクリルスタンド",
       image: "../assets/nasuno-tsutsuji.png",
@@ -129,9 +129,9 @@ const PORTAL_DATA = {
     },
     {
       id: "g3",
-      name: "みるくアイススプーン (狩野みるく)",
-      character: "狩野みるく",
-      spotName: "千本松牧場 レストラン",
+      name: "くるみアイススプーン (狩野くるみ)",
+      character: "狩野くるみ",
+      spotName: "那須ミッドシティホテル",
       price: 600,
       category: "食器・雑貨",
       image: "../assets/karino-milk.png",
@@ -140,9 +140,9 @@ const PORTAL_DATA = {
     },
     {
       id: "g4",
-      name: "アクリルキーホルダー スーツVer. (狩野みるく)",
-      character: "狩野みるく",
-      spotName: "千本松牧場 / 田中屋",
+      name: "アクリルキーホルダー スーツVer. (狩野くるみ)",
+      character: "狩野くるみ",
+      spotName: "那須ミッドシティホテル / 田中屋",
       price: 700,
       category: "キーホルダー",
       image: "../assets/karino-milk.png",
@@ -153,7 +153,7 @@ const PORTAL_DATA = {
       id: "g5",
       name: "与一の矢 アクリルチャーム (大俵ちか)",
       character: "大俵ちか",
-      spotName: "道の駅 那須与一の郷",
+      spotName: "光丸山法輪寺",
       price: 700,
       category: "チャーム",
       image: "../assets/otawara-chika.png",
@@ -176,17 +176,17 @@ const PORTAL_DATA = {
     {
       id: "c1",
       title: "塩原温泉郷 ご縁めぐり宿泊プラン",
-      character: "狩野みるく",
-      spotName: "塩原温泉 湯守田中屋",
+      character: "狩野くるみ",
+      spotName: "那須ミッドシティホテル",
       image: "../assets/karino-milk.png",
       isNew: true,
-      description: "宿泊者限定の「狩野みるく 特製手ぬぐい＆限定ボイスカード」がもらえるスペシャル宿泊プランです。"
+      description: "宿泊者限定の「狩野くるみ 特製手ぬぐい＆限定ボイスカード」がもらえるスペシャル宿泊プランです。"
     },
     {
       id: "c2",
       title: "九尾伝説カフェスイーツ コラボセット",
       character: "那須乃つつじ",
-      spotName: "森のカフェ ベルツ",
+      spotName: "高野山真言宗 高福寺",
       image: "../assets/nasuno-tsutsuji.png",
       isNew: true,
       description: "つつじちゃんの大好物チーズケーキとオリジナル木製コースターがセットになった限定カフェメニュー。"
@@ -195,7 +195,7 @@ const PORTAL_DATA = {
       id: "c3",
       title: "那須与一の郷 名物鮎塩焼き＆ご縁米キャンペーン",
       character: "大俵ちか",
-      spotName: "道の駅 那須与一の郷",
+      spotName: "光丸山法輪寺",
       image: "../assets/otawara-chika.png",
       isNew: true,
       description: "レストランでお食事または特産品購入で、大俵ちか限定オリジナルステッカーをプレゼント！"
@@ -231,7 +231,7 @@ function initDigitalPassPreview() {
     },
     milk: {
       themeClass: "theme-milk",
-      name: "狩野みるく",
+      name: "狩野くるみ",
       image: "../assets/karino-milk.png",
       title: "🏅 地域のご縁"
     },
