@@ -681,16 +681,30 @@ function setupEventListeners() {
 
       let latVal = parseFloat(document.getElementById("form-company-lat").value);
       let lngVal = parseFloat(document.getElementById("form-company-lng").value);
+      const addrVal = document.getElementById("form-company-address").value.trim();
+      
+      // GPSが未入力の場合は住所から自動算出
       if (isNaN(latVal) || isNaN(lngVal)) {
-        alert("GPS座標（緯度・経度）が未入力です。「📍 GPS自動取得」をクリックするか、数値を入力してください。");
-        return;
+        fallbackGeocode(addrVal);
+        latVal = parseFloat(document.getElementById("form-company-lat").value);
+        lngVal = parseFloat(document.getElementById("form-company-lng").value);
+        if (isNaN(latVal) || isNaN(lngVal)) {
+          latVal = 36.933365;
+          lngVal = 140.017654;
+        }
       }
 
-      // 3. Validate Panel Image (必須)
+      // 3. Validate / Fallback Panel Image
       let charImg = panelImgDataInput.value;
       if (!charImg) {
-        alert("⚠️ 設置パネルの画像が登録されていません。\n店頭でファンがスキャン照合するためにパネル画像は必須です。\n「📁 パソコンからパネル画像を選択」から画像ファイルを登録してください。");
-        return;
+        // 画像未選択時はキャラクターに応じた公式立ち絵画像を自動補完
+        if (charName.includes("くるみ") || charName.includes("みるく")) {
+          charImg = "../assets/karino-milk.png";
+        } else if (charName.includes("ちか")) {
+          charImg = "../assets/otawara-chika.png";
+        } else {
+          charImg = "../assets/nasuno-tsutsuji.png";
+        }
       }
 
       // Accurate Billing & Services Calculation
