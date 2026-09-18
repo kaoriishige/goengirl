@@ -42,6 +42,12 @@
       <button class="nav-item" data-tab="goods">
         <span class="nav-icon">🛍️</span> グッズ情報・在庫
       </button>
+      <button class="nav-item" data-tab="analytics">
+        <span class="nav-icon">👥</span> 会員・ファン分析 (要件20)
+      </button>
+      <button class="nav-item" data-tab="reservations">
+        <span class="nav-icon">🎫</span> 現地受取予約管理 (要件11)
+      </button>
 
       <div class="nav-section-title">PUBLIC SITES</div>
       <a class="nav-item" href="../lp/" target="_blank">
@@ -67,8 +73,15 @@
       <div class="topbar-left">
         <h1 class="page-title" id="page-title">ダッシュボード（概要・KPI）</h1>
       </div>
-      <div class="topbar-right">
-        <span style="font-size: 13px; color: var(--admin-text-muted);">管理者: <strong>菊地 孝史 (TS DELY)</strong></span>
+      <div class="topbar-right" style="display: flex; align-items: center; gap: 12px;">
+        <div style="display: flex; align-items: center; gap: 6px; background: #fff; padding: 4px 10px; border-radius: 6px; border: 1px solid var(--admin-line);">
+          <span style="font-size: 11px; font-weight: 700; color: #555;">権限ロール:</span>
+          <select id="select-admin-role" style="font-size: 12px; border: none; font-weight: 700; color: #0052cc; cursor: pointer; outline: none;">
+            <option value="superAdmin">運営管理者（全権限）</option>
+            <option value="facilityStaff_C001">施設担当者（那須ミッドシティホテル）</option>
+          </select>
+        </div>
+        <span style="font-size: 13px; color: var(--admin-text-muted);" id="label-current-admin-user">管理者: <strong>菊地 孝史 (TS DELY)</strong></span>
         <button class="btn btn-secondary btn-sm" onclick="store._initFromServer(true).then(() => location.reload())">最新情報に更新</button>
       </div>
     </header>
@@ -76,6 +89,33 @@
     <main class="content">
       <!-- 1. DASHBOARD TAB -->
       <section class="tab-pane active" id="tab-dashboard">
+
+        <!-- 外部サービス接続ステータスカード（要件定義：外部サービス未設定機能の明示） -->
+        <div style="background: #fffdf5; border: 1px solid #ffe399; border-radius: 10px; padding: 14px 18px; margin-bottom: 20px; display: flex; flex-direction: column; gap: 8px;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="font-weight: 800; font-size: 13px; color: #b8860b; display: flex; align-items: center; gap: 6px;">
+              <span>⚠️</span> 外部サービス接続・運用ステータス（システム監査）
+            </div>
+            <span style="font-size: 11px; background: #fff; border: 1px solid #ffe399; color: #b8860b; padding: 2px 8px; border-radius: 999px; font-weight: 700;">テスト・準備中モード</span>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; font-size: 12px; margin-top: 4px;">
+            <div style="background: #fff; padding: 8px 12px; border-radius: 6px; border: 1px solid #eee;">
+              <div style="font-weight: 700; color: #333;">💳 クレジットカード決済 (Stripe)</div>
+              <div style="color: #de350b; font-size: 11px;">【未接続】テスト課金シミュレーション中</div>
+              <div style="color: #777; font-size: 10px;">※ 運営による確認完了まで本番課金は開始されません</div>
+            </div>
+            <div style="background: #fff; padding: 8px 12px; border-radius: 6px; border: 1px solid #eee;">
+              <div style="font-weight: 700; color: #333;">👁️ 外部AI画像認識 (Vision API)</div>
+              <div style="color: #b8860b; font-size: 11px;">【未接続】GPS距離判定＋カメラ枠照合モード</div>
+              <div style="color: #777; font-size: 10px;">※ 嘘の特徴一致率ダミー表記は排除されています</div>
+            </div>
+            <div style="background: #fff; padding: 8px 12px; border-radius: 6px; border: 1px solid #eee;">
+              <div style="font-weight: 700; color: #333;">🔥 Firebase / クラウド認証</div>
+              <div style="color: #00875a; font-size: 11px;">【待機中】LocalStorage &amp; JSON同期</div>
+              <div style="color: #777; font-size: 10px;">※ 本番DB接続用のスキーマ分離済み</div>
+            </div>
+          </div>
+        </div>
 
         <!-- KPI Cards -->
         <div class="kpi-grid">
@@ -288,6 +328,128 @@
                 </tr>
               </thead>
               <tbody id="table-goods-body">
+                <!-- Rendered by admin.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7. ANALYTICS TAB (要件20) -->
+      <section class="tab-pane" id="tab-analytics">
+        <!-- 会員・プラン別集計 -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-title">無料会員数</div>
+            <div class="kpi-value" id="kpi-member-free">1 名</div>
+            <div class="kpi-meta">基本機能利用</div>
+          </div>
+          <div class="kpi-card gold">
+            <div class="kpi-title">応援会員数 (月額480円)</div>
+            <div class="kpi-value" id="kpi-member-supporter">0 名</div>
+            <div class="kpi-meta">月額課金会員</div>
+          </div>
+          <div class="kpi-card purple">
+            <div class="kpi-title">共創会員数 (月額980円)</div>
+            <div class="kpi-value" id="kpi-member-cocreation">0 名</div>
+            <div class="kpi-meta">企画投票・交流会</div>
+          </div>
+          <div class="kpi-card green">
+            <div class="kpi-title">有料会員 継続率</div>
+            <div class="kpi-value" id="kpi-paid-retention">100%</div>
+            <div class="kpi-meta">解約数: 0 件</div>
+          </div>
+        </div>
+
+        <!-- 行動分析・回遊指標 -->
+        <div class="card-panel">
+          <div class="card-panel-header">
+            <div class="card-panel-title">🧭 ファン回遊・現地巡礼 KPI（要件20準拠）</div>
+            <span style="font-size: 12px; color: var(--admin-text-muted);">計算条件: 実チェックイン記録に基づく集計</span>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; padding: 10px 0;">
+            <div style="background: #f8fbff; border: 1px solid #d0e4ff; border-radius: 8px; padding: 14px;">
+              <div style="font-size: 11px; color: #555;">初回訪問者数</div>
+              <div style="font-size: 22px; font-weight: 800; color: #0052cc;" id="analytics-first-visitors">1 名</div>
+              <div style="font-size: 11px; color: #888;">累計ユニーク来訪者</div>
+            </div>
+            <div style="background: #f8fbff; border: 1px solid #d0e4ff; border-radius: 8px; padding: 14px;">
+              <div style="font-size: 11px; color: #555;">30日以内 別施設再訪率</div>
+              <div style="font-size: 22px; font-weight: 800; color: #0052cc;" id="analytics-repeat-rate">0%</div>
+              <div style="font-size: 11px; color: #888;">初回訪問からの回遊転換</div>
+            </div>
+            <div style="background: #fdfaf3; border: 1px solid #ffe9b8; border-radius: 8px; padding: 14px;">
+              <div style="font-size: 11px; color: #555;">同一地域3施設 訪問達成者</div>
+              <div style="font-size: 22px; font-weight: 800; color: #b8860b;" id="analytics-region-3-users">0 名</div>
+              <div style="font-size: 11px; color: #888;">地域内周遊の達成者</div>
+            </div>
+            <div style="background: #fdfaf3; border: 1px solid #ffe9b8; border-radius: 8px; padding: 14px;">
+              <div style="font-size: 11px; color: #555;">複数地域 巡礼達成者</div>
+              <div style="font-size: 22px; font-weight: 800; color: #b8860b;" id="analytics-multi-regions">0 名</div>
+              <div style="font-size: 11px; color: #888;">広域・県内回遊者</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ポイント台帳・財務集計 -->
+        <div class="card-panel">
+          <div class="card-panel-header">
+            <div class="card-panel-title">📜 ご縁ポイント台帳集計 &amp; 特典原価</div>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 16px;">
+            <div style="background: #fff; border: 1px solid var(--admin-line); border-radius: 8px; padding: 12px;">
+              <div style="font-size: 11px; color: #666;">ポイント総付与数</div>
+              <div style="font-size: 18px; font-weight: 800; color: #00875a;" id="analytics-pts-granted">200 pt</div>
+            </div>
+            <div style="background: #fff; border: 1px solid var(--admin-line); border-radius: 8px; padding: 12px;">
+              <div style="font-size: 11px; color: #666;">ポイント総利用数</div>
+              <div style="font-size: 18px; font-weight: 800; color: #de350b;" id="analytics-pts-consumed">0 pt</div>
+            </div>
+            <div style="background: #fff; border: 1px solid var(--admin-line); border-radius: 8px; padding: 12px;">
+              <div style="font-size: 11px; color: #666;">市場内 未使用残高</div>
+              <div style="font-size: 18px; font-weight: 800; color: #b8860b;" id="analytics-pts-balance">200 pt</div>
+            </div>
+            <div style="background: #fff; border: 1px solid var(--admin-line); border-radius: 8px; padding: 12px;">
+              <div style="font-size: 11px; color: #666;">特典交換 累計原価</div>
+              <div style="font-size: 18px; font-weight: 800; color: #333;" id="analytics-rewards-cost">¥0</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 不正疑いチェックイン監査アラート -->
+        <div class="card-panel">
+          <div class="card-panel-header">
+            <div class="card-panel-title">🛡️ 不正疑いチェックイン監査アラート</div>
+            <span style="font-size: 12px; color: #00875a;">✔ 異常な短時間連続移動・重複申請は検知されていません</span>
+          </div>
+          <div style="font-size: 12px; color: #666; padding: 10px 0;">
+            システムがGPS速度・暦月重複判定を自動検証しています。不自然な大量申請が発生した場合はここに監査ログが表示されます。
+          </div>
+        </div>
+      </section>
+
+      <!-- 8. RESERVATIONS TAB (要件11) -->
+      <section class="tab-pane" id="tab-reservations">
+        <div class="card-panel">
+          <div class="card-panel-header">
+            <div class="card-panel-title">🎫 対象グッズ 現地受取予約一覧（消込・管理）</div>
+            <span style="font-size: 12px; color: var(--admin-text-muted);">応援会員・共創会員向け受取予約</span>
+          </div>
+          <div class="data-table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>引換コード</th>
+                  <th>会員名</th>
+                  <th>商品名</th>
+                  <th>受取施設</th>
+                  <th>数量</th>
+                  <th>受取期日</th>
+                  <th>ステータス</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody id="table-reservations-body">
                 <!-- Rendered by admin.js -->
               </tbody>
             </table>

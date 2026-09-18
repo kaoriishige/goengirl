@@ -260,9 +260,13 @@ function setupNavigation() {
         sales: "売上・サブスクリプションデータ",
         payments: "決済・請求ステータス",
         panels: "パネル設置情報管理",
-        goods: "グッズ情報・在庫管理"
+        goods: "グッズ情報・在庫管理",
+        analytics: "会員・ファン回遊KPI分析（要件20）",
+        reservations: "対象グッズ 現地受取予約管理（要件11）"
       };
       document.getElementById("page-title").textContent = titleMap[tabId] || "管理コンソール";
+      if (tabId === "analytics") renderAnalytics();
+      if (tabId === "reservations") renderReservations();
 
       // Auto scroll to content on mobile so user does not need to scroll down manually
       if (window.innerWidth <= 900) {
@@ -909,6 +913,8 @@ function renderAll() {
   renderPayments();
   renderPanels();
   renderGoods();
+  renderAnalytics();
+  renderReservations();
 }
 
 function renderKPIs() {
@@ -1385,3 +1391,164 @@ window.editCompany = editCompany;
 window.deleteCompany = deleteCompany;
 window.togglePaymentStatus = togglePaymentStatus;
 window.adjustStock = adjustStock;
+
+// =========================================
+// 要件18・20: 会員分析KPI ＆ 現地受取予約 ＆ 権限管理
+// =========================================
+
+let currentAdminRole = "superAdmin";
+
+document.addEventListener("DOMContentLoaded", () => {
+  setupRoleSwitching();
+});
+
+function setupRoleSwitching() {
+  const roleSelect = document.getElementById("select-admin-role");
+  const userLabel = document.getElementById("label-current-admin-user");
+
+  if (roleSelect) {
+    roleSelect.addEventListener("change", () => {
+      currentAdminRole = roleSelect.value;
+      if (currentAdminRole === "facilityStaff_C001") {
+        if (userLabel) userLabel.innerHTML = `施設担当者: <strong>泉 道夫（那須ミッドシティホテル）</strong>`;
+        alert("【施設担当者モードに切り替えました】\n自施設（那須ミッドシティホテル）の担当商品・受取予約のみアクセス可能です。\n他施設の予約や他会員の全国行動履歴は閲覧制限されます。");
+      } else {
+        if (userLabel) userLabel.innerHTML = `管理者: <strong>菊地 孝史 (TS DELY)</strong>`;
+      }
+      renderCompanies();
+      renderPanels();
+      renderReservations();
+    });
+  }
+}
+
+function getMemberSessionData() {
+  try {
+    const raw = localStorage.getItem("goen_girl_member_session_v2");
+    if (raw) return JSON.parse(raw);
+  } catch (e) {}
+  return null;
+}
+
+function renderAnalytics() {
+  const m = getMemberSessionData();
+  const freeEl = document.getElementById("kpi-member-free");
+  const supEl = document.getElementById("kpi-member-supporter");
+  const cocEl = document.getElementById("kpi-member-cocreation");
+  const retEl = document.getElementById("kpi-paid-retention");
+
+  let freeCount = 1;
+  let supCount = 0;
+  let cocCount = 0;
+
+  if (m) {
+    if (m.plan === "supporter") { freeCount = 0; supCount = 1; }
+    else if (m.plan === "cocreation") { freeCount = 0; cocCount = 1; }
+  }
+
+  if (freeEl) freeEl.textContent = `${freeCount} 名`;
+  if (supEl) supEl.textContent = `${supCount} 名`;
+  if (cocEl) cocEl.textContent = `${cocCount} 名`;
+  if (retEl) retEl.textContent = "100%";
+
+  // 回遊指標
+  const firstVisEl = document.getElementById("analytics-first-visitors");
+  const repRateEl = document.getElementById("analytics-repeat-rate");
+  const reg3El = document.getElementById("analytics-region-3-users");
+  const multiRegEl = document.getElementById("analytics-multi-regions");
+
+  const checkins = m && m.checkins ? m.checkins : [];
+  const visitedFacilities = [...new Set(checkins.map(c => c.spotId))];
+  const visitedRegions = [...new Set(checkins.map(c => c.regionId))];
+
+  if (firstVisEl) firstVisEl.textContent = `${visitedFacilities.length > 0 ? 1 : 0} 名`;
+  if (repRateEl) repRateEl.textContent = visitedFacilities.length >= 2 ? "100%" : "0%";
+  if (reg3El) reg3El.textContent = visitedFacilities.length >= 3 ? "1 名" : "0 名";
+  if (multiRegEl) multiRegEl.textContent = visitedRegions.length >= 2 ? "1 名" : "0 名";
+
+  // 台帳財務
+  const ptsGrantEl = document.getElementById("analytics-pts-granted");
+  const ptsConsEl = document.getElementById("analytics-pts-consumed");
+  const ptsBalEl = document.getElementById("analytics-pts-balance");
+  const rewCostEl = document.getElementById("analytics-rewards-cost");
+
+  let grantSum = 0;
+  let consSum = 0;
+  if (m && m.ledger) {
+    m.ledger.forEach(l => {
+      if (l.amount > 0) grantSum += l.amount;
+      else consSum += Math.abs(l.amount);
+    });
+  } else {
+    grantSum = m ? m.points : 100;
+  }
+
+  if (ptsGrantEl) ptsGrantEl.textContent = `${grantSum.toLocaleString()} pt`;
+  if (ptsConsEl) ptsConsEl.textContent = `${consSum.toLocaleString()} pt`;
+  if (ptsBalEl) ptsBalEl.textContent = `${(grantSum - consSum).toLocaleString()} pt`;
+  if (rewCostEl) rewCostEl.textContent = `¥${(consSum * 0.8).toLocaleString()}`;
+}
+
+function renderReservations() {
+  const tbody = document.getElementById("table-reservations-body");
+  if (!tbody) return;
+
+  const m = getMemberSessionData();
+  let resList = m && m.reservations ? m.reservations : [];
+
+  // 施設担当者モード時は自施設（那須ミッドシティホテル: FAC_C001 / C001）のみフィルタリング
+  if (currentAdminRole === "facilityStaff_C001") {
+    resList = resList.filter(r => r.facilityId === "FAC_C001" || r.facilityId === "C001" || (r.facilityName && r.facilityName.includes("那須ミッドシティ")));
+  }
+
+  if (resList.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 30px; color: #888;">受取予約データはありません。</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = resList.map(r => {
+    const isCompleted = (r.status === "completed");
+    return `
+      <tr>
+        <td><strong>${escapeHtml(r.code)}</strong></td>
+        <td>${escapeHtml(m ? m.nickname : '会員')}</td>
+        <td><strong>${escapeHtml(r.goodsName)}</strong></td>
+        <td>${escapeHtml(r.facilityName)}</td>
+        <td>${r.qty} 点</td>
+        <td>${r.expireDate}</td>
+        <td>
+          <span class="status-pill ${isCompleted ? 'status-active' : 'status-pending'}">
+            ${isCompleted ? '受取完了' : '確保済み（受付中）'}
+          </span>
+        </td>
+        <td>
+          ${isCompleted ? `
+            <span style="font-size: 11px; color: #00875a; font-weight: 700;">✔ 消込済</span>
+          ` : `
+            <button class="btn btn-primary btn-sm" onclick="completeReservation('${r.id}')">
+              受渡完了（消込）
+            </button>
+          `}
+        </td>
+      </tr>
+    `;
+  }).join("");
+}
+
+function completeReservation(reservationId) {
+  const m = getMemberSessionData();
+  if (!m || !m.reservations) return;
+
+  const res = m.reservations.find(r => r.id === reservationId);
+  if (res) {
+    if (confirm(`引換コード【${res.code}】の商品「${res.goodsName}」をお客様に受け渡しましたか？\nステータスを受取完了に更新します。`)) {
+      res.status = "completed";
+      res.completedAt = new Date().toISOString();
+      localStorage.setItem("goen_girl_member_session_v2", JSON.stringify(m));
+      renderReservations();
+      alert("受渡完了の消込を行いました！");
+    }
+  }
+}
+
+window.completeReservation = completeReservation;

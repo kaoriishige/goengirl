@@ -13,3 +13,4 @@ $RECYCLE.BIN/
 .env
 .env.local
 *.log
+*.backup.*

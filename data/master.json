@@ -1,0 +1,313 @@
+{
+  "regions": [
+    {
+      "id": "REG_NASUSHIOBARA",
+      "name": "那須塩原市",
+      "pref": "栃木県",
+      "characterId": "CHAR_MILK"
+    },
+    {
+      "id": "REG_OTAWARA",
+      "name": "大田原市",
+      "pref": "栃木県",
+      "characterId": "CHAR_CHIKA"
+    },
+    {
+      "id": "REG_NASUMACHI",
+      "name": "那須町",
+      "pref": "栃木県",
+      "characterId": "CHAR_TSUTSUJI"
+    }
+  ],
+  "characters": [
+    {
+      "id": "CHAR_MILK",
+      "name": "狩野みるく",
+      "regionId": "REG_NASUSHIOBARA",
+      "avatar": "../assets/karino-milk.png",
+      "color": "#1199c4",
+      "themeClass": "theme-milk",
+      "title": "那須塩原市の守護ガール",
+      "birthday": "9月17日",
+      "defaultGreeting": "お疲れさま！今日も元気いっぱい笑顔で巡礼いってみよー！"
+    },
+    {
+      "id": "CHAR_CHIKA",
+      "name": "大俵ちか",
+      "regionId": "REG_OTAWARA",
+      "avatar": "../assets/otawara-chika.png",
+      "color": "#c84127",
+      "themeClass": "theme-chika",
+      "title": "大田原市の守護ガール",
+      "birthday": "10月28日",
+      "defaultGreeting": "一矢必中！ご縁の矢を放って、最高の出会いをつかみ取りましょう！"
+    },
+    {
+      "id": "CHAR_TSUTSUJI",
+      "name": "那須乃つつじ",
+      "regionId": "REG_NASUMACHI",
+      "avatar": "../assets/nasuno-tsutsuji.png",
+      "color": "#e9588d",
+      "themeClass": "theme-tsutsuji",
+      "title": "那須町の守護ガール",
+      "birthday": "5月20日",
+      "defaultGreeting": "ご縁に感謝いたしますわ。今日も素敵な一日になりますように。"
+    }
+  ],
+  "facilities": [
+    {
+      "id": "FAC_C001",
+      "name": "那須ミッドシティホテル",
+      "regionId": "REG_NASUSHIOBARA",
+      "industry": "ホテル・旅館",
+      "representative": "泉道夫",
+      "phone": "0287671400",
+      "email": "izumi@nasu-midcity.com",
+      "address": "栃木県那須塩原市方京1-1-10",
+      "lat": 36.933365,
+      "lng": 140.017654,
+      "allowedDistance": 200,
+      "status": "open",
+      "openingHours": "ロビー 24時間 / フロント受付 7:00〜23:00",
+      "description": "JR那須塩原駅西口より徒歩3分。ビジネス・那須観光の拠点として最適なホテル。"
+    },
+    {
+      "id": "FAC_C002",
+      "name": "那須温泉神社",
+      "regionId": "REG_NASUMACHI",
+      "industry": "寺社・仏閣",
+      "representative": "社務所",
+      "phone": "0287762301",
+      "email": "info@nasu-yuzen.jp",
+      "address": "栃木県那須郡那須町湯本182",
+      "lat": 37.098800,
+      "lng": 139.998500,
+      "allowedDistance": 250,
+      "status": "open",
+      "openingHours": "境内自由 / 社務所 9:00〜16:30",
+      "description": "白面金毛九尾の狐伝説や那須与一ゆかりの由緒ある名社。"
+    },
+    {
+      "id": "FAC_C003",
+      "name": "大田原ツーリズムセンター",
+      "regionId": "REG_OTAWARA",
+      "industry": "観光案内・物産館",
+      "representative": "案内窓口",
+      "phone": "0287238700",
+      "email": "info@ohtawara-tourism.jp",
+      "address": "栃木県大田原市本町1-3-1",
+      "lat": 36.871500,
+      "lng": 140.015200,
+      "allowedDistance": 200,
+      "status": "open",
+      "openingHours": "9:00〜17:00 (月曜休館)",
+      "description": "大俵ちかのグッズや大田原市の特産品・観光情報を案内する情報拠点。"
+    }
+  ],
+  "costumes": [
+    {
+      "id": "COST_MILK_HOTEL",
+      "characterId": "CHAR_MILK",
+      "facilityId": "FAC_C001",
+      "name": "那須ミッドシティホテル制服",
+      "image": "../assets/karino-milk.png",
+      "desc": "那須ミッドシティホテルのフロントスタッフ制服をスマートに着こなすみるく。"
+    },
+    {
+      "id": "COST_TSUTSUJI_SHRINE",
+      "characterId": "CHAR_TSUTSUJI",
+      "facilityId": "FAC_C002",
+      "name": "那須温泉神社 巫女装束",
+      "image": "../assets/nasuno-tsutsuji.png",
+      "desc": "神聖な境内に咲くつつじをあしらった格式高い巫女装束。"
+    },
+    {
+      "id": "COST_CHIKA_FESTIVAL",
+      "characterId": "CHAR_CHIKA",
+      "facilityId": "FAC_C003",
+      "name": "大田原与一まつり 法被姿",
+      "image": "../assets/otawara-chika.png",
+      "desc": "与一まつりを盛り上げる勇ましい法被と弓矢のスタイル。"
+    }
+  ],
+  "panels": [
+    {
+      "id": "PANEL_C001_1",
+      "facilityId": "FAC_C001",
+      "costumeId": "COST_MILK_HOTEL",
+      "locationName": "ホテル1Fロビー",
+      "panelType": "等身大パネル"
+    },
+    {
+      "id": "PANEL_C002_1",
+      "facilityId": "FAC_C002",
+      "costumeId": "COST_TSUTSUJI_SHRINE",
+      "locationName": "社務所前広場",
+      "panelType": "等身大パネル"
+    },
+    {
+      "id": "PANEL_C003_1",
+      "facilityId": "FAC_C003",
+      "costumeId": "COST_CHIKA_FESTIVAL",
+      "locationName": "エントランス正面",
+      "panelType": "等身大パネル"
+    }
+  ],
+  "goods": [
+    {
+      "id": "GOODS_001",
+      "name": "狩野みるく アクリルキーホルダー（那須ミッドシティホテルver）",
+      "category": "アクリルキーホルダー",
+      "price": 880,
+      "characterId": "CHAR_MILK",
+      "costumeId": "COST_MILK_HOTEL",
+      "facilityId": "FAC_C001",
+      "image": "../assets/karino-milk.png",
+      "salesType": "現地限定",
+      "targetPlan": "general",
+      "stockStatus": "在庫あり",
+      "stockCount": 35,
+      "canReserve": true,
+      "updateTime": "2026-09-18 11:00"
+    },
+    {
+      "id": "GOODS_002",
+      "name": "狩野みるく 等身大イラストアクリルスタンド",
+      "category": "アクリルスタンド",
+      "price": 1650,
+      "characterId": "CHAR_MILK",
+      "costumeId": "COST_MILK_HOTEL",
+      "facilityId": "FAC_C001",
+      "image": "../assets/karino-milk.png",
+      "salesType": "現地限定",
+      "targetPlan": "general",
+      "stockStatus": "在庫あり",
+      "stockCount": 18,
+      "canReserve": true,
+      "updateTime": "2026-09-18 11:00"
+    },
+    {
+      "id": "GOODS_003",
+      "name": "那須乃つつじ 公式参拝御朱印（記念和紙）",
+      "category": "御朱印",
+      "price": 500,
+      "characterId": "CHAR_TSUTSUJI",
+      "costumeId": "COST_TSUTSUJI_SHRINE",
+      "facilityId": "FAC_C002",
+      "image": "../assets/nasuno-tsutsuji.png",
+      "salesType": "現地限定",
+      "targetPlan": "general",
+      "stockStatus": "在庫あり",
+      "stockCount": 60,
+      "canReserve": false,
+      "updateTime": "2026-09-18 11:00"
+    },
+    {
+      "id": "GOODS_004",
+      "name": "大俵ちか アクリルキーホルダー（法被ver）",
+      "category": "アクリルキーホルダー",
+      "price": 880,
+      "characterId": "CHAR_CHIKA",
+      "costumeId": "COST_CHIKA_FESTIVAL",
+      "facilityId": "FAC_C003",
+      "image": "../assets/otawara-chika.png",
+      "salesType": "現地限定",
+      "targetPlan": "general",
+      "stockStatus": "在庫あり",
+      "stockCount": 22,
+      "canReserve": true,
+      "updateTime": "2026-09-18 11:00"
+    }
+  ],
+  "titles": [
+    {
+      "id": "TITLE_FIRST",
+      "name": "初めてのご縁",
+      "conditionType": "first_visit",
+      "conditionValue": 1,
+      "desc": "初めて提携スポットを訪問した証"
+    },
+    {
+      "id": "TITLE_REGION",
+      "name": "地域のご縁",
+      "conditionType": "same_region_3",
+      "conditionValue": 3,
+      "desc": "同一地域の異なる3施設を訪問した証"
+    },
+    {
+      "id": "TITLE_TRAVEL",
+      "name": "旅するご縁",
+      "conditionType": "multi_regions_3",
+      "conditionValue": 3,
+      "desc": "異なる3地域を訪問した証"
+    },
+    {
+      "id": "TITLE_MASTER",
+      "name": "ご縁結びマスター",
+      "conditionType": "facilities_10",
+      "conditionValue": 10,
+      "desc": "全国で異なる10施設を巡礼した栄誉ある達成称号"
+    }
+  ],
+  "rewards": [
+    {
+      "id": "item-voice-secret",
+      "name": "那須乃つつじ シークレット甘味ボイス",
+      "cost": 40,
+      "type": "voice",
+      "targetPlan": "free",
+      "desc": "「和牛もいいですが…あなたと食べるお団子が一番ですわ」",
+      "status": "published"
+    },
+    {
+      "id": "item-wp-special",
+      "name": "3人集合！秋の那須連山特製壁紙",
+      "cost": 60,
+      "type": "wallpaper",
+      "targetPlan": "free",
+      "desc": "スマートフォン用高画質描き下ろし待受画像",
+      "status": "published"
+    },
+    {
+      "id": "rew-midcity-special",
+      "name": "那須ミッドシティホテル限定 狩野みるく館内放送ボイス",
+      "cost": 200,
+      "type": "voice",
+      "requiredFacilityId": "FAC_C001",
+      "targetPlan": "free",
+      "desc": "那須ミッドシティホテルへの訪問者のみが交換できる特別収録館内ボイス",
+      "status": "published"
+    },
+    {
+      "id": "rew-badge-local",
+      "name": "【応援会員限定】特製アクリルバッジ（現地受取）",
+      "cost": 350,
+      "type": "physical",
+      "requiredFacilityId": "FAC_C001",
+      "targetPlan": "supporter",
+      "desc": "ホテルフロントにて専用引換コードを提示して受け取れる限定バッジ",
+      "status": "published",
+      "stockCount": 25
+    }
+  ],
+  "plans": [
+    {
+      "id": "free",
+      "name": "無料会員",
+      "price": 0,
+      "desc": "無料で好きになり、現地で思い出とコレクションが増える基本プラン"
+    },
+    {
+      "id": "supporter",
+      "name": "応援会員",
+      "price": 480,
+      "desc": "月額480円（税込）。限定ボイス・壁紙・推し便り・対象グッズ現地受取予約など"
+    },
+    {
+      "id": "cocreation",
+      "name": "共創会員",
+      "price": 980,
+      "desc": "月額980円（税込）。応援会員の全特典＋企画投票・四半期企画交流・裏話レポート"
+    }
+  ]
+}
