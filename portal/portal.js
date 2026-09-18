@@ -209,7 +209,62 @@ document.addEventListener("DOMContentLoaded", () => {
   renderGoods();
   renderCollabs();
   setupModal();
+  initDigitalPassPreview();
 });
+
+// Digital Pass Preview Interactive Switcher
+function initDigitalPassPreview() {
+  const tabsContainer = document.getElementById("pass-char-tabs");
+  const card = document.getElementById("mini-pass-card");
+  const avatar = document.getElementById("mini-pass-avatar");
+  const favGirlLabel = document.getElementById("mini-pass-fav-girl");
+  const titleBadge = document.getElementById("mini-pass-title-badge");
+
+  if (!tabsContainer || !card) return;
+
+  const charThemes = {
+    tsutsuji: {
+      themeClass: "theme-tsutsuji",
+      name: "那須乃つつじ",
+      image: "../assets/nasuno-tsutsuji.png",
+      title: "🏅 初めてのご縁"
+    },
+    milk: {
+      themeClass: "theme-milk",
+      name: "狩野みるく",
+      image: "../assets/karino-milk.png",
+      title: "🏅 地域のご縁"
+    },
+    chika: {
+      themeClass: "theme-chika",
+      name: "大俵ちか",
+      image: "../assets/otawara-chika.png",
+      title: "🏅 旅するご縁"
+    }
+  };
+
+  tabsContainer.addEventListener("click", (e) => {
+    const btn = e.target.closest(".char-tab-btn");
+    if (!btn) return;
+
+    const charKey = btn.dataset.char;
+    const config = charThemes[charKey];
+    if (!config) return;
+
+    // Toggle active tab
+    tabsContainer.querySelectorAll(".char-tab-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+
+    // Update card styling
+    card.classList.remove("theme-tsutsuji", "theme-milk", "theme-chika");
+    card.classList.add(config.themeClass);
+
+    // Update elements
+    if (avatar) avatar.src = config.image;
+    if (favGirlLabel) favGirlLabel.textContent = config.name;
+    if (titleBadge) titleBadge.textContent = config.title;
+  });
+}
 
 function renderCharacters() {
   const container = document.getElementById("char-container");
@@ -234,9 +289,14 @@ function renderCharacters() {
           <dt>設置スポット</dt><dd><strong>${c.spotsCount} か所</strong></dd>
           <dt>限定グッズ</dt><dd><strong>${c.goodsCount} 種</strong></dd>
         </dl>
-        <button class="voice-sample-btn" onclick="playVoiceSample('${c.name}', '${c.voiceText.replace(/'/g, "\\'")}')">
-          <span>🔊</span> 公式ボイスメッセージを聴く
-        </button>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px;">
+          <button class="voice-sample-btn" style="flex: 1; min-width: 140px;" onclick="playVoiceSample('${c.name}', '${c.voiceText.replace(/'/g, "\\'")}')">
+            <span>🔊</span> 公式ボイス試聴
+          </button>
+          <a href="../join/" class="voice-sample-btn" style="flex: 1; min-width: 140px; background: #fff0f5; border-color: #f28baf; color: #c72c5b; text-decoration: none; display: flex; align-items: center; justify-content: center;">
+            <span>🎁</span> 推し会員証を発行
+          </a>
+        </div>
       </div>
     </article>
   `).join("");
@@ -250,6 +310,7 @@ function renderPanels() {
     <div class="poka-card" onclick="openDetailModal('panel', '${p.id}')">
       <div class="poka-card-img-wrap">
         <img src="${p.image}" alt="${p.title}" class="poka-card-img">
+        <span class="poka-badge-points">📍 チェックイン +100pt</span>
         ${p.isNew ? '<span class="poka-badge-new">NEW</span>' : ''}
         <span class="poka-badge-category">${p.category}</span>
       </div>
@@ -257,6 +318,9 @@ function renderPanels() {
         <p class="poka-card-character">${p.character}</p>
         <h3 class="poka-card-title">${p.title}</h3>
         <p class="poka-card-spot">📍 ${p.spotName}</p>
+        <div style="margin-top: 8px; font-size: 11px; color: #059669; font-weight: 700;">
+          ✨ 現地チェックインで初回100pt進呈！
+        </div>
       </div>
     </div>
   `).join("");
@@ -270,6 +334,7 @@ function renderGoods() {
     <div class="poka-card" onclick="openDetailModal('goods', '${g.id}')">
       <div class="poka-card-img-wrap">
         <img src="${g.image}" alt="${g.name}" class="poka-card-img">
+        <span class="poka-badge-reserve">🎫 受取予約対象</span>
         ${g.isNew ? '<span class="poka-badge-new">NEW</span>' : ''}
         <span class="poka-badge-category">${g.category}</span>
       </div>
@@ -278,6 +343,9 @@ function renderGoods() {
         <h3 class="poka-card-title">${g.name}</h3>
         <p class="poka-card-spot">🏬 ${g.spotName}</p>
         <p class="poka-card-price">¥${g.price.toLocaleString()} <small>(税込)</small></p>
+        <div style="margin-top: 6px; font-size: 11px; color: #2563eb; font-weight: 700;">
+          🛍️ 応援会員なら現地お取り置き可能
+        </div>
       </div>
     </div>
   `).join("");
@@ -352,17 +420,28 @@ function openDetailModal(type, id) {
         <span style="color: #b8860b; font-weight: 700; font-size: 13px;">${item.character}</span>
         <h2 style="color: #3b3259; font-size: 20px; margin: 6px 0 12px;">${item.title}</h2>
         <p style="color: #555; font-size: 14px; line-height: 1.8; margin-bottom: 16px;">${item.description}</p>
+        
+        <div style="background: #ecfdf5; border: 1px solid #a7f3d0; padding: 12px 16px; border-radius: 8px; margin-bottom: 14px; font-size: 13px; color: #065f46;">
+          <strong>🎁 チェックイン特典:</strong> 現地でチェックインすると<strong>初回100pt</strong>を獲得！貯まったポイントは限定ボイスや壁紙と交換できます。
+        </div>
+
         <div style="background: #faf8fc; padding: 14px; border-radius: 8px; font-size: 13px;">
           <p><strong>設置スポット:</strong> ${item.spotName}</p>
           <p style="color: #666; margin-top: 4px;"><strong>住所:</strong> ${item.address}</p>
         </div>
-        <div style="margin-top: 20px; display: flex; gap: 12px;">
-          <a href="https://maps.google.com/?q=${encodeURIComponent(item.spotName + ' ' + item.address)}" target="_blank" rel="noopener" class="btn-hero-primary" style="flex: 1; justify-content: center; font-size: 13px; padding: 10px;">
-            Google マップでルート案内 ↗
+
+        <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 10px;">
+          <a href="../join/" class="btn-hero-primary" style="justify-content: center; font-size: 14px; padding: 12px; background: linear-gradient(135deg, #ff4757, #ff6b81); text-decoration: none;">
+            🎁 10秒で無料会員証を発行して現地へ行く（100pt付）
           </a>
-          <a href="../member/" class="btn-hero-secondary" style="flex: 1; justify-content: center; font-size: 13px; padding: 10px;">
-            現地チェックイン画面へ →
-          </a>
+          <div style="display: flex; gap: 10px;">
+            <a href="https://maps.google.com/?q=${encodeURIComponent(item.spotName + ' ' + item.address)}" target="_blank" rel="noopener" class="btn-hero-secondary" style="flex: 1; justify-content: center; font-size: 12px; padding: 10px; text-decoration: none;">
+              Google マップで案内 ↗
+            </a>
+            <a href="../member/" class="btn-hero-secondary" style="flex: 1; justify-content: center; font-size: 12px; padding: 10px; text-decoration: none;">
+              会員チェックイン画面へ →
+            </a>
+          </div>
         </div>
       `;
     }
@@ -375,13 +454,26 @@ function openDetailModal(type, id) {
         </div>
         <span style="color: #b8860b; font-weight: 700; font-size: 13px;">${item.character}</span>
         <h2 style="color: #3b3259; font-size: 20px; margin: 6px 0 8px;">${item.name}</h2>
-        <p style="color: #c84127; font-size: 24px; font-weight: 800; margin-bottom: 16px;">¥${item.price.toLocaleString()} <small style="font-size: 13px; color: #666;">(税込)</small></p>
+        <p style="color: #c84127; font-size: 24px; font-weight: 800; margin-bottom: 12px;">¥${item.price.toLocaleString()} <small style="font-size: 13px; color: #666;">(税込)</small></p>
+        
+        <div style="background: #eff6ff; border: 1px solid #bfdbfe; padding: 12px 16px; border-radius: 8px; margin-bottom: 14px; font-size: 13px; color: #1e40af;">
+          <strong>🎫 現地受取予約（応援会員特典）:</strong> マイページから事前にお取り置き予約しておけば、売り切れの心配なく現地でお受け取りいただけます！
+        </div>
+
         <div style="background: #faf8fc; padding: 14px; border-radius: 8px; font-size: 13px;">
           <p><strong>カテゴリ:</strong> ${item.category}</p>
           <p><strong>取扱スポット:</strong> ${item.spotName}</p>
           <p><strong>販売状況:</strong> <span style="color: #006644; font-weight: 700;">${item.stockStatus}</span></p>
         </div>
-        <p style="font-size: 12px; color: #888; margin-top: 14px;">※現地店舗の営業時間・在庫状況は変動する場合がございます。事前にご確認ください。</p>
+
+        <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 10px;">
+          <a href="../join/" class="btn-hero-primary" style="justify-content: center; font-size: 14px; padding: 12px; background: linear-gradient(135deg, #ff4757, #ff6b81); text-decoration: none;">
+            🎁 無料会員登録してコレクションに追加する
+          </a>
+          <a href="../member/" class="btn-hero-secondary" style="justify-content: center; font-size: 12px; padding: 10px; text-decoration: none;">
+            会員マイページのグッズ一覧へ →
+          </a>
+        </div>
       `;
     }
   } else if (type === "collab") {
@@ -394,8 +486,16 @@ function openDetailModal(type, id) {
         <span style="color: #b8860b; font-weight: 700; font-size: 13px;">${item.character}</span>
         <h2 style="color: #3b3259; font-size: 20px; margin: 6px 0 12px;">${item.title}</h2>
         <p style="color: #555; font-size: 14px; line-height: 1.8; margin-bottom: 16px;">${item.description}</p>
-        <div style="background: #faf8fc; padding: 14px; border-radius: 8px; font-size: 13px;">
+        <div style="background: #faf8fc; padding: 14px; border-radius: 8px; font-size: 13px; margin-bottom: 16px;">
           <p><strong>実施場所:</strong> ${item.spotName}</p>
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <a href="../join/" class="btn-hero-primary" style="flex: 1; justify-content: center; font-size: 13px; padding: 10px; background: linear-gradient(135deg, #ff4757, #ff6b81); text-decoration: none;">
+            🎁 無料会員登録して巡礼する
+          </a>
+          <a href="../member/" class="btn-hero-secondary" style="flex: 1; justify-content: center; font-size: 13px; padding: 10px; text-decoration: none;">
+            会員画面へ →
+          </a>
         </div>
       `;
     }
@@ -407,3 +507,4 @@ function openDetailModal(type, id) {
 
 window.playVoiceSample = playVoiceSample;
 window.openDetailModal = openDetailModal;
+window.initDigitalPassPreview = initDigitalPassPreview;
