@@ -244,35 +244,73 @@
       </div>
     </section>
 
-    <!-- 8. 仲間の旅の投稿 -->
+    <!-- 8. 会員交流コミュニティ「ご縁ひろば」 -->
     <section class="dashboard-section" id="section-community">
       <div class="section-head">
         <div>
-          <h3 class="section-title">📮 仲間の旅の投稿（全国交流）</h3>
-          <p class="section-desc">全国のファンが撮影した思い出や感想をシェアしよう！</p>
+          <h3 class="section-title">🌸 会員交流コミュニティ「ご縁ひろば」</h3>
+          <p class="section-desc">旅の思い出、推しの魅力、グッズの楽しみ方を全国の仲間と共有しよう！</p>
         </div>
-        <button class="btn-secondary" id="btn-open-post-modal" style="font-size: 12px; padding: 6px 12px;">
-          ✍️ 旅の写真を投稿
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <a href="hiroba-guide.html" class="btn-secondary" style="font-size: 12px; padding: 6px 12px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
+            📖 使い方ガイド
+          </a>
+          <button class="btn-primary" id="btn-open-post-modal" onclick="if(window.hiroba) hiroba.openPostModal()" style="font-size: 12px; padding: 6px 14px;">
+            ✍️ 旅の思い出を投稿
+          </button>
+        </div>
+      </div>
+
+      <!-- ご縁ひろば 趣旨・ウェルカムバナー -->
+      <div class="hiroba-welcome-banner">
+        <div class="hiroba-banner-icon">🌸</div>
+        <div class="hiroba-banner-text">
+          <strong>みんなの投稿を見て「ここに行ってみたい！」「この衣装に会いたい！」を見つけよう！</strong>
+          <p>
+            栃木県3市（那須塩原・那須・大田原）をはじめ、全国の聖地巡礼や推し活の記録が集まる場所です。<br>
+            <span style="font-size: 11px; opacity: 0.85;">※ 健全で温かい交流のため、投稿や交流によるポイント付与は設けておりません。</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- 話題（カテゴリ）タブ切り替え -->
+      <div class="hiroba-categories-bar" id="hiroba-cat-bar">
+        <button class="hiroba-cat-chip active" data-cat="all">すべて</button>
+        <button class="hiroba-cat-chip" data-cat="trip">🗺️ 旅の思い出</button>
+        <button class="hiroba-cat-chip" data-cat="oshi">🌸 推しガール自慢</button>
+        <button class="hiroba-cat-chip" data-cat="goods">🛍️ グッズ写真</button>
+        <button class="hiroba-cat-chip" data-cat="report">🧭 聖地巡礼レポ</button>
+        <button class="hiroba-cat-chip" data-cat="official">📢 運営便り</button>
+      </div>
+
+      <!-- 絞り込みフィルターバー（キャラクター・地域・保存済み） -->
+      <div class="hiroba-sub-filter-bar">
+        <div style="display: flex; gap: 8px; flex: 1; flex-wrap: wrap;">
+          <select id="hiroba-filter-char" class="filter-select" style="min-width: 130px;">
+            <option value="all">全キャラクター</option>
+            <option value="狩野くるみ">狩野くるみ</option>
+            <option value="那須乃つつじ">那須乃つつじ</option>
+            <option value="大俵ちか">大俵ちか</option>
+          </select>
+          <select id="hiroba-filter-region" class="filter-select" style="min-width: 120px;">
+            <option value="all">全地域</option>
+            <option value="那須塩原市">那須塩原市</option>
+            <option value="那須町">那須町</option>
+            <option value="大田原市">大田原市</option>
+          </select>
+        </div>
+        <button class="btn-secondary btn-saved-filter" id="btn-hiroba-saved-toggle" style="font-size: 11px; padding: 5px 10px;">
+          🔖 保存した投稿を見る
         </button>
       </div>
 
-      <!-- 投稿タグフィルター -->
-      <div class="tag-filter-row" id="community-tag-bar">
-        <button class="tag-chip active" data-tag="all">すべて</button>
-        <button class="tag-chip" data-tag="狩野くるみ">#狩野くるみ</button>
-        <button class="tag-chip" data-tag="那須乃つつじ">#那須乃つつじ</button>
-        <button class="tag-chip" data-tag="大俵ちか">#大俵ちか</button>
-        <button class="tag-chip" data-tag="那須塩原市">#那須塩原市</button>
-        <button class="tag-chip" data-tag="那須町">#那須町</button>
-        <button class="tag-chip" data-tag="大田原市">#大田原市</button>
-      </div>
-
-      <div class="posts-stream" id="posts-container">
+      <!-- 投稿一覧ストリーム（hiroba.jsで動的描画） -->
+      <div class="posts-stream hiroba-posts-stream" id="posts-container">
         <!-- JSでレンダリング -->
       </div>
 
       <!-- 共創会員向け 企画候補投票ボックス（要件15） -->
-      <div class="vote-box" id="community-vote-box" style="margin-top: 20px;">
+      <div class="vote-box" id="community-vote-box" style="margin-top: 24px;">
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
           <h4 style="font-size: 14px; margin: 0; color: #0043a8;">🗳️ 【共創会員限定】新企画アイデア投票</h4>
           <span class="plan-pill-sm" style="background: #e6f0ff; color: #0043a8;">共創会員（月額980円）</span>
@@ -402,8 +440,8 @@
       <span class="nav-text">コレクション</span>
     </button>
     <button class="bottom-nav-item" data-nav="community">
-      <span class="nav-icon">📮</span>
-      <span class="nav-text">交流</span>
+      <span class="nav-icon">🌸</span>
+      <span class="nav-text">ご縁ひろば</span>
     </button>
   </nav>
 
@@ -457,39 +495,206 @@
     </div>
   </div>
 
-  <!-- Modal: 旅の写真投稿（要件15） -->
-  <div id="modal-post" class="custom-modal" style="display: none;">
-    <div class="modal-backdrop"></div>
-    <div class="modal-dialog">
-      <div class="modal-inner-card">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-          <h3 style="margin: 0; font-size: 16px;">📮 旅の写真を投稿</h3>
-          <button type="button" class="btn-close-modal" id="btn-close-post-modal">&times;</button>
+  <!-- Modal: ご縁ひろば 旅の写真・レポート新規投稿 -->
+  <div id="modal-hiroba-post" class="custom-modal" style="display: none;">
+    <div class="modal-backdrop" onclick="document.getElementById('modal-hiroba-post').style.display='none'"></div>
+    <div class="modal-dialog" style="max-width: 520px;">
+      <div class="modal-inner-card" style="padding: 24px 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--line); padding-bottom: 10px;">
+          <h3 style="margin: 0; font-size: 17px; color: var(--navy);">✍️ ご縁ひろばに投稿する</h3>
+          <button type="button" class="btn-close-modal" onclick="document.getElementById('modal-hiroba-post').style.display='none'">&times;</button>
         </div>
-        <form id="form-create-post">
+
+        <form id="form-hiroba-post">
           <div class="form-group">
-            <label class="form-label">推しキャラクター・地域 *</label>
-            <select id="post-char-select" class="form-input" required>
-              <option value="狩野くるみ">狩野くるみ (那須塩原市)</option>
-              <option value="那須乃つつじ">那須乃つつじ (那須町)</option>
-              <option value="大俵ちか">大俵ちか (大田原市)</option>
+            <label class="form-label">話題（カテゴリ） <span style="color: #de350b;">*</span></label>
+            <select id="hiroba-post-category-select" class="form-input" required>
+              <option value="trip">🗺️ 旅の思い出（観光・現地グルメ・風景）</option>
+              <option value="oshi">🌸 推しガール自慢（パネル・衣装・推し活）</option>
+              <option value="goods">🛍️ グッズ写真（購入品・現地限定・飾り方）</option>
+              <option value="report">🧭 聖地巡礼レポート（巡礼ルート・見どころ）</option>
             </select>
           </div>
-          <div class="form-group">
-            <label class="form-label">訪問した施設・スポット名</label>
-            <input type="text" id="post-spot-input" class="form-input" placeholder="例: 那須ミッドシティホテル">
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div class="form-group">
+              <label class="form-label">推しキャラクター <span style="color: #de350b;">*</span></label>
+              <select id="hiroba-post-char-select" class="form-input" required>
+                <option value="狩野くるみ">狩野くるみ (那須塩原市)</option>
+                <option value="那須乃つつじ">那須乃つつじ (那須町)</option>
+                <option value="大俵ちか">大俵ちか (大田原市)</option>
+                <option value="全キャラクター">全キャラクター / その他</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">公開範囲</label>
+              <div style="display: flex; gap: 10px; font-size: 12px; margin-top: 6px;">
+                <label style="cursor: pointer;"><input type="radio" name="hiroba-visibility" value="public" checked> 全体公開</label>
+                <label style="cursor: pointer;"><input type="radio" name="hiroba-visibility" value="supporter"> 会員限定 🔒</label>
+              </div>
+            </div>
           </div>
+
           <div class="form-group">
-            <label class="form-label">感想・メッセージ *</label>
-            <textarea id="post-text-input" class="form-textarea" required rows="3" placeholder="店頭のパネルに会えました！とても素敵でした。"></textarea>
+            <label class="form-label">訪問施設・スポット名（任意）</label>
+            <input type="text" id="hiroba-post-spot-input" class="form-input" placeholder="例: 那須ミッドシティホテル、高野山真言宗 高福寺">
           </div>
+
           <div class="form-group">
-            <label class="form-label">写真（任意）</label>
-            <input type="file" id="post-file-input" accept="image/*" class="form-input">
-            <div style="font-size: 11px; color: #888; margin-top: 4px;">※ 個人情報や位置情報（Exif）は自動削除されます。</div>
+            <label class="form-label">関連グッズ（任意）</label>
+            <input type="text" id="hiroba-post-goods-input" class="form-input" placeholder="例: 狩野くるみ アクリルキーホルダー、公式御朱印">
           </div>
-          <button type="submit" class="btn-primary" style="width: 100%; padding: 12px; margin-top: 8px;">投稿する</button>
+
+          <div class="form-group">
+            <label class="form-label">タイトル（任意）</label>
+            <input type="text" id="hiroba-post-title-input" class="form-input" placeholder="例: 那須塩原の巡礼に行ってきました！" maxlength="50">
+          </div>
+
+          <div class="form-group">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+              <label class="form-label" style="margin: 0;">本文（旅の感想・おすすめポイント） <span style="color: #de350b;">*</span></label>
+              <span id="hiroba-post-counter" style="font-size: 11px; color: var(--text-muted);">0 / 1000</span>
+            </div>
+            <textarea id="hiroba-post-content-input" class="form-textarea" required rows="4" placeholder="訪れたときの感動や、パネルの感想、立ち寄った美味しいお店など、全国の仲間へ向けて自由に共有してください！" maxlength="1000"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">写真の添付（最大4枚・任意）</label>
+            <div class="hiroba-img-uploader-box">
+              <div id="hiroba-img-preview-container" class="hiroba-preview-container">
+                <!-- プレビュー画像サムネイル -->
+              </div>
+              <label class="btn-add-img" id="btn-hiroba-add-img">
+                <span>📷 写真を選択</span>
+                <input type="file" id="hiroba-post-file-input" accept="image/*" multiple style="display: none;" onchange="if(window.hiroba) hiroba.handleImageUpload(this)">
+              </label>
+            </div>
+            <div style="font-size: 11px; color: #888; margin-top: 4px; line-height: 1.4;">
+              ※ 位置情報（Exif）や個人情報は送信前に端末側で自動除去されます。<br>
+              ※ 公序良俗に反する写真や、一般の方の無断撮影写真の投稿はご遠慮ください。
+            </div>
+          </div>
+
+          <button type="submit" class="btn-primary" id="btn-hiroba-submit-post" style="width: 100%; padding: 13px; font-size: 14px; margin-top: 10px; font-weight: 700;">
+            この内容で投稿する 🌸
+          </button>
         </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: 初回投稿時 コミュニティ利用ルール同意 -->
+  <div id="modal-hiroba-rule" class="custom-modal" style="display: none;">
+    <div class="modal-backdrop"></div>
+    <div class="modal-dialog" style="max-width: 460px;">
+      <div class="modal-inner-card" style="padding: 24px 20px;">
+        <div style="text-align: center; margin-bottom: 14px;">
+          <div style="font-size: 36px;">🌸</div>
+          <h3 style="font-size: 17px; color: var(--navy); margin-top: 4px;">ご縁ひろば 初回ルールのご確認</h3>
+        </div>
+        <p style="font-size: 12px; color: #555; line-height: 1.6; margin-bottom: 12px;">
+          ご縁ひろばは、旅の思い出や推しへの愛を全国の会員と温かく分かち合う場所です。皆様が安心・安全に楽しむため、以下のルールへの同意をお願いしております。
+        </p>
+        <div style="background: #f8fafc; border: 1px solid var(--line); border-radius: 8px; padding: 12px; font-size: 12px; color: #444; max-height: 160px; overflow-y: auto; margin-bottom: 16px; line-height: 1.6;">
+          <strong>【お守りいただきたいこと】</strong><br>
+          1. 他者への誹謗中傷、攻撃的な発言、差別的な表現を禁じます。<br>
+          2. 一般の方の顔や車のナンバーなど、プライバシー情報の無断掲載を禁じます。<br>
+          3. 立ち入り禁止区域や店舗の撮影禁止ルールを厳守してください。<br>
+          4. 商業宣伝、スパム、個人間取引はできません。<br>
+          5. 健全な交流のため、投稿によるポイント付与は行っておりません。
+        </div>
+        <button type="button" class="btn-primary" style="width: 100%; padding: 12px;" onclick="if(window.hiroba) hiroba.agreeRuleAndContinue()">
+          ルールに同意して投稿画面へ進む
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: 初回訪問 3ステップガイド -->
+  <div id="modal-hiroba-guide" class="custom-modal" style="display: none;">
+    <div class="modal-backdrop"></div>
+    <div class="modal-dialog" style="max-width: 460px;">
+      <div class="modal-inner-card" style="padding: 26px 22px; text-align: center;">
+        <!-- Step 1 -->
+        <div id="guide-step-1" class="guide-step-content">
+          <div style="font-size: 40px; margin-bottom: 10px;">🌸</div>
+          <h3 style="font-size: 18px; color: var(--navy); margin-bottom: 8px;">ご縁ひろばへようこそ！</h3>
+          <p style="font-size: 13px; color: #555; line-height: 1.6; margin-bottom: 16px;">
+            旅先で出会った等身大パネル、美味しかった名物、手に入れた限定グッズなど、あなたの推し活の思い出を全国の仲間とシェアしましょう！
+          </p>
+        </div>
+
+        <!-- Step 2 -->
+        <div id="guide-step-2" class="guide-step-content" style="display: none;">
+          <div style="font-size: 40px; margin-bottom: 10px;">🧭</div>
+          <h3 style="font-size: 18px; color: var(--navy); margin-bottom: 8px;">「行きたい場所」が見つかる！</h3>
+          <p style="font-size: 13px; color: #555; line-height: 1.6; margin-bottom: 16px;">
+            みんなの投稿を見れば、「この衣装に会いたい！」「このホテルに泊まりたい！」がすぐ見つかります。気になる投稿は「保存」して次の旅の計画に役立てましょう！
+          </p>
+        </div>
+
+        <!-- Step 3 -->
+        <div id="guide-step-3" class="guide-step-content" style="display: none;">
+          <div style="font-size: 40px; margin-bottom: 10px;">🤝</div>
+          <h3 style="font-size: 18px; color: var(--navy); margin-bottom: 8px;">安心・安全のコミュニティ</h3>
+          <p style="font-size: 13px; color: #555; line-height: 1.6; margin-bottom: 16px;">
+            写真の位置情報（Exif）は自動削除されるため安心です。温かいコメントやいいねで、ご縁の輪をどんどん広げてくださいね！
+          </p>
+        </div>
+
+        <!-- インジケータードット -->
+        <div class="guide-dots-row">
+          <span class="guide-dot active" id="guide-dot-1"></span>
+          <span class="guide-dot" id="guide-dot-2"></span>
+          <span class="guide-dot" id="guide-dot-3"></span>
+        </div>
+
+        <div style="display: flex; gap: 10px; margin-top: 18px;">
+          <button type="button" class="btn-secondary" id="btn-guide-prev" style="flex: 1; visibility: hidden;" onclick="if(window.hiroba) hiroba.prevGuideStep()">❮ 戻る</button>
+          <button type="button" class="btn-primary" id="btn-guide-next" style="flex: 2;" onclick="if(window.hiroba) hiroba.nextGuideStep()">次へ ❯</button>
+        </div>
+
+        <div style="margin-top: 14px; font-size: 12px; color: #777;">
+          <label style="cursor: pointer;">
+            <input type="checkbox" id="chk-hide-guide"> 次回から自動表示しない
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: 通報モーダル -->
+  <div id="modal-hiroba-report" class="custom-modal" style="display: none;">
+    <div class="modal-backdrop" onclick="document.getElementById('modal-hiroba-report').style.display='none'"></div>
+    <div class="modal-dialog" style="max-width: 440px;">
+      <div class="modal-inner-card" style="padding: 22px 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+          <h3 style="margin: 0; font-size: 16px; color: #de350b;">🚩 投稿の通報</h3>
+          <button type="button" class="btn-close-modal" onclick="document.getElementById('modal-hiroba-report').style.display='none'">&times;</button>
+        </div>
+        <input type="hidden" id="report-target-post-id">
+        <p style="font-size: 12px; color: #555; margin-bottom: 12px;">
+          不適切な表現やルール違反と思われる投稿について、該当する理由を選択してください。運営事務局が確認のうえ適切に対応いたします。
+        </p>
+        <div class="form-group">
+          <label class="form-label">通報理由</label>
+          <select id="report-reason-select" class="form-input">
+            <option value="誹謗中傷・迷惑行為">誹謗中傷・迷惑行為・不快な表現</option>
+            <option value="プライバシー侵害">個人情報・プライバシーの侵害</option>
+            <option value="不適切な画像">公序良俗に反する画像・無断撮影</option>
+            <option value="商業宣伝・スパム">宣伝・勧誘・スパム・金銭取引</option>
+            <option value="その他">その他（運営への相談）</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">詳細な状況（任意）</label>
+          <textarea id="report-detail-input" class="form-textarea" rows="3" placeholder="問題箇所の詳細などがあればご記入ください"></textarea>
+        </div>
+        <div style="display: flex; gap: 8px; margin-top: 14px;">
+          <button type="button" class="btn-secondary" style="flex: 1;" onclick="document.getElementById('modal-hiroba-report').style.display='none'">キャンセル</button>
+          <button type="button" class="btn-primary" style="flex: 1; background: #de350b;" onclick="if(window.hiroba) hiroba.submitReportFromModal()">通報を送信</button>
+        </div>
       </div>
     </div>
   </div>
@@ -511,5 +716,6 @@
   </div>
 
   <script src="member.js"></script>
+  <script src="hiroba.js"></script>
 </body>
 </html>

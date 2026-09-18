@@ -48,6 +48,9 @@
       <button class="nav-item" data-tab="reservations">
         <span class="nav-icon">🎫</span> 現地受取予約管理 (要件11)
       </button>
+      <button class="nav-item" data-tab="hiroba">
+        <span class="nav-icon">🌸</span> ご縁ひろば・通報管理
+      </button>
 
       <div class="nav-section-title">PUBLIC SITES</div>
       <a class="nav-item" href="../lp/" target="_blank">
@@ -450,6 +453,80 @@
                 </tr>
               </thead>
               <tbody id="table-reservations-body">
+                <!-- Rendered by admin.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+      
+      <!-- 9. ご縁ひろば・通報管理 TAB -->
+      <section class="tab-pane" id="tab-hiroba">
+        <!-- 外部サービス接続ステータスカード -->
+        <div style="background: #fffdf5; border: 1px solid #ffe399; border-radius: 10px; padding: 14px 18px; margin-bottom: 20px; display: flex; flex-direction: column; gap: 8px;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="font-weight: 800; font-size: 13px; color: #b8860b; display: flex; align-items: center; gap: 6px;">
+              <span>⚠️</span> コミュニティデータ保存ステータス（システム監査）
+            </div>
+            <span style="font-size: 11px; background: #fff; border: 1px solid #ffe399; color: #b8860b; padding: 2px 8px; border-radius: 999px; font-weight: 700;">Firebase未接続 / localStorage運用モード</span>
+          </div>
+          <p style="font-size: 12px; color: #555; margin: 0; line-height: 1.6;">
+            本番用クラウドデータベース（Firebase Firestore / Cloud Storage）は現在未接続です。会員の投稿データ、通報記録、いいね、コメントは安全のためブラウザの <code>localStorage (goen_hiroba_*)</code> にてテスト運用されています。
+          </p>
+        </div>
+
+        <!-- 通報対応キュー -->
+        <div class="card" style="margin-bottom: 24px;">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">🚩 通報・モデレーション対応キュー</h2>
+              <p class="card-subtitle">会員から通報があった投稿の一覧です。不適切な投稿を非表示（取り下げ）に設定できます。</p>
+            </div>
+            <span class="badge badge-warning" id="admin-reports-count-badge">通報 0件</span>
+          </div>
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>通報日時</th>
+                  <th>通報理由</th>
+                  <th>対象投稿</th>
+                  <th>通報者 / 状況詳細</th>
+                  <th>ステータス</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody id="table-reports-body">
+                <!-- Rendered by admin.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 投稿モデレーション一覧 -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">📮 ご縁ひろば 投稿全件・公開ステータス管理</h2>
+              <p class="card-subtitle">コミュニティ全体の投稿一覧。公開/非表示の切り替えを行えます。</p>
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="renderAdminHiroba()">🔄 最新データに更新</button>
+          </div>
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>投稿日時</th>
+                  <th>話題</th>
+                  <th>投稿者</th>
+                  <th>対象キャラ / 施設</th>
+                  <th>本文抜粋</th>
+                  <th>公開範囲</th>
+                  <th>ステータス</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody id="table-admin-posts-body">
                 <!-- Rendered by admin.js -->
               </tbody>
             </table>

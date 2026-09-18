@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ご縁ひろば 使い方ガイド・ルール — ご縁ガール公式</title>
+  <meta name="description" content="ご縁ガールの会員交流コミュニティ「ご縁ひろば」の使い方ガイド。旅の思い出や推し活、グッズの楽しみ方の共有方法、安心安全なコミュニティルールをご案内します。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&family=Noto+Serif+JP:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="member.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext y='.9em' font-size='54'%3E%E6%A1%9C%3C/text%3E%3C/svg%3E">
+  <style>
+    .guide-hero {
+      background: linear-gradient(135deg, #173c61 0%, #1199c4 60%, #e9588d 100%);
+      color: #fff;
+      padding: 36px 24px;
+      border-radius: var(--radius-lg);
+      margin-bottom: 30px;
+      text-align: center;
+      box-shadow: 0 12px 32px rgba(17, 153, 196, 0.25);
+    }
+    .guide-hero h1 {
+      font: 700 24px var(--font-serif);
+      margin-bottom: 10px;
+      letter-spacing: 0.05em;
+    }
+    .guide-hero p {
+      font-size: 13px;
+      opacity: 0.95;
+      line-height: 1.6;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .guide-nav-box {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      padding: 18px 20px;
+      margin-bottom: 28px;
+    }
+    .guide-nav-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 10px;
+    }
+    .guide-nav-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .guide-nav-list a {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--blue);
+      text-decoration: none;
+      font-weight: 600;
+      padding: 6px 8px;
+      border-radius: 6px;
+      background: #f7fafc;
+      transition: all 0.15s;
+    }
+    .guide-nav-list a:hover {
+      background: #e6f6fa;
+      color: var(--navy);
+    }
+    .guide-section {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      padding: 24px 20px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+    }
+    .guide-section h2 {
+      font: 700 18px var(--font-serif);
+      color: var(--navy);
+      border-bottom: 2px solid var(--pink);
+      padding-bottom: 8px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .guide-grid-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 14px;
+    }
+    @media (max-width: 600px) {
+      .guide-grid-cards, .guide-nav-list {
+        grid-template-columns: 1fr;
+      }
+    }
+    .guide-sub-card {
+      background: #fcfdfe;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+    }
+    .guide-sub-card h3 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .guide-sub-card p {
+      font-size: 12px;
+      color: #555;
+      line-height: 1.6;
+      margin: 0;
+    }
+    .step-flow {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 16px;
+    }
+    .step-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      background: #fdfaf6;
+      border: 1px solid #faeedd;
+      border-radius: 8px;
+      padding: 12px;
+    }
+    .step-num {
+      background: var(--pink);
+      color: #fff;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+    .step-body h4 {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 4px;
+    }
+    .step-body p {
+      font-size: 12px;
+      color: #555;
+      line-height: 1.5;
+      margin: 0;
+    }
+    .rule-box-danger {
+      background: #fff5f5;
+      border: 1px solid #fed7d7;
+      border-radius: 8px;
+      padding: 14px;
+      margin-top: 12px;
+    }
+    .rule-box-danger h4 {
+      color: #c53030;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .rule-box-danger ul {
+      padding-left: 18px;
+      font-size: 12px;
+      color: #4a5568;
+      line-height: 1.6;
+    }
+    .faq-item {
+      border-bottom: 1px solid var(--line);
+      padding: 12px 0;
+    }
+    .faq-item:last-child {
+      border-bottom: none;
+    }
+    .faq-q {
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--navy);
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .faq-a {
+      font-size: 12px;
+      color: #555;
+      line-height: 1.6;
+      padding-left: 20px;
+    }
+    .btn-return-hiroba {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: var(--navy);
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 14px;
+      text-decoration: none;
+      transition: all 0.2s;
+      box-shadow: 0 4px 14px rgba(23, 60, 97, 0.2);
+    }
+    .btn-return-hiroba:hover {
+      background: var(--pink);
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap" style="padding-top: 20px;">
+    <!-- Header -->
+    <header style="height: auto; padding-bottom: 16px;">
+      <a href="./#section-community" class="brand" style="display: flex; align-items: center;">
+        <img src="../assets/goen-girl-logo.png" alt="ご縁ガール" style="height: 36px; max-width: 130px; object-fit: contain;">
+      </a>
+      <a href="./#section-community" class="btn-return-hiroba" style="font-size: 12px; padding: 6px 14px;">
+        ← ご縁ひろばに戻る
+      </a>
+    </header>
+
+    <!-- ヒーロー -->
+    <section class="guide-hero">
+      <h1>🌸 ご縁ひろば 使い方ガイド・ルール</h1>
+      <p>
+        旅の思い出、推しの魅力、グッズの楽しみ方を会員同士で共有する場所。<br>
+        初めての方でも安心して楽しめる機能とマナーをご紹介します。
+      </p>
+    </section>
+
+    <!-- 目次 -->
+    <nav class="guide-nav-box">
+      <div class="guide-nav-title">📑 目次（クリックで該当箇所に移動）</div>
+      <ul class="guide-nav-list">
+        <li><a href="#about">1. ご縁ひろばとは？</a></li>
+        <li><a href="#categories">2. 5つの話題カテゴリ</a></li>
+        <li><a href="#how-to-post">3. 投稿の手順とポイント</a></li>
+        <li><a href="#plans">4. 会員プランによる違い</a></li>
+        <li><a href="#rules">5. 安心・安全のコミュニティルール</a></li>
+        <li><a href="#faq">6. よくあるご質問 (FAQ)</a></li>
+      </ul>
+    </nav>
+
+    <!-- 1. ご縁ひろばとは？ -->
+    <section class="guide-section" id="about">
+      <h2><span>🌸</span> 1. ご縁ひろばとは？</h2>
+      <p style="font-size: 13px; color: #444; line-height: 1.7; margin-bottom: 12px;">
+        ご縁ひろばは、全国のご縁ガールファンが集い、各地への巡礼や現地での体験、推しへの応援を分かち合う公式コミュニティです。
+      </p>
+      <div class="guide-grid-cards">
+        <div class="guide-sub-card">
+          <h3>📍 「ここに行ってみたい！」</h3>
+          <p>他の会員が投稿した素敵な風景やホテルの様子を見て、次の旅行先や巡礼ルートを見つけることができます。</p>
+        </div>
+        <div class="guide-sub-card">
+          <h3>👘 「この衣装に会いたい！」</h3>
+          <p>各地の提携施設に設置された等身大パネルの写真を見て、推しガールの新たな魅力に出会えます。</p>
+        </div>
+        <div class="guide-sub-card">
+          <h3>🛍️ 「このグッズを現地で買いたい！」</h3>
+          <p>現地限定のアクキーや御朱印、絵馬の写真をチェックして、旅の楽しみを増やしましょう。</p>
+        </div>
+        <div class="guide-sub-card">
+          <h3>🔖 「気になる投稿を保存！」</h3>
+          <p>行きたいスポットや役立つ巡礼ルートを見つけたら、保存ボタンでマイリストにいつでもストックできます。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. 5つの話題カテゴリ -->
+    <section class="guide-section" id="categories">
+      <h2><span>🏷️</span> 2. 5つの話題カテゴリ</h2>
+      <p style="font-size: 13px; color: #444; margin-bottom: 14px;">投稿時には目的に合ったカテゴリを選ぶことで、全国の仲間が見つけやすくなります。</p>
+      
+      <div class="guide-grid-cards">
+        <div class="guide-sub-card" style="border-left: 4px solid #1199c4;">
+          <h3>🗺️ 旅の思い出</h3>
+          <p>訪れた観光スポット、現地で食べたご当地グルメ、道中の美しい風景など、旅の記録をシェアしましょう。</p>
+        </div>
+        <div class="guide-sub-card" style="border-left: 4px solid #e9588d;">
+          <h3>🌸 推しガール自慢</h3>
+          <p>店頭の等身大パネルと一緒に撮った写真や、推しの衣装の好きなポイント、熱い応援メッセージを共有！</p>
+        </div>
+        <div class="guide-sub-card" style="border-left: 4px solid #d4a337;">
+          <h3>🛍️ グッズ写真</h3>
+          <p>手に入れたアクリルスタンドや御朱印、現地限定品を旅先やお家で綺麗に撮影した写真を大募集！</p>
+        </div>
+        <div class="guide-sub-card" style="border-left: 4px solid #00875a;">
+          <h3>🧭 聖地巡礼レポート</h3>
+          <p>「那須塩原駅からの回り方」「おすすめの時間帯」「駐車場の情報」など、これから訪れる仲間に役立つ情報を発信。</p>
+        </div>
+      </div>
+
+      <div class="guide-sub-card" style="border-left: 4px solid #0f2740; margin-top: 12px; background: #f4f7f9;">
+        <h3>📢 運営からのお便り</h3>
+        <p>ご縁ガール公式事務局からの最新情報、新企画の先行公開、イベントレポートなどを随時お届けします。（※運営のみ投稿可能）</p>
+      </div>
+    </section>
+
+    <!-- 3. 投稿の手順とポイント -->
+    <section class="guide-section" id="how-to-post">
+      <h2><span>✍️</span> 3. 投稿の手順とポイント</h2>
+      <div class="step-flow">
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <h4>「旅の写真を投稿」ボタンを押す</h4>
+            <p>ご縁ひろばの右上にあるボタンをタップします。初回投稿時のみ簡単なコミュニティルール確認画面が表示されます。</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <h4>話題（カテゴリ）と推しキャラクターを選ぶ</h4>
+            <p>投稿内容にぴったりの話題を選びます。関連するキャラクター（狩野くるみ、那須乃つつじ、大俵ちか）を選択すると自動で地域タグが付与されます。</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <h4>訪問施設名・関連グッズを入力（任意）</h4>
+            <p>「那須ミッドシティホテル」「高野山真言宗 高福寺」などのスポット名やグッズ名を入れると、同じ場所を訪れたい会員の参考になります。</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <h4>写真を追加（最大4枚・Exif自動削除）</h4>
+            <p>旅の写真を最大4枚まで選択できます。位置情報（Exif）は端末側で安全に自動除去されますので安心してアップロードしてください。</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">5</div>
+          <div class="step-body">
+            <h4>本文を入力（最大1000文字）して送信！</h4>
+            <p>感想や見どころを自由に入力し、「この内容で投稿する」を押せば完了です！</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. 会員プランによる違い -->
+    <section class="guide-section" id="plans">
+      <h2><span>💎</span> 4. 会員プランによる機能の違い</h2>
+      <p style="font-size: 13px; color: #444; margin-bottom: 12px;">ご縁ひろばは無料会員の方からすべてのプランでご利用いただけます。</p>
+      
+      <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 12px; text-align: left;">
+          <thead>
+            <tr style="background: #eef5fa; border-bottom: 2px solid var(--line);">
+              <th style="padding: 10px; font-weight: 700;">機能</th>
+              <th style="padding: 10px; font-weight: 700;">無料会員 (0円)</th>
+              <th style="padding: 10px; font-weight: 700; color: var(--pink);">応援会員 (480円/月)</th>
+              <th style="padding: 10px; font-weight: 700; color: #0043a8;">共創会員 (980円/月)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid var(--line);">
+              <td style="padding: 10px; font-weight: 600;">投稿の閲覧・検索</td>
+              <td style="padding: 10px;">全体公開の投稿</td>
+              <td style="padding: 10px;">すべての投稿（限定含む）</td>
+              <td style="padding: 10px;">すべての投稿（限定含む）</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--line);">
+              <td style="padding: 10px; font-weight: 600;">旅の写真・レポート投稿</td>
+              <td style="padding: 10px;">全体公開で投稿可能</td>
+              <td style="padding: 10px;">限定公開・全体公開両方可能</td>
+              <td style="padding: 10px;">限定公開・全体公開両方可能</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--line);">
+              <td style="padding: 10px; font-weight: 600;">いいね・コメント・保存</td>
+              <td style="padding: 10px;">✔ 利用可能</td>
+              <td style="padding: 10px;">✔ 利用可能</td>
+              <td style="padding: 10px;">✔ 利用可能</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--line);">
+              <td style="padding: 10px; font-weight: 600;">会員バッジ表示</td>
+              <td style="padding: 10px;">「無料会員」</td>
+              <td style="padding: 10px; color: var(--pink); font-weight: 700;">「応援会員」バッジ</td>
+              <td style="padding: 10px; color: #0043a8; font-weight: 700;">「共創会員」バッジ</td>
+            </tr>
+            <tr>
+              <td style="padding: 10px; font-weight: 600;">新企画アイデア投票</td>
+              <td style="padding: 10px; color: #888;">閲覧のみ</td>
+              <td style="padding: 10px; color: #888;">閲覧のみ</td>
+              <td style="padding: 10px; color: #0043a8; font-weight: 700;">✔ 投票権あり</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="font-size: 11px; color: #888; margin-top: 10px;">
+        ※ ご縁ひろばへの投稿・コメント・いいね等によってご縁ポイントが増減することはありません。
+      </div>
+    </section>
+
+    <!-- 5. 安心・安全のコミュニティルール -->
+    <section class="guide-section" id="rules">
+      <h2><span>🛡️</span> 5. 安心・安全のコミュニティルール</h2>
+      <p style="font-size: 13px; color: #444; line-height: 1.6;">
+        ご縁ガールは「地域との温かいご縁を結ぶ」プロジェクトです。すべてのファンと地域の方々が心地よく過ごせるよう、以下のマナーをお守りください。
+      </p>
+
+      <div class="rule-box-danger">
+        <h4>⚠️ 禁止事項（見つけ次第、非表示対応・アカウント制限を行います）</h4>
+        <ul>
+          <li>他の会員、キャラクター、提携店舗、地域の方々への誹謗中傷・攻撃的な表現</li>
+          <li>一般の方の顔や車のナンバープレートなど、個人が特定できる情報の無断掲載</li>
+          <li>立ち入り禁止区域での撮影や、店舗・寺社仏閣のルール（撮影禁止場所等）に反する行為</li>
+          <li>商業目的の宣伝、勧誘、スパム行為、個人間での金銭売買</li>
+          <li>公序良俗に反する画像や文章の投稿</li>
+        </ul>
+      </div>
+
+      <div style="background: #f7fafc; padding: 14px; border-radius: 8px; border: 1px solid var(--line); margin-top: 14px;">
+        <h4 style="font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 6px;">🚩 通報とブロックについて</h4>
+        <p style="font-size: 12px; color: #555; line-height: 1.6; margin: 0;">
+          不快な投稿やルール違反を見かけた場合は、投稿カード右上のメニュー「⋯」から<strong>「投稿を通報する」</strong>または<strong>「このユーザーをブロック」</strong>をご利用ください。<br>
+          ブロックしたユーザーの投稿は即座に画面から非表示になります。通報内容は運営事務局にて確認し、厳正に対処いたします。
+        </p>
+      </div>
+    </section>
+
+    <!-- 6. よくあるご質問 (FAQ) -->
+    <section class="guide-section" id="faq">
+      <h2><span>❓</span> 6. よくあるご質問 (FAQ)</h2>
+      
+      <div class="faq-item">
+        <div class="faq-q"><span>Q.</span> 投稿するとご縁ポイントはもらえますか？</div>
+        <div class="faq-a">
+          ポイントは付与されません。ご縁ひろばは純粋に旅の楽しさや推しへの想いを共有する場所として運営しており、ポイント獲得目的の過度な連続投稿を防ぐため、投稿や交流に伴うポイント変動は一切設けておりません。
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q"><span>Q.</span> 栃木県以外の写真や旅行の思い出も投稿していいですか？</div>
+        <div class="faq-a">
+          ご縁ガールは全国展開を予定しております！現時点での守護ガール（栃木県3市）の話題はもちろん、「ここにご縁ガールが来てほしい！」という全国各地の魅力的な観光地やおすすめスポットの投稿も大歓迎です。
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q"><span>Q.</span> 投稿した写真や文章を後から削除できますか？</div>
+        <div class="faq-a">
+          はい、ご自身が投稿したカードの右上メニュー「⋯」から、いつでも削除することができます。
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q"><span>Q.</span> 「保存」した投稿は他の人から見えますか？</div>
+        <div class="faq-a">
+          いいえ、保存リストはあなた専用のプライベートなメモです。他の会員から保存内容を見られることはありません。
+        </div>
+      </div>
+    </section>
+
+    <!-- フッター戻るボタン -->
+    <div style="text-align: center; margin: 30px 0 50px;">
+      <a href="./#section-community" class="btn-return-hiroba" style="font-size: 15px; padding: 14px 32px;">
+        🌸 ご縁ひろばへ戻る
+      </a>
+      <div style="margin-top: 14px; font-size: 12px;">
+        <a href="../portal/" style="color: var(--navy); text-decoration: underline; margin-right: 14px;">公式ポータルへ</a>
+        <a href="./#section-plans" style="color: var(--navy); text-decoration: underline;">会員プラン一覧へ</a>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

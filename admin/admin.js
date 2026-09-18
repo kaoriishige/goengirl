@@ -262,11 +262,13 @@ function setupNavigation() {
         panels: "パネル設置情報管理",
         goods: "グッズ情報・在庫管理",
         analytics: "会員・ファン回遊KPI分析（要件20）",
-        reservations: "対象グッズ 現地受取予約管理（要件11）"
+        reservations: "対象グッズ 現地受取予約管理（要件11）",
+        hiroba: "ご縁ひろば・通報モデレーション管理"
       };
       document.getElementById("page-title").textContent = titleMap[tabId] || "管理コンソール";
       if (tabId === "analytics") renderAnalytics();
       if (tabId === "reservations") renderReservations();
+      if (tabId === "hiroba") renderAdminHiroba();
 
       // Auto scroll to content on mobile so user does not need to scroll down manually
       if (window.innerWidth <= 900) {
@@ -1552,3 +1554,183 @@ function completeReservation(reservationId) {
 }
 
 window.completeReservation = completeReservation;
+
+/**
+ * ご縁ひろば・通報モデレーション管理
+ */
+function renderAdminHiroba() {
+  const reportsTable = document.getElementById("table-reports-body");
+  const postsTable = document.getElementById("table-admin-posts-body");
+  const countBadge = document.getElementById("admin-reports-count-badge");
+
+  // LocalStorageからデータ取得
+  let reports = [];
+  let posts = [];
+  try {
+    reports = JSON.parse(localStorage.getItem("goen_hiroba_reports_v1")) || [];
+  } catch(e) {}
+  try {
+    posts = JSON.parse(localStorage.getItem("goen_hiroba_posts_v1")) || [];
+  } catch(e) {}
+
+  if (countBadge) {
+    const pendingCount = reports.filter(r => r.status === "pending").length;
+    countBadge.textContent = `未対応通報 ${pendingCount}件`;
+    countBadge.className = pendingCount > 0 ? "badge badge-warning" : "badge badge-success";
+  }
+
+  // 通報キューの描画
+  if (reportsTable) {
+    if (reports.length === 0) {
+      reportsTable.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #888; padding: 20px;">現在、通報されている投稿はありません。健全に運用されています。</td></tr>`;
+    } else {
+      reportsTable.innerHTML = reports.map(r => {
+        const post = posts.find(p => p.id === r.postId);
+        const postTitle = post ? (post.title || post.content.substring(0, 30) + "...") : "(削除済み投稿)";
+        const isPending = (r.status === "pending");
+
+        return `
+          <tr>
+            <td><small>${r.createdAt}</small></td>
+            <td><strong style="color: #de350b;">${escapeHtml(r.reason)}</strong></td>
+            <td>
+              <div style="font-weight: 600; font-size: 12px;">${escapeHtml(postTitle)}</div>
+              <small style="color: #888;">ID: ${r.postId}</small>
+            </td>
+            <td>
+              <div style="font-size: 11px;">通報者: ${r.reporterId}</div>
+              <div style="font-size: 11px; color: #555;">${escapeHtml(r.detail || "（詳細記述なし）")}</div>
+            </td>
+            <td>
+              <span class="badge ${isPending ? 'badge-warning' : 'badge-success'}">
+                ${isPending ? '要対応' : '対応完了'}
+              </span>
+            </td>
+            <td>
+              <div style="display: flex; gap: 6px;">
+                ${isPending ? `
+                  <button class="btn btn-sm" style="background: #de350b; color: #fff;" onclick="hidePostFromAdmin('${r.postId}', '${r.id}')">投稿を非表示</button>
+                  <button class="btn btn-secondary btn-sm" onclick="dismissReport('${r.id}')">問題なし(完了)</button>
+                ` : `
+                  <span style="font-size: 11px; color: #888;">対応済</span>
+                `}
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+  }
+
+  // 投稿全件一覧の描画
+  if (postsTable) {
+    if (posts.length === 0) {
+      postsTable.innerHTML = `<tr><td colspan="8" style="text-align: center; color: #888; padding: 20px;">投稿データがありません。</td></tr>`;
+    } else {
+      const catLabels = {
+        trip: "旅の思い出",
+        oshi: "推しガール自慢",
+        goods: "グッズ写真",
+        report: "聖地巡礼レポ",
+        official: "運営便り"
+      };
+
+      postsTable.innerHTML = posts.map(p => {
+        const isHidden = (p.status === "hidden");
+        return `
+          <tr style="${isHidden ? 'opacity: 0.6; background: #fff5f5;' : ''}">
+            <td><small>${p.createdAt}</small></td>
+            <td><span class="badge badge-info">${catLabels[p.category] || p.category}</span></td>
+            <td>
+              <strong>${escapeHtml(p.authorName)}</strong>
+              <small style="display: block; color: #888;">(${p.authorPlan})</small>
+            </td>
+            <td>
+              <div style="font-size: 12px;">${escapeHtml(p.characterName || "全キャラ")}</div>
+              <small style="color: #666;">${escapeHtml(p.facilityName || "-")}</small>
+            </td>
+            <td style="max-width: 200px;">
+              <div style="font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${escapeHtml(p.content)}</div>
+              ${p.images && p.images.length > 0 ? `<small style="color: #0052cc;">📷 写真${p.images.length}枚</small>` : ''}
+            </td>
+            <td>
+              <span style="font-size: 11px;">${p.visibility === "supporter" ? '🔒 会員限定' : '全体公開'}</span>
+            </td>
+            <td>
+              <span class="badge ${isHidden ? 'badge-danger' : 'badge-success'}">
+                ${isHidden ? '非表示中' : '公開中'}
+              </span>
+            </td>
+            <td>
+              <button class="btn btn-sm ${isHidden ? 'btn-secondary' : 'btn-warning'}" onclick="togglePostVisibility('${p.id}')">
+                ${isHidden ? '再公開する' : '非表示にする'}
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+  }
+}
+
+function hidePostFromAdmin(postId, reportId) {
+  try {
+    const posts = JSON.parse(localStorage.getItem("goen_hiroba_posts_v1")) || [];
+    const p = posts.find(x => x.id === postId);
+    if (p) {
+      p.status = "hidden";
+      localStorage.setItem("goen_hiroba_posts_v1", JSON.stringify(posts));
+    }
+    const reports = JSON.parse(localStorage.getItem("goen_hiroba_reports_v1")) || [];
+    const r = reports.find(x => x.id === reportId);
+    if (r) {
+      r.status = "resolved";
+      localStorage.setItem("goen_hiroba_reports_v1", JSON.stringify(reports));
+    }
+    renderAdminHiroba();
+    alert("投稿を非表示にし、通報を対応済みにしました。");
+  } catch(e) {
+    console.error(e);
+  }
+}
+
+function dismissReport(reportId) {
+  try {
+    const reports = JSON.parse(localStorage.getItem("goen_hiroba_reports_v1")) || [];
+    const r = reports.find(x => x.id === reportId);
+    if (r) {
+      r.status = "dismissed";
+      localStorage.setItem("goen_hiroba_reports_v1", JSON.stringify(reports));
+    }
+    renderAdminHiroba();
+    alert("通報を対応済み（問題なし）に更新しました。");
+  } catch(e) {
+    console.error(e);
+  }
+}
+
+function togglePostVisibility(postId) {
+  try {
+    const posts = JSON.parse(localStorage.getItem("goen_hiroba_posts_v1")) || [];
+    const p = posts.find(x => x.id === postId);
+    if (p) {
+      p.status = (p.status === "hidden") ? "active" : "hidden";
+      localStorage.setItem("goen_hiroba_posts_v1", JSON.stringify(posts));
+      renderAdminHiroba();
+      alert(`投稿を【${p.status === "hidden" ? "非表示" : "公開"}】に変更しました。`);
+    }
+  } catch(e) {
+    console.error(e);
+  }
+}
+
+function escapeHtml(str) {
+  if (!str) return "";
+  return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+window.renderAdminHiroba = renderAdminHiroba;
+window.hidePostFromAdmin = hidePostFromAdmin;
+window.dismissReport = dismissReport;
+window.togglePostVisibility = togglePostVisibility;
+

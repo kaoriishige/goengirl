@@ -364,6 +364,7 @@ class MemberManager {
 }
 
 const mgr = new MemberManager();
+window.mgr = mgr;
 let activeVideoStream = null;
 let currentTargetSpot = null;
 
@@ -1074,48 +1075,20 @@ function playMemberVoice(charName) {
 }
 
 /**
- * 8. コミュニティ（旅の投稿・共創企画投票）
+ * 8. 会員交流コミュニティ「ご縁ひろば」＆ 共創企画投票
  */
 function renderCommunity() {
-  const container = document.getElementById("posts-container");
-  if (!container) return;
-
-  const tagBar = document.getElementById("community-tag-bar");
-  let activeTag = "all";
-  if (tagBar) {
-    const chips = tagBar.querySelectorAll(".tag-chip");
-    chips.forEach(c => {
-      if (c.classList.contains("active")) activeTag = c.dataset.tag;
-      c.onclick = () => {
-        chips.forEach(x => x.classList.remove("active"));
-        c.classList.add("active");
-        renderCommunity();
-      };
-    });
+  // ご縁ひろばの初期化または再レンダリング
+  if (typeof initHiroba === "function" && !window.hiroba) {
+    initHiroba(mgr);
+  } else if (window.hiroba) {
+    window.hiroba.memberMgr = mgr;
+    window.hiroba.render();
   }
 
-  let filtered = mgr.posts;
-  if (activeTag !== "all") {
-    filtered = filtered.filter(p => p.character === activeTag || p.region === activeTag);
-  }
-
-  container.innerHTML = filtered.map(p => `
-    <div class="post-card">
-      <div class="post-header">
-        <span class="post-user">${p.userName} <span style="font-size: 10px; color: #888;">(${p.userPlan})</span></span>
-        <span class="post-meta">${p.date} • ${p.spotName}</span>
-      </div>
-      <div class="post-body">${p.text}</div>
-      <div class="post-tags">#${p.character} #${p.region}</div>
-      <div class="post-actions">
-        <button class="btn-post-like" onclick="likePost('${p.id}')">❤️ いいね (${p.likes})</button>
-      </div>
-    </div>
-  `).join("");
-
-  // 投票エリア（共創会員限定）
+  // 企画投票エリア（共創会員限定）
   const voteContainer = document.getElementById("vote-options-container");
-  if (voteContainer) {
+  if (voteContainer && mgr.votes) {
     const isCocreation = (mgr.member.plan === "cocreation");
     voteContainer.innerHTML = mgr.votes.map(v => `
       <div class="vote-option-card">
@@ -1135,11 +1108,8 @@ function renderCommunity() {
 }
 
 function likePost(postId) {
-  const p = mgr.posts.find(x => x.id === postId);
-  if (p) {
-    p.likes += 1;
-    mgr.savePosts();
-    renderCommunity();
+  if (window.hiroba) {
+    window.hiroba.handleLike(postId);
   }
 }
 
@@ -1324,41 +1294,19 @@ function confirmPlanChange(newPlan) {
 function setupModals() {
   // 投稿モーダル
   const btnOpenPost = document.getElementById("btn-open-post-modal");
-  const modalPost = document.getElementById("modal-post");
-  const btnClosePost = document.getElementById("btn-close-post-modal");
-  const formPost = document.getElementById("form-create-post");
+  const btnCompPost = document.getElementById("btn-comp-post");
 
-  if (btnOpenPost && modalPost) {
-    btnOpenPost.onclick = () => { modalPost.style.display = "grid"; };
+  if (btnOpenPost) {
+    btnOpenPost.onclick = () => {
+      if (window.hiroba) window.hiroba.openPostModal();
+    };
   }
-  if (btnClosePost && modalPost) {
-    btnClosePost.onclick = () => { modalPost.style.display = "none"; };
-  }
-  if (formPost) {
-    formPost.onsubmit = (e) => {
-      e.preventDefault();
-      const char = document.getElementById("post-char-select").value;
-      const spot = document.getElementById("post-spot-input").value.trim() || "栃木県内スポット";
-      const text = document.getElementById("post-text-input").value.trim();
 
-      const newPost = {
-        id: "P" + Date.now(),
-        userName: mgr.member.nickname,
-        userPlan: mgr.member.plan === "free" ? "無料会員" : (mgr.member.plan === "supporter" ? "応援会員" : "共創会員"),
-        character: char,
-        spotName: spot,
-        region: char === "狩野くるみ" ? "那須塩原市" : (char === "那須乃つつじ" ? "那須町" : "大田原市"),
-        text: text,
-        likes: 0,
-        date: new Date().toISOString().split("T")[0]
-      };
-
-      mgr.posts.unshift(newPost);
-      mgr.savePosts();
-      modalPost.style.display = "none";
-      formPost.reset();
-      renderCommunity();
-      alert("旅の写真を投稿しました！");
+  if (btnCompPost) {
+    btnCompPost.onclick = () => {
+      const compModal = document.getElementById("modal-checkin-complete");
+      if (compModal) compModal.style.display = "none";
+      if (window.hiroba) window.hiroba.openPostModal();
     };
   }
 
