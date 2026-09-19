@@ -211,8 +211,17 @@ class HirobaManager {
     this.page = 1;
     this.pageSize = 20;
     this.tempUploadedImages = []; // 投稿用アップロード済みBase64画像
+    this.unlockedPostIds = [];   // 無料会員向けお試しアンロック投稿ID
     this.lang = localStorage.getItem("goen_lang") || "ja";
     this.initStorage();
+  }
+
+  unlockPostPreview(postId) {
+    if (!this.unlockedPostIds) this.unlockedPostIds = [];
+    if (!this.unlockedPostIds.includes(postId)) {
+      this.unlockedPostIds.push(postId);
+    }
+    this.renderPosts();
   }
 
   setLanguage(lang) {
@@ -616,8 +625,9 @@ class HirobaManager {
     const isSaved = this.isSaved(post.id);
     const isAuthor = (post.authorId === currentMember.memberId);
 
-    // 会員限定投稿のロック判定
-    const isLocked = (post.visibility === "supporter" && currentMember.plan === "free" && !isAuthor && !post.isOfficial);
+    // 会員限定投稿のロック判定（無料会員向けお試しアンロックに対応）
+    const isUnlockedByUser = this.unlockedPostIds && this.unlockedPostIds.includes(post.id);
+    const isLocked = (post.visibility === "supporter" && currentMember.plan === "free" && !isAuthor && !post.isOfficial && !isUnlockedByUser);
 
     const isEn = (this.lang === "en");
 
@@ -638,11 +648,11 @@ class HirobaManager {
     if (post.images && post.images.length > 0) {
       if (isLocked) {
         imagesHtml = `
-          <div class="hiroba-images-grid grid-${Math.min(post.images.length, 4)} locked-blur">
+          <div class="hiroba-images-grid grid-${Math.min(post.images.length, 4)} locked-blur" style="cursor: pointer;" onclick="hiroba.unlockPostPreview('${post.id}')">
             <img src="${post.images[0]}" alt="限定写真" class="hiroba-post-img" style="filter: blur(12px);">
             <div class="hiroba-lock-overlay">
               <span style="font-size: 20px;">🔒</span>
-              <span style="font-size: 12px; font-weight: 700;">${isEn ? 'Supporter / Co-Creation Member exclusive photo' : '応援会員・共創会員限定の写真です'}</span>
+              <span style="font-size: 12px; font-weight: 700;">${isEn ? 'Supporter exclusive photo (Click to Preview)' : '応援会員・共創会員限定の写真（タップでプレビュー）'}</span>
             </div>
           </div>
         `;
@@ -671,11 +681,16 @@ class HirobaManager {
               ${isEn ? '🔒 Exclusive Post for Supporter & Co-Creation Members' : '🔒 応援会員・共創会員 限定公開の投稿です'}
             </div>
             <p style="font-size: 12px; color: #555; margin-bottom: 10px;">
-              ${isEn ? 'Join Supporter Plan (¥480/month) to unlock full stories, high-res photos, and behind-the-scenes.' : '月額480円（応援会員）にご加入いただくと、限定投稿の全文・高画質写真・制作裏話をすべてご覧いただけます。'}
+              ${isEn ? 'Supporter plan exclusive story. You can preview the full post now!' : '会員限定の制作裏話・限定写真です。無料会員様もお試しプレビューで今すぐ全文をご覧いただけます！'}
             </p>
-            <button class="btn-primary" style="font-size: 12px; padding: 6px 16px;" onclick="document.getElementById('section-plans').scrollIntoView({behavior: 'smooth'})">
-              ${isEn ? 'Explore Membership Plans (from ¥480/mo)' : '会員プランを見る (¥480/月〜)'}
-            </button>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <button class="btn-primary" style="font-size: 12px; padding: 7px 16px; font-weight: 700;" onclick="hiroba.unlockPostPreview('${post.id}')">
+                ✨ ${isEn ? 'Preview Full Post & Photos' : '限定投稿をお試しプレビュー ✨'}
+              </button>
+              <button class="btn-secondary" style="font-size: 11px; padding: 7px 12px;" onclick="document.getElementById('section-plans').scrollIntoView({behavior: 'smooth'})">
+                ${isEn ? 'View Plans' : '会員プラン詳細'}
+              </button>
+            </div>
           </div>
         </div>
       `;

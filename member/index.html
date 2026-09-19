@@ -329,11 +329,14 @@
 
     <!-- 9. ポイント交換所 -->
     <section class="dashboard-section" id="section-rewards-shop">
-      <div class="section-head">
+      <div class="section-head" style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 8px;">
         <div>
           <h3 class="section-title" data-i18n="shopHead">🎁 ご縁ポイント交換所</h3>
           <p class="section-desc" data-i18n="shopSub">巡礼で貯まったポイントを使って、限定ボイスや特製壁紙、現地特典をアンロック！</p>
         </div>
+        <button class="btn-secondary" style="font-size: 11px; padding: 6px 12px; font-weight: 700; color: #b8860b; border-color: #ffd07d; background: #fffdf5;" onclick="addTestBonusPoints()">
+          ✨ 巡礼ボーナス +100pt
+        </button>
       </div>
       <div class="shop-grid" id="shop-container">
         <!-- JSでレンダリング -->
@@ -581,6 +584,65 @@
             この内容で投稿する 🌸
           </button>
         </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: 推しガール変更・プロフィール設定 -->
+  <div id="modal-change-oshi" class="custom-modal" style="display: none;">
+    <div class="modal-backdrop" onclick="document.getElementById('modal-change-oshi').style.display='none'"></div>
+    <div class="modal-dialog" style="max-width: 480px;">
+      <div class="modal-inner-card" style="padding: 24px 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--line); padding-bottom: 10px;">
+          <h3 style="margin: 0; font-size: 16px; color: var(--navy);">🌸 推しガール ＆ プロフィール設定</h3>
+          <button type="button" class="btn-close-modal" onclick="document.getElementById('modal-change-oshi').style.display='none'">&times;</button>
+        </div>
+
+        <div style="margin-bottom: 16px;">
+          <label style="font-size: 12px; font-weight: 700; display: block; margin-bottom: 6px;">ニックネーム</label>
+          <input type="text" id="input-member-nickname" class="form-input" style="width: 100%; padding: 8px 12px; font-size: 14px;" maxlength="20" placeholder="ご縁巡礼者">
+        </div>
+
+        <label style="font-size: 12px; font-weight: 700; display: block; margin-bottom: 8px;">あなたの推しガールを選択</label>
+        <div class="oshi-select-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px;">
+          <div class="oshi-card-opt" data-char="那須乃つつじ" style="border: 2px solid var(--line); border-radius: 12px; padding: 10px 6px; text-align: center; cursor: pointer; background: #fff; transition: all .2s;">
+            <img src="../assets/nasuno-tsutsuji.png" alt="那須乃つつじ" style="height: 70px; object-fit: contain; margin-bottom: 4px;">
+            <div style="font-size: 12px; font-weight: 700; color: #e9588d;">那須乃つつじ</div>
+            <div style="font-size: 10px; color: #777;">那須町</div>
+          </div>
+          <div class="oshi-card-opt" data-char="狩野くるみ" style="border: 2px solid var(--line); border-radius: 12px; padding: 10px 6px; text-align: center; cursor: pointer; background: #fff; transition: all .2s;">
+            <img src="../assets/karino-milk.png" alt="狩野くるみ" style="height: 70px; object-fit: contain; margin-bottom: 4px;">
+            <div style="font-size: 12px; font-weight: 700; color: #1199c4;">狩野くるみ</div>
+            <div style="font-size: 10px; color: #777;">那須塩原市</div>
+          </div>
+          <div class="oshi-card-opt" data-char="大俵ちか" style="border: 2px solid var(--line); border-radius: 12px; padding: 10px 6px; text-align: center; cursor: pointer; background: #fff; transition: all .2s;">
+            <img src="../assets/otawara-chika.png" alt="大俵ちか" style="height: 70px; object-fit: contain; margin-bottom: 4px;">
+            <div style="font-size: 12px; font-weight: 700; color: #c84127;">大俵ちか</div>
+            <div style="font-size: 10px; color: #777;">大田原市</div>
+          </div>
+        </div>
+
+        <button type="button" id="btn-save-oshi-profile" class="btn-primary" style="width: 100%; padding: 12px; font-size: 14px; font-weight: 700;">
+          設定を保存する ✨
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: 特製壁紙プレビュー・保存 -->
+  <div id="modal-wallpaper-preview" class="custom-modal" style="display: none;">
+    <div class="modal-backdrop" onclick="document.getElementById('modal-wallpaper-preview').style.display='none'"></div>
+    <div class="modal-dialog" style="max-width: 440px;">
+      <div class="modal-inner-card" style="padding: 20px; text-align: center;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <h3 id="wallpaper-modal-title" style="margin: 0; font-size: 15px; color: var(--navy);">特製壁紙</h3>
+          <button type="button" class="btn-close-modal" onclick="document.getElementById('modal-wallpaper-preview').style.display='none'">&times;</button>
+        </div>
+        <div style="background: #111; border-radius: 12px; overflow: hidden; margin-bottom: 14px;">
+          <img id="wallpaper-modal-img" src="../assets/nasuno-tsutsuji.png" alt="壁紙プレビュー" style="max-height: 380px; width: auto; max-width: 100%; object-fit: contain; display: block; margin: auto;">
+        </div>
+        <p style="font-size: 12px; color: #666; margin-bottom: 14px;">画像を長押し、または右クリックして「画像を保存」してください。</p>
+        <button type="button" class="btn-secondary" onclick="document.getElementById('modal-wallpaper-preview').style.display='none'" style="width: 100%; padding: 10px; font-size: 13px;">閉じる</button>
       </div>
     </div>
   </div>

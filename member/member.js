@@ -781,6 +781,7 @@ function setMemberLanguage(lang) {
   renderStampBook();
   renderGoodsCollection();
   renderMemberContents();
+  renderVoteOptions();
   renderShop();
   renderPlans();
 
@@ -823,6 +824,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   setupNavigation();
   setMemberLanguage(memberCurrentLang);
   setupCheckinSystem();
+  setupOshiModal();
   setupModals();
 });
 
@@ -1439,15 +1441,20 @@ function renderGoodsCollection() {
       return;
     }
     container.innerHTML = mgr.member.reservations.map(r => `
-      <div class="goods-card">
+      <div class="goods-card" style="border: 1px solid #bce0fd; background: #fdfefe;">
         <div>
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-            <span style="font-size: 11px; background: #0052cc; color: #fff; padding: 2px 6px; border-radius: 4px;">${isEn ? 'Reservation Confirmed' : '予約受付済み'}</span>
-            <span style="font-size: 11px; color: #666;">${isEn ? 'Voucher Code' : '引換コード'}: <strong>${r.code}</strong></span>
+            <span style="font-size: 11px; background: #0052cc; color: #fff; padding: 2px 8px; border-radius: 4px; font-weight: 700;">${isEn ? 'Voucher Active' : '予約受付済み'}</span>
+            <span style="font-size: 12px; color: var(--navy);">${isEn ? 'Code' : '引換コード'}: <strong style="color: #b01b4c; letter-spacing: 0.05em;">${r.code}</strong></span>
           </div>
-          <div class="goods-name">${r.goodsName}</div>
-          <div style="font-size: 12px; color: #555; margin-top: 4px;">${isEn ? 'Spot' : '受取施設'}: ${r.facilityName}</div>
-          <div style="font-size: 11px; color: #b8860b; margin-top: 2px;">${isEn ? 'Pickup Deadline' : '受取期日'}: ${r.expireDate} (${isEn ? 'Pay on-site' : '現地払い'})</div>
+          <div class="goods-name" style="font-size: 14px; font-weight: 700; color: var(--navy);">${r.goodsName}</div>
+          <div style="font-size: 12px; color: #555; margin-top: 4px;">📍 ${r.facilityName}</div>
+          <div style="font-size: 11px; color: #8b6508; margin-top: 2px;">⏳ ${isEn ? 'Pickup Deadline' : '受取期日'}: ${r.expireDate} (${isEn ? 'Pay on-site' : '店頭にて現地精算'})</div>
+        </div>
+        <div style="margin-top: 10px; display: flex; gap: 8px;">
+          <button class="btn-secondary" style="flex: 1; font-size: 11px; padding: 5px; color: #de350b;" onclick="cancelGoodsReservation('${r.id}')">
+            ${isEn ? 'Cancel Reservation' : '予約をキャンセル'}
+          </button>
         </div>
       </div>
     `).join("");
@@ -1518,26 +1525,15 @@ function openReservationModal(goodsId, goodsName, facilityName) {
   if (!modal || !content) return;
   const isEn = memberCurrentLang === "en";
 
-  if (mgr.member.plan === "free") {
-    content.innerHTML = `
-      <div style="text-align: center; padding: 10px;">
-        <div style="font-size: 32px; margin-bottom: 8px;">🔒</div>
-        <h4 style="font-size: 15px; margin-bottom: 8px;">${isEn ? 'Supporter Feature' : '応援会員・共創会員限定機能です'}</h4>
-        <p style="font-size: 12px; color: #666; line-height: 1.6; margin-bottom: 16px;">
-          ${isEn ? 'Merchandise pickup reservation is available exclusively for Supporter and Co-Creation members. Never miss out on sold-out local goods!' : '「現地受取予約」は、遠方からの巡礼で確実に限定グッズを手に入れたいファンのための応援会員特典です。'}
-        </p>
-        <button class="btn-primary" style="width: 100%; padding: 10px;" onclick="document.getElementById('modal-reservation').style.display='none'; document.getElementById('section-plans').scrollIntoView({behavior:'smooth'});">
-          ${isEn ? 'Explore Supporter Plan (¥480/mo)' : '応援会員プランを見る (月額480円)'}
-        </button>
-      </div>
-    `;
-    modal.style.display = "grid";
-    return;
-  }
-
+  const isTrial = (mgr.member.plan === "free");
   const expDate = new Date(Date.now() + 14 * 86400000).toISOString().split("T")[0];
   content.innerHTML = `
     <div>
+      ${isTrial ? `
+        <div style="background: #fff8e8; border: 1px solid #ffd07d; padding: 8px 12px; border-radius: 8px; font-size: 11px; color: #8b6508; margin-bottom: 12px;">
+          ✨ <strong>${isEn ? 'Trial Mode' : '【無料会員 お試し体験】'}</strong> ${isEn ? 'You can test merchandise pickup reservations right now!' : '無料会員様も今すぐ限定グッズのお取り置き予約をお試しいただけます！'}
+        </div>
+      ` : ''}
       <div style="background: #f4f5f7; padding: 12px; border-radius: 8px; margin-bottom: 14px;">
         <div style="font-size: 13px; font-weight: 700;">${goodsName}</div>
         <div style="font-size: 12px; color: #555; margin-top: 4px;">📍 ${facilityName}</div>
@@ -1572,6 +1568,17 @@ function confirmGoodsReservation(goodsId, goodsName, facilityName, expireDate) {
   alert(isEn
     ? `Pickup Reservation Confirmed!\nVoucher Code: ${code}\nPlease show this code at ${facilityName}.`
     : `受取予約が完了しました！\n引換コード: 【${code}】\n${facilityName} の窓口でご提示ください。`);
+}
+
+function cancelGoodsReservation(reservationId) {
+  const isEn = memberCurrentLang === "en";
+  if (!confirm(isEn ? "Are you sure you want to cancel this pickup reservation?" : "この現地受取予約をキャンセルしますか？")) {
+    return;
+  }
+  mgr.member.reservations = mgr.member.reservations.filter(r => r.id !== reservationId);
+  mgr.save();
+  renderGoodsCollection();
+  alert(isEn ? "Pickup reservation has been cancelled." : "受取予約をキャンセルしました。");
 }
 
 /**
@@ -1617,10 +1624,9 @@ function renderMemberContents() {
   ];
 
   container.innerHTML = contents.map(item => {
-    const isLocked = (item.planReq === "supporter" && mgr.member.plan === "free") ||
-                     (item.planReq === "cocreation" && mgr.member.plan !== "cocreation");
     const itemTitle = isEn ? item.titleEn : item.title;
     const itemDesc = isEn ? item.descEn : item.desc;
+    const planBadgeText = item.planReq === 'cocreation' ? (isEn ? 'Co-Creation Special' : '共創会員特典') : (item.planReq === 'supporter' ? (isEn ? 'Supporter Perk' : '応援会員特典') : (isEn ? 'Free Member' : '無料会員特典'));
 
     return `
       <div class="media-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 16px;">
@@ -1628,29 +1634,23 @@ function renderMemberContents() {
           <span style="font-size: 11px; background: ${item.type === 'voice' ? '#e6f6fa' : '#fff0f5'}; color: ${item.type === 'voice' ? '#1199c4' : '#e9588d'}; padding: 2px 8px; border-radius: 4px; font-weight: 700;">
             ${item.type === 'voice' ? '🎙️ ' + (isEn ? 'Voice' : 'ボイス') : '🖼️ ' + (isEn ? 'Wallpaper' : '壁紙')}
           </span>
-          <span style="font-size: 11px; color: ${isLocked ? '#de350b' : '#00875a'}; font-weight: 700;">
-            ${isLocked ? '🔒 ' + (item.planReq === 'cocreation' ? (isEn ? 'Co-Creation Only' : '共創会員限定') : (isEn ? 'Supporter Only' : '応援会員限定')) : '✔ ' + (isEn ? 'Unlocked' : '視聴可能')}
+          <span style="font-size: 11px; color: #00875a; font-weight: 700; background: #e3fcef; padding: 2px 8px; border-radius: 4px;">
+            ✨ ${planBadgeText} (${isEn ? 'Unlocked' : '視聴可能'})
           </span>
         </div>
         <h4 style="font-size: 14px; margin-bottom: 6px; color: var(--navy);">${itemTitle}</h4>
         <p style="font-size: 12px; color: #666; margin-bottom: 12px; line-height: 1.5;">${itemDesc}</p>
         <div>
-          ${isLocked ? `
-            <button class="btn-secondary" style="width: 100%; font-size: 12px;" onclick="document.getElementById('section-plans').scrollIntoView({behavior:'smooth'})">
-              ${isEn ? 'Upgrade Plan to Unlock' : 'プランアップグレードで解放'}
-            </button>
-          ` : `
-            <button class="btn-primary" style="width: 100%; font-size: 12px;" onclick="playContentMedia('${item.type}', '${(item.audioText || itemTitle).replace(/'/g, "\\'")}')">
-              ${item.type === 'voice' ? t.contentsPlayVoice : t.contentsDownload}
-            </button>
-          `}
+          <button class="btn-primary" style="width: 100%; font-size: 12px; padding: 8px;" onclick="playContentMedia('${item.type}', '${(item.audioText || itemTitle).replace(/'/g, "\\'")}', '${item.image || '../assets/nasuno-tsutsuji.png'}')">
+            ${item.type === 'voice' ? `🔊 ${t.contentsPlayVoice}` : `🖼️ ${t.contentsDownload}`}
+          </button>
         </div>
       </div>
     `;
   }).join("");
 }
 
-function playContentMedia(type, text) {
+function playContentMedia(type, text, imgUrl) {
   const isEn = memberCurrentLang === "en";
   if (type === "voice") {
     if ('speechSynthesis' in window) {
@@ -1663,7 +1663,16 @@ function playContentMedia(type, text) {
     }
     alert(isEn ? `[Exclusive Voice Message]\n"${text}"` : `【会員限定ボイス】\n「${text}」`);
   } else {
-    alert(isEn ? "Downloading high-resolution smartphone wallpaper..." : "特製高画質スマートフォンのダウンロードを開始しました！");
+    const modal = document.getElementById("modal-wallpaper-preview");
+    if (modal) {
+      const titleEl = document.getElementById("wallpaper-modal-title");
+      const imgEl = document.getElementById("wallpaper-modal-img");
+      if (titleEl) titleEl.textContent = text;
+      if (imgEl && imgUrl) imgEl.src = imgUrl;
+      modal.style.display = "grid";
+    } else {
+      alert(isEn ? "Downloading high-resolution smartphone wallpaper..." : "特製高画質スマホ壁紙を表示しました！");
+    }
   }
 }
 
@@ -1803,4 +1812,129 @@ function setupModals() {
       document.getElementById("modal-reservation").style.display = "none";
     };
   }
+}
+
+/**
+ * 企画候補アイデア投票レンダリング
+ */
+function renderVoteOptions() {
+  const container = document.getElementById("vote-options-container");
+  if (!container) return;
+  const isEn = memberCurrentLang === "en";
+
+  const votedId = mgr.member.votedProposalId;
+
+  container.innerHTML = `
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+      ${VOTE_CANDIDATES.map(item => {
+        const isVoted = (votedId === item.id);
+        const title = isEn ? item.titleEn : item.title;
+        const desc = isEn ? item.descEn : item.desc;
+        const currentVotes = item.votes + (isVoted ? 1 : 0);
+
+        return `
+          <div style="background: #fff; border: 1.5px solid ${isVoted ? '#0052cc' : 'var(--line)'}; border-radius: 10px; padding: 14px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 200px;">
+              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px; flex-wrap: wrap;">
+                <strong style="font-size: 13px; color: var(--navy);">${title}</strong>
+                <span style="font-size: 11px; background: #eef5fa; color: #0052cc; padding: 2px 8px; border-radius: 12px; font-weight: 700;">🗳️ ${currentVotes} ${isEn ? 'votes' : '票'}</span>
+              </div>
+              <p style="font-size: 12px; color: #666; margin: 0; line-height: 1.5;">${desc}</p>
+            </div>
+            <div>
+              <button class="btn-primary" style="font-size: 12px; padding: 8px 16px; white-space: nowrap; ${isVoted ? 'background: #00875a; border-color: #00875a;' : ''}" onclick="submitIdeaVote('${item.id}')">
+                ${isVoted ? (isEn ? '✔ Voted' : '✔ 投票済み') : (isEn ? 'Vote for This' : 'この企画に投票')}
+              </button>
+            </div>
+          </div>
+        `;
+      }).join("")}
+    </div>
+  `;
+}
+
+function submitIdeaVote(proposalId) {
+  const isEn = memberCurrentLang === "en";
+  mgr.member.votedProposalId = proposalId;
+  mgr.save();
+  renderVoteOptions();
+  const proposal = VOTE_CANDIDATES.find(c => c.id === proposalId);
+  const pTitle = proposal ? (isEn ? proposal.titleEn : proposal.title) : "";
+  alert(isEn
+    ? `Thank you for your vote for:\n"${pTitle}"!\nYour voice will help shape the next Goen Girl project.`
+    : `企画【${pTitle}】へ投票しました！\n全国のファンからの投票をもとに、運営が企画実現に向けて動き出します。`);
+}
+
+/**
+ * 推しガール変更モーダル設定
+ */
+function setupOshiModal() {
+  const btnChange = document.getElementById("btn-change-oshi");
+  const modal = document.getElementById("modal-change-oshi");
+  const btnSave = document.getElementById("btn-save-oshi-profile");
+  const nameInput = document.getElementById("input-member-nickname");
+  if (!btnChange || !modal) return;
+
+  let selectedGirl = mgr.member.favoriteGirl;
+
+  btnChange.onclick = () => {
+    selectedGirl = mgr.member.favoriteGirl;
+    if (nameInput) nameInput.value = mgr.member.nickname;
+    updateOshiCardSelection(selectedGirl);
+    modal.style.display = "grid";
+  };
+
+  document.querySelectorAll(".oshi-card-opt").forEach(card => {
+    card.onclick = () => {
+      selectedGirl = card.dataset.char;
+      updateOshiCardSelection(selectedGirl);
+    };
+  });
+
+  if (btnSave) {
+    btnSave.onclick = () => {
+      const isEn = memberCurrentLang === "en";
+      mgr.member.favoriteGirl = selectedGirl;
+      if (nameInput && nameInput.value.trim()) {
+        mgr.member.nickname = nameInput.value.trim();
+        mgr.member.nicknameEn = nameInput.value.trim();
+      }
+      mgr.save();
+      renderMemberCard();
+      renderOshiSection();
+      modal.style.display = "none";
+      const charName = isEn ? (EN_MAP.characters[selectedGirl] || selectedGirl) : selectedGirl;
+      alert(isEn
+        ? `Profile updated! Favorite Girl: [${charName}]`
+        : `プロフィールを更新しました！推しガール: 【${selectedGirl}】`);
+    };
+  }
+}
+
+function updateOshiCardSelection(charName) {
+  document.querySelectorAll(".oshi-card-opt").forEach(card => {
+    const match = (card.dataset.char === charName);
+    card.style.borderColor = match ? "var(--pink)" : "var(--line)";
+    card.style.background = match ? "#fff5f8" : "#fff";
+    card.style.transform = match ? "scale(1.03)" : "scale(1)";
+  });
+}
+
+function addTestBonusPoints() {
+  const isEn = memberCurrentLang === "en";
+  mgr.member.points += 100;
+  mgr.member.ledger.unshift({
+    id: "LEDGER_" + Date.now(),
+    type: "grant",
+    amount: 100,
+    reason: isEn ? "Pilgrimage Bonus (+100pt)" : "巡礼ボーナス獲得",
+    date: new Date().toISOString().split("T")[0],
+    timestamp: Date.now()
+  });
+  mgr.save();
+  renderMemberCard();
+  renderShop();
+  alert(isEn
+    ? "Claimed +100 Goen Points bonus!\nYou can now redeem items at the Rewards Shop."
+    : "巡礼ボーナス 100pt を獲得しました！\n交換所でお好きな限定ボイスや壁紙を交換できます。");
 }
