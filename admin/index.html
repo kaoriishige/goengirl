@@ -705,7 +705,13 @@
                 <input type="text" value="請求書で一括清算（銀行振込）" readonly style="background: #eef2f7; color: #1a73e8; font-weight: 600;">
               </div>
               <div class="form-group">
-                <label for="form-company-panel-fee">初期パネル導入費 (税別) <span style="color:red;">*</span></label>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                  <label for="form-company-panel-fee" style="margin-bottom: 0;">初期パネル導入費 (税別) <span style="color:red;">*</span></label>
+                  <div style="display: flex; gap: 4px;">
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('form-company-panel-fee').value=150000; document.getElementById('form-company-panel-fee').dispatchEvent(new Event('input'));" style="font-size: 10px; padding: 2px 6px;">等身大 (¥150,000)</button>
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('form-company-panel-fee').value=40000; document.getElementById('form-company-panel-fee').dispatchEvent(new Event('input'));" style="font-size: 10px; padding: 2px 6px;">SDパネル50cm (¥40,000)</button>
+                  </div>
+                </div>
                 <input type="number" id="form-company-panel-fee" value="150000" required step="1000">
               </div>
             </div>

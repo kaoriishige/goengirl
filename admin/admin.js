@@ -848,7 +848,7 @@ function setupEventListeners() {
           id: "INV-PN-" + String(store.data.payments.length + 1).padStart(3, "0"),
           companyId: newId,
           companyName: formData.name,
-          billingItem: `等身大キャラクターパネル初期導入費 (${formData.panelType}) [税別¥${panelFee.toLocaleString()} + 税¥${(panelFeeTax - panelFee).toLocaleString()}]`,
+          billingItem: `キャラクターパネル初期導入費 (${formData.panelType}) [税別¥${panelFee.toLocaleString()} + 税¥${(panelFeeTax - panelFee).toLocaleString()}]`,
           amount: panelFeeTax,
           method: "請求書で一括清算 (銀行振込)",
           dueDate: dueStr,
