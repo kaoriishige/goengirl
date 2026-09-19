@@ -327,4 +327,409 @@ h3 { font-size: clamp(22px, 2.4vw, 32px); }
   }
 }
 
+/* 第3章用：動画制作と公式SNS配信の明確な分割表示 */
+.benefit-subparts {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.benefit-subpart {
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  border-left: 3px solid #f9d983;
+}
+
+.benefit-subpart strong {
+  display: block;
+  font-size: 13px;
+  margin-bottom: 4px;
+  color: #fff;
+  letter-spacing: .02em;
+}
+
+.benefit-subpart p {
+  font-size: 12px !important;
+  line-height: 1.7 !important;
+  margin: 0 !important;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+/* ==========================================================================
+   ご縁ガール展開システム（店舗別衣装バリエーション × 全国拡大展開）
+   ========================================================================== */
+.char-system-intro {
+  max-width: 1100px;
+  margin: 0 auto 44px;
+}
+
+.char-system-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.char-system-card {
+  background: #fff;
+  border-radius: var(--radius-lg);
+  padding: 32px 28px;
+  border: 1px solid var(--color-rule);
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.char-system-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.char-system-card.costume-focus {
+  border-top: 4px solid #d9480f;
+  background: linear-gradient(180deg, #fffaf6 0%, #fff 35%);
+}
+
+.char-system-card.nationwide-focus {
+  border-top: 4px solid #1971c2;
+  background: linear-gradient(180deg, #f8faff 0%, #fff 35%);
+}
+
+.char-system-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-cta);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  margin-bottom: 14px;
+}
+
+.char-system-badge.costume {
+  background: #ffe8cc;
+  color: #d9480f;
+}
+
+.char-system-badge.nationwide {
+  background: #d0ebff;
+  color: #1971c2;
+}
+
+.char-system-card h3 {
+  font-size: clamp(19px, 2.2vw, 24px);
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.char-system-card p {
+  font-size: 14px;
+  line-height: 1.85;
+  color: var(--color-muted);
+  margin-bottom: 16px;
+}
+
+.char-system-highlight {
+  background: #f8f7f2;
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  border-left: 3px solid var(--color-primary);
+  font-size: 13px;
+  line-height: 1.75;
+}
+
+.char-system-highlight strong {
+  color: var(--color-ink);
+}
+
+.char-costume-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.char-costume-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  background: #fff;
+  border: 1px solid #e9ecef;
+  padding: 3px 8px;
+  border-radius: 4px;
+  color: #495057;
+}
+
+/* プロフィールカード内の衣装展開インフォ */
+.profile-badges-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.badge-ambassador {
+  display: inline-block;
+  padding: 3px 10px;
+  font-family: var(--font-cta);
+  font-size: 11px;
+  font-weight: 700;
+  background: #fff3bf;
+  color: #e67700;
+  border-radius: var(--radius-pill);
+}
+
+.badge-costume-active {
+  display: inline-block;
+  padding: 3px 10px;
+  font-family: var(--font-cta);
+  font-size: 11px;
+  font-weight: 700;
+  background: #ffe3e3;
+  color: #c92a2a;
+  border-radius: var(--radius-pill);
+}
+
+.char-costume-box {
+  margin: 18px 0;
+  padding: 14px 18px;
+  background: #fffdf8;
+  border: 1px dashed #d5b36b;
+  border-radius: var(--radius-md);
+}
+
+.char-costume-box-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #b8860b;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.char-costume-box p {
+  font-size: 12px;
+  line-height: 1.7;
+  color: #555;
+  margin: 0;
+}
+
+/* 日光市・全国展開枠（COMING SOON） */
+.expansion-container {
+  max-width: 1100px;
+  margin: 44px auto 0;
+}
+
+.expansion-title-box {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.expansion-title-box h3 {
+  font-size: clamp(20px, 2.4vw, 26px);
+  margin-bottom: 8px;
+}
+
+.expansion-title-box p {
+  font-size: 14px;
+  color: var(--color-muted);
+}
+
+.expansion-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.expansion-card {
+  background: #fff;
+  border-radius: var(--radius-lg);
+  padding: 30px 26px;
+  border: 2px dashed #ced4da;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.expansion-card.nikko {
+  border-color: #f59f00;
+  background: linear-gradient(135deg, #fff9db 0%, #fff 60%);
+}
+
+.expansion-card.japan {
+  border-color: #339af0;
+  background: linear-gradient(135deg, #e7f5ff 0%, #fff 60%);
+}
+
+.expansion-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.expansion-status {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+}
+
+.expansion-card.nikko .expansion-status {
+  background: #f59f00;
+  color: #fff;
+}
+
+.expansion-card.japan .expansion-status {
+  background: #1971c2;
+  color: #fff;
+}
+
+.expansion-area-tag {
+  font-family: var(--font-en);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-muted);
+}
+
+.expansion-card h4 {
+  font-size: 20px;
+  margin: 0 0 10px;
+  line-height: 1.4;
+}
+
+.expansion-card p {
+  font-size: 13px;
+  color: var(--color-muted);
+  line-height: 1.8;
+  margin-bottom: 16px;
+}
+
+.expansion-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 16px;
+}
+
+.expansion-features li {
+  font-size: 12px;
+  line-height: 1.8;
+  color: #495057;
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.expansion-features li::before {
+  content: '✔';
+  color: #2b8a3e;
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .char-system-grid,
+  .expansion-grid {
+    grid-template-columns: 1fr;
+  }
+  .char-system-card,
+  .expansion-card {
+    padding: 24px 20px;
+  }
+}
+
+/* ==========================================================================
+   動画配信オプション (Video Distribution Options)
+   ========================================================================== */
+.option-box {
+  max-width: 650px;
+  margin: 32px auto 0;
+  background: #fff;
+  border: 1px solid var(--color-rule);
+  border-radius: var(--radius-lg);
+  padding: 28px 24px;
+  box-shadow: var(--shadow-sm);
+}
+
+.option-box-header {
+  margin-bottom: 18px;
+  text-align: center;
+}
+
+.option-badge {
+  display: inline-block;
+  padding: 3px 12px;
+  font-family: var(--font-cta);
+  font-size: 11px;
+  font-weight: 700;
+  background: #e7f5ff;
+  color: #1971c2;
+  border-radius: var(--radius-pill);
+  margin-bottom: 8px;
+}
+
+.option-box h3 {
+  font-size: 19px;
+  margin-bottom: 6px;
+}
+
+.option-box p.option-desc {
+  font-size: 13px;
+  color: var(--color-muted);
+  line-height: 1.7;
+  margin: 0;
+}
+
+.option-table-wrap {
+  overflow-x: auto;
+  margin-top: 18px;
+  border: 1px solid var(--color-rule);
+  border-radius: var(--radius-sm);
+}
+
+.option-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  text-align: left;
+}
+
+.option-table th {
+  background: #f8f7f2;
+  padding: 12px 14px;
+  font-weight: 700;
+  color: var(--color-ink);
+  border-bottom: 2px solid var(--color-rule);
+  white-space: nowrap;
+}
+
+.option-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #eee;
+  line-height: 1.6;
+}
+
+.option-table tr:last-child td {
+  border-bottom: none;
+}
+
+.option-table td strong {
+  color: var(--color-accent-red);
+  font-family: var(--font-cta);
+  font-size: 14px;
+}
+
+.option-note {
+  margin-top: 14px;
+  font-size: 12px;
+  color: var(--color-muted);
+  line-height: 1.6;
+  text-align: left;
+}
 
