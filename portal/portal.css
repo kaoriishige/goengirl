@@ -23,12 +23,16 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
+html, body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
 body {
   font-family: var(--font-round);
   background-color: var(--goen-bg-cream);
   color: var(--goen-text);
   line-height: 1.8;
-  overflow-x: hidden;
 }
 
 /* Pattern Header Wrapper */
@@ -268,8 +272,8 @@ body {
 
 .hero-circle-bg {
   position: absolute;
-  width: 380px;
-  height: 380px;
+  width: min(380px, 86vw);
+  height: min(380px, 86vw);
   border-radius: 50%;
   background: radial-gradient(circle, #fde8f0 0%, #ecdcf7 70%, transparent 100%);
   z-index: 1;

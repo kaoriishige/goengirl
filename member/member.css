@@ -20,6 +20,11 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
+html, body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
 body {
   margin: 0;
   background: linear-gradient(135deg, #edfafd 0%, #fff4f7 50%, #fdfbf7 100%);
@@ -30,9 +35,20 @@ body {
 }
 
 .wrap {
+  width: 100%;
   max-width: 860px;
+  min-width: 0;
   margin: auto;
-  padding: 0 20px 80px;
+  padding: 0 16px 80px;
+  box-sizing: border-box;
+}
+
+.dashboard-section {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  margin-bottom: 32px;
 }
 
 /* Header */
@@ -1479,9 +1495,14 @@ header {
   display: flex;
   gap: 8px;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   padding-bottom: 8px;
   margin-bottom: 12px;
   scrollbar-width: thin;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .hiroba-categories-bar::-webkit-scrollbar {
@@ -1507,6 +1528,7 @@ header {
   display: inline-flex;
   align-items: center;
   gap: 4px;
+  flex-shrink: 0;
 }
 
 .hiroba-cat-chip:hover {
@@ -1533,6 +1555,10 @@ header {
   padding: 10px 14px;
   border-radius: var(--radius-sm);
   border: 1px solid var(--line);
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .btn-saved-filter {
@@ -2116,6 +2142,163 @@ header {
   align-items: center;
   justify-content: center;
   box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+/* ==========================================================================
+   モバイル最適化・横スクロール/横崩れ防止メディアクエリ
+   ========================================================================== */
+@media (max-width: 640px) {
+  .wrap {
+    padding: 0 12px 90px;
+  }
+  
+  header {
+    height: auto;
+    min-height: 56px;
+    padding: 8px 0;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  
+  .brand {
+    font-size: 18px;
+    letter-spacing: 0.05em;
+  }
+
+  .header-nav {
+    gap: 6px;
+    margin-left: auto;
+  }
+
+  .header-link {
+    font-size: 11px;
+    display: none; /* スマホでは下部固定ナビに集約 */
+  }
+
+  .btn-header-action {
+    padding: 4px 10px;
+    font-size: 11px;
+  }
+
+  .member-lang-switcher {
+    padding: 1px 3px;
+  }
+
+  .member-lang-btn {
+    font-size: 11px;
+    padding: 2px 5px;
+  }
+
+  /* セクションヘッダー */
+  .section-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  /* タブボタン */
+  .tabs {
+    gap: 4px;
+    margin-bottom: 16px;
+  }
+
+  .tab-btn {
+    padding: 9px 4px;
+    font-size: 11px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* プラン比較グリッド */
+  .plans-comparison-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  /* スタッツグリッド */
+  .stats-grid-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .stat-card {
+    padding: 10px 4px;
+  }
+
+  .stat-card .stat-val {
+    font-size: 18px !important;
+  }
+
+  .stat-label {
+    font-size: 10px;
+  }
+
+  /* ご縁ひろば フィルター・カード */
+  .hiroba-sub-filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    padding: 8px 10px;
+  }
+
+  .hiroba-sub-filter-bar > div {
+    width: 100%;
+  }
+
+  .filter-select {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    font-size: 12px;
+  }
+
+  .btn-saved-filter {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+
+  .hiroba-card {
+    padding: 14px 12px;
+  }
+
+  /* デジタル会員証 */
+  .pass-card-inner {
+    padding: 18px 14px;
+  }
+
+  .pass-number {
+    font-size: 13px;
+  }
+
+  /* クイックアクションタイル */
+  .complete-actions-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* 各種モーダル */
+  .modal-card {
+    width: 95vw !important;
+    max-width: 95vw !important;
+    padding: 20px 14px !important;
+    margin: auto;
+    box-sizing: border-box;
+  }
+}
+
+@media (max-width: 380px) {
+  .wrap {
+    padding: 0 8px 90px;
+  }
+  
+  .tab-btn {
+    font-size: 10px;
+    padding: 8px 2px;
+  }
+
+  .stat-card .stat-val {
+    font-size: 15px !important;
+  }
 }
 
 
