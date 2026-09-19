@@ -144,15 +144,36 @@ const MEMBER_I18N = {
 
     // Plans
     plansHead: "💎 会員プラン・契約設定",
+    planSupporterBadge: "人気",
     planFreeTitle: "無料会員",
     planFreePrice: "0円",
     planFreeBtnActive: "利用中",
+    memberPlanFreeF1: "✔ キャラクター・施設・グッズ閲覧",
+    memberPlanFreeF2: "✔ 推しガール登録",
+    memberPlanFreeF3: "✔ 現地チェックイン・スタンプ帳",
+    memberPlanFreeF4: "✔ 基本ポイント獲得・交換",
+    memberPlanFreeF5: "✔ グッズ「持っている/欲しい」登録",
+    memberPlanFreeF6: "✔ 旅の投稿・基本交流",
+
     planSupporterTitle: "応援会員",
     planSupporterPrice: "月額 480円 (税込)",
     planSupporterBtn: "応援会員に変更 (¥480/月)",
+    memberPlanSupporterF1: "✔ 無料会員のすべての機能",
+    memberPlanSupporterF2: "✔ 会員向け限定ボイス・壁紙・推し便り",
+    memberPlanSupporterF3: "✔ 制作裏話・新企画の先行情報",
+    memberPlanSupporterF4: "✔ 推し別の会員限定交流",
+    memberPlanSupporterF5: "✔ 会員向けポイント交換特典",
+    memberPlanSupporterF6: "✔ 対象グッズの現地受取予約",
+    memberPlanSupporterF7: "✔ 会員向け商品の優先購入機会",
+
     planCocreateTitle: "共創会員",
     planCocreatePrice: "月額 980円 (税込)",
     planCocreateBtn: "共創会員に変更 (¥980/月)",
+    memberPlanCocreateF1: "✔ 応援会員のすべての機能",
+    memberPlanCocreateF2: "✔ 実施可能な企画候補への投票権",
+    memberPlanCocreateF3: "✔ 四半期オンライン企画交流会へ参加",
+    memberPlanCocreateF4: "✔ 企画検討の裏話レポート",
+    memberPlanCocreateF5: "✔ 提案採用結果や進捗報告",
 
     // Bottom Nav
     navHome: "ホーム",
@@ -296,15 +317,36 @@ const MEMBER_I18N = {
 
     // Plans
     plansHead: "💎 Membership Plans & Settings",
+    planSupporterBadge: "Popular",
     planFreeTitle: "Free Member",
     planFreePrice: "¥0 / Free",
     planFreeBtnActive: "Active Plan",
+    memberPlanFreeF1: "✔ Browse Characters, Spots & Goods",
+    memberPlanFreeF2: "✔ Register Favorite Oshi Girl",
+    memberPlanFreeF3: "✔ On-site GPS Check-in & Stamp Book",
+    memberPlanFreeF4: "✔ Earn & Redeem Basic Points",
+    memberPlanFreeF5: "✔ Goods 'Have / Want' Collection",
+    memberPlanFreeF6: "✔ Share Travel Posts & Community",
+
     planSupporterTitle: "Supporter Plan",
     planSupporterPrice: "¥480 / month (tax incl.)",
     planSupporterBtn: "Switch to Supporter (¥480/mo)",
+    memberPlanSupporterF1: "✔ All Free Member Features Included",
+    memberPlanSupporterF2: "✔ Exclusive Monthly Voice, Wallpapers & News",
+    memberPlanSupporterF3: "✔ Behind-the-scenes & Early Access",
+    memberPlanSupporterF4: "✔ Supporter-only Community Spaces",
+    memberPlanSupporterF5: "✔ Exclusive Point Redemption Rewards",
+    memberPlanSupporterF6: "✔ Guaranteed On-site Goods Reservation",
+    memberPlanSupporterF7: "✔ Priority Access for Special Merch",
+
     planCocreateTitle: "Co-Creation Plan",
     planCocreatePrice: "¥980 / month (tax incl.)",
     planCocreateBtn: "Switch to Co-Creation (¥980/mo)",
+    memberPlanCocreateF1: "✔ All Supporter Member Features Included",
+    memberPlanCocreateF2: "✔ Voting Rights on Project & Product Proposals",
+    memberPlanCocreateF3: "✔ Quarterly Online Creator Meetups",
+    memberPlanCocreateF4: "✔ Secret Development & Planning Reports",
+    memberPlanCocreateF5: "✔ Proposal Results & Progress Updates",
 
     // Bottom Nav
     navHome: "Home",

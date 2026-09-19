@@ -642,7 +642,7 @@ class HirobaManager {
             <img src="${post.images[0]}" alt="限定写真" class="hiroba-post-img" style="filter: blur(12px);">
             <div class="hiroba-lock-overlay">
               <span style="font-size: 20px;">🔒</span>
-              <span style="font-size: 12px; font-weight: 700;">応援会員・共創会員限定の写真です</span>
+              <span style="font-size: 12px; font-weight: 700;">${isEn ? 'Supporter / Co-Creation Member exclusive photo' : '応援会員・共創会員限定の写真です'}</span>
             </div>
           </div>
         `;
@@ -668,13 +668,13 @@ class HirobaManager {
           <p style="white-space: pre-wrap; margin-bottom: 8px;">${this.escapeHtml(truncated)}</p>
           <div class="hiroba-locked-box">
             <div style="font-weight: 700; font-size: 13px; color: #b01b4c; margin-bottom: 4px;">
-              🔒 応援会員・共創会員 限定公開の投稿です
+              ${isEn ? '🔒 Exclusive Post for Supporter & Co-Creation Members' : '🔒 応援会員・共創会員 限定公開の投稿です'}
             </div>
             <p style="font-size: 12px; color: #555; margin-bottom: 10px;">
-              月額480円（応援会員）にご加入いただくと、限定投稿の全文・高画質写真・制作裏話をすべてご覧いただけます。
+              ${isEn ? 'Join Supporter Plan (¥480/month) to unlock full stories, high-res photos, and behind-the-scenes.' : '月額480円（応援会員）にご加入いただくと、限定投稿の全文・高画質写真・制作裏話をすべてご覧いただけます。'}
             </p>
             <button class="btn-primary" style="font-size: 12px; padding: 6px 16px;" onclick="document.getElementById('section-plans').scrollIntoView({behavior: 'smooth'})">
-              会員プランを見る (¥480/月〜)
+              ${isEn ? 'Explore Membership Plans (from ¥480/mo)' : '会員プランを見る (¥480/月〜)'}
             </button>
           </div>
         </div>
